@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 模型比价 — 官方价与中转站价格对比，API 可用性实时监控</title>
+<meta name="description" content="覆盖 OpenAI、Claude、Gemini、DeepSeek 等 16 家厂商 50+ 模型的一站式比价与监控平台。每日自动更新价格，统一折算人民币口径，帮你找到最优 AI API 方案。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,450;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfbf9;
+    --surface: #ffffff;
+    --hover: #f5f4f0;
+    --border: rgba(0,0,0,.07);
+    --border-strong: rgba(0,0,0,.12);
+    --text: #1a1a1a;
+    --text2: #6b6b6b;
+    --text3: #b0b0b0;
+    --blue: #2383e2;
+    --blue-bg: rgba(35,131,226,.06);
+    --blue-hover: #1a6dc4;
+    --purple: #9b51e0;
+    --purple-bg: rgba(155,81,224,.06);
+    --green: #0ca16a;
+    --green-bg: rgba(12,161,106,.06);
+    --green-hover: #098558;
+    --orange: #e1622e;
+    --orange-bg: rgba(225,98,46,.06);
+    --red: #e03e3e;
+    --amber: #dfab01;
+    --cyan: #0b8a8f;
+    --radius-sm: 6px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.06);
+    --shadow: 0 4px 12px rgba(0,0,0,.06);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.08);
+    --sans: 'Inter', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --serif: 'Newsreader', Georgia, serif;
+    --max-width: 1100px;
+    --nav-height: 52px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.55;min-height:100vh;font-weight:450;font-size:15px}
+  ::selection{background:rgba(35,131,226,.15)}
+
+  /* ===== NAV ===== */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(251,251,249,.88);backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    height:var(--nav-height);
+    transition:border-color .3s;
+  }
+  .nav.scrolled{border-bottom-color:var(--border)}
+  .nav-inner{max-width:var(--max-width);margin:0 auto;padding:0 40px;height:100%;display:flex;align-items:center;gap:20px}
+  .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:700;font-size:15px;flex-shrink:0}
+  .nav-brand-dot{width:22px;height:22px;border-radius:5px;background:var(--text);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+  .nav-spacer{flex:1}
+  .nav-links{display:flex;gap:2px}
+  .nav-link{text-decoration:none;color:var(--text2);padding:5px 14px;border-radius:6px;font-size:14px;font-weight:500;transition:all .15s}
+  .nav-link:hover{color:var(--text);background:var(--hover)}
+  .nav-cta{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 18px;border-radius:var(--radius);
+    background:var(--text);color:#fff;
+    font-size:13px;font-weight:600;text-decoration:none;
+    transition:all .2s;white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--text2);transform:translateY(-1px);box-shadow:var(--shadow)}
+
+  /* ===== HERO ===== */
+  .hero{
+    max-width:var(--max-width);margin:0 auto;
+    padding:120px 40px 80px;
+    text-align:center;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 14px;border-radius:20px;
+    background:var(--green-bg);color:var(--green);
+    font-size:12px;font-weight:600;font-family:var(--mono);
+    letter-spacing:.03em;margin-bottom:28px;
+  }
+  .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .hero-title{
+    font-family:var(--serif);font-size:clamp(38px,6vw,60px);
+    font-weight:600;letter-spacing:-.03em;line-height:1.1;
+    color:var(--text);margin-bottom:18px;
+  }
+  .hero-title em{font-style:italic;color:var(--blue)}
+  .hero-desc{
+    font-size:18px;color:var(--text2);max-width:520px;
+    margin:0 auto 40px;line-height:1.65;
+  }
+  .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:11px 26px;border-radius:var(--radius);
+    font-size:14px;font-weight:600;font-family:var(--sans);
+    text-decoration:none;cursor:pointer;transition:all .2s;
+    border:none;white-space:nowrap;
+  }
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-primary:hover{background:var(--blue-hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(35,131,226,.3)}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
+  .btn-outline:hover{background:var(--hover);border-color:var(--text2)}
+  .btn svg{width:16px;height:16px;flex-shrink:0}
+
+  /* Hero Stats */
+  .hero-stats{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+  .hero-stat{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:16px 24px;
+    box-shadow:var(--shadow-sm);min-width:130px;
+    text-align:center;
+  }
+  .hero-stat-num{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--text)}
+  .hero-stat-label{font-size:13px;color:var(--text3);margin-top:2px}
+
+  /* ===== SECTION COMMON ===== */
+  section{padding:72px 40px}
+  .section-inner{max-width:var(--max-width);margin:0 auto}
+  .section-label{
+    font-family:var(--mono);font-size:11px;color:var(--text3);
+    text-transform:uppercase;letter-spacing:.06em;
+    margin-bottom:12px;font-weight:500;
+  }
+  .section-title{
+    font-family:var(--serif);font-size:clamp(28px,4vw,40px);
+    font-weight:600;letter-spacing:-.02em;line-height:1.2;
+    margin-bottom:16px;color:var(--text);
+  }
+  .section-desc{
+    font-size:16px;color:var(--text2);max-width:520px;
+    line-height:1.65;margin-bottom:40px;
+  }
+
+  /* ===== FEATURES ===== */
+  .features-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:16px;
+  }
+  .feature-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius-xl);padding:28px;
+    box-shadow:var(--shadow-sm);transition:all .25s;
+    position:relative;overflow:hidden;
+  }
+  .feature-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-lg);
+    border-color:var(--border-strong);
+  }
+  .feature-icon{
+    width:40px;height:40px;border-radius:var(--radius);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:18px;
+  }
+  .feature-icon.blue{background:var(--blue-bg);color:var(--blue)}
+  .feature-icon.green{background:var(--green-bg);color:var(--green)}
+  .feature-icon.purple{background:var(--purple-bg);color:var(--purple)}
+  .feature-icon.orange{background:var(--orange-bg);color:var(--orange)}
+  .feature-icon svg{width:20px;height:20px}
+  .feature-card h3{font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text)}
+  .feature-card p{font-size:14px;color:var(--text2);line-height:1.6}
+
+  /* ===== HOW IT WORKS ===== */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+  .step{text-align:center;padding:24px 20px}
+  .step-num{
+    width:48px;height:48px;border-radius:50%;
+    background:var(--blue-bg);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 16px;font-family:var(--mono);
+    font-size:18px;font-weight:700;
+  }
+  .step h3{font-size:16px;font-weight:600;margin-bottom:6px}
+  .step p{font-size:14px;color:var(--text2);line-height:1.6}
+
+  /* ===== COVERAGE ===== */
+  .coverage{
+    background:var(--surface);border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+  }
+  .coverage-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+  }
+  .coverage-item{
+    text-align:center;padding:24px 16px;
+    border-radius:var(--radius-lg);
+    transition:background .2s;
+  }
+  .coverage-item:hover{background:var(--hover)}
+  .coverage-num{font-family:var(--mono);font-size:32px;font-weight:600;color:var(--text)}
+  .coverage-num.blue{color:var(--blue)}
+  .coverage-num.green{color:var(--green)}
+  .coverage-num.purple{color:var(--purple)}
+  .coverage-label{font-size:13px;color:var(--text3);margin-top:4px}
+
+  /* ===== VENDOR LOGOS ===== */
+  .vendor-scroll{
+    display:flex;gap:32px;align-items:center;justify-content:center;
+    flex-wrap:wrap;opacity:.5;
+  }
+  .vendor-name{font-family:var(--mono);font-size:13px;color:var(--text2);font-weight:500;white-space:nowrap}
+
+  /* ===== CTA SECTION ===== */
+  .cta-section{text-align:center}
+  .cta-card{
+    background:var(--text);color:#fff;
+    border-radius:var(--radius-xl);padding:56px 40px;
+    max-width:700px;margin:0 auto;
+  }
+  .cta-card h2{
+    font-family:var(--serif);font-size:clamp(26px,3.5vw,36px);
+    font-weight:600;letter-spacing:-.02em;line-height:1.2;
+    margin-bottom:12px;
+  }
+  .cta-card p{font-size:16px;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.6}
+  .cta-card .btn-primary{background:#fff;color:var(--text)}
+  .cta-card .btn-primary:hover{background:rgba(255,255,255,.85);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+  .cta-card .btn-outline{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)}
+  .cta-card .btn-outline:hover{color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4)}
+
+  /* ===== FOOTER ===== */
+  .footer{
+    border-top:1px solid var(--border);
+    padding:40px;
+    text-align:center;
+  }
+  .footer-inner{max-width:var(--max-width);margin:0 auto}
+  .footer-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+  .footer-links a{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+  .footer-links a:hover{color:var(--text)}
+  .footer-text{font-size:12px;color:var(--text3)}
+
+  /* ===== SCROLL ANIMATIONS ===== */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-delay-1{transition-delay:.1s}
+  .reveal-delay-2{transition-delay:.2s}
+  .reveal-delay-3{transition-delay:.3s}
+  .reveal-delay-4{transition-delay:.4s}
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:768px){
+    .hero{padding:100px 24px 56px}
+    section{padding:48px 24px}
+    .section-inner{padding:0}
+    .hero-stats{gap:10px}
+    .hero-stat{padding:12px 18px;min-width:100px}
+    .hero-stat-num{font-size:22px}
+    .features-grid{grid-template-columns:1fr}
+    .coverage-grid{grid-template-columns:repeat(2,1fr)}
+    .cta-card{padding:40px 24px}
+    .nav-inner{padding:0 24px}
+    .nav-link{display:none}
+  }
+  @media (max-width:480px){
+    .hero-title{font-size:32px}
+    .hero-actions{flex-direction:column;align-items:stretch}
+    .hero-actions .btn{justify-content:center}
+    .hero-stats{gap:8px}
+    .hero-stat{padding:10px 14px;min-width:90px}
+    .hero-stat-num{font-size:20px}
+    .coverage-grid{grid-template-columns:repeat(2,1fr)}
+    .vendor-scroll{gap:20px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+    .hero-badge-dot{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="landing.html" class="nav-brand">
+      <span class="nav-brand-dot">比</span>
+      AI 模型比价
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">功能</a>
+      <a href="#how" class="nav-link">流程</a>
+      <a href="#coverage" class="nav-link">覆盖</a>
+    </div>
+    <a href="index.html" class="nav-cta">
+      开始比价
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-badge reveal">
+    <span class="hero-badge-dot"></span>
+    价格每日自动更新 · 数据更新时间 2026-07-09
+  </div>
+  <h1 class="hero-title reveal reveal-delay-1">
+    AI 模型 <em>全网比价</em>，<br>帮你省下每一分 API 预算
+  </h1>
+  <p class="hero-desc reveal reveal-delay-2">
+    覆盖 16 家官方厂商、8+ 中转渠道，统一折算人民币口径。
+    不再逐个打开定价页，一站式对比、筛选、决策。
+  </p>
+  <div class="hero-actions reveal reveal-delay-2">
+    <a href="index.html" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      开始比价
+    </a>
+    <a href="monitor.html" class="btn btn-outline">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+      查看监控
+    </a>
+  </div>
+
+  <div class="hero-stats reveal reveal-delay-3">
+    <div class="hero-stat">
+      <div class="hero-stat-num">16</div>
+      <div class="hero-stat-label">官方厂商</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">50+</div>
+      <div class="hero-stat-label">收录模型</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">8+</div>
+      <div class="hero-stat-label">中转渠道</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num" style="color:var(--green)">24h</div>
+      <div class="hero-stat-label">自动更新</div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== FEATURES ===== -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-label reveal">核心功能</div>
+    <h2 class="section-title reveal reveal-delay-1">
+      一个页面，搞定模型选型与成本比对
+    </h2>
+    <p class="section-desc reveal reveal-delay-1">
+      从发现模型到对比价格再到持续监控，覆盖 AI API 采购决策的全流程。
+    </p>
+
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <h3>全网比价</h3>
+        <p>覆盖 OpenAI、Anthropic、Google、DeepSeek 等 16 家厂商与 8+ 中转站渠道。所有价格统一折算为人民币/百万 tokens，一目了然。</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>智能筛选</h3>
+        <p>按厂商、模型系列、能力标签（对话/编码/深度思考/多模态等）快速筛选排序，秒级定位目标模型。</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        </div>
+        <h3>一键比价</h3>
+        <p>点击模型即可展开比价抽屉，同一模型的多供应方报价横向对比。输入价、输出价、综合价同口径排序，最低折扣一目了然。</p>
+      </div>
+
+      <div class="feature-card reveal reveal-delay-4">
+        <div class="feature-icon orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-4"/></svg>
+        </div>
+        <h3>实时监控</h3>
+        <p>每 30 分钟自动探测各供应商 API 可用性与延迟。在线、降级、宕机状态一目了然，帮你避开不稳定的渠道。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label reveal">使用流程</div>
+    <h2 class="section-title reveal reveal-delay-1">三步完成模型选型</h2>
+    <p class="section-desc reveal reveal-delay-1">无需注册，无需付费。打开即用，数据每日自动更新。</p>
+
+    <div class="steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">1</div>
+        <h3>筛选定位</h3>
+        <p>按厂商、能力或关键词搜索，从 50+ 模型中快速找到候选</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">2</div>
+        <h3>横向对比</h3>
+        <p>点击"比价"，同口径对比官方价与多家中转站报价</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">3</div>
+        <h3>来源验证</h3>
+        <p>每条报价提供来源跳转入口，直达官方定价页确认最新价格</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COVERAGE ===== -->
+<section class="coverage" id="coverage">
+  <div class="section-inner">
+    <div class="section-label reveal" style="text-align:center">数据覆盖</div>
+    <h2 class="section-title reveal reveal-delay-1" style="text-align:center;max-width:600px;margin-left:auto;margin-right:auto">
+      持续扩张的模型与渠道覆盖
+    </h2>
+
+    <div class="coverage-grid">
+      <div class="coverage-item reveal reveal-delay-1">
+        <div class="coverage-num blue">16</div>
+        <div class="coverage-label">官方厂商</div>
+      </div>
+      <div class="coverage-item reveal reveal-delay-2">
+        <div class="coverage-num green">50+</div>
+        <div class="coverage-label">收录模型</div>
+      </div>
+      <div class="coverage-item reveal reveal-delay-3">
+        <div class="coverage-num purple">8+</div>
+        <div class="coverage-label">中转渠道</div>
+      </div>
+      <div class="coverage-item reveal reveal-delay-4">
+        <div class="coverage-num" style="color:var(--orange)">30min</div>
+        <div class="coverage-label">监控频率</div>
+      </div>
+    </div>
+
+    <div class="vendor-scroll reveal reveal-delay-2" style="margin-top:40px">
+      <span class="vendor-name">OpenAI</span>
+      <span class="vendor-name">Anthropic</span>
+      <span class="vendor-name">Google Gemini</span>
+      <span class="vendor-name">DeepSeek</span>
+      <span class="vendor-name">xAI Grok</span>
+      <span class="vendor-name">Mistral AI</span>
+      <span class="vendor-name">阿里云 Qwen</span>
+      <span class="vendor-name">月之暗面 Kimi</span>
+      <span class="vendor-name">智谱 GLM</span>
+      <span class="vendor-name">MiniMax</span>
+      <span class="vendor-name">字节 Doubao</span>
+      <span class="vendor-name">百度 ERNIE</span>
+      <span class="vendor-name">腾讯 Hunyuan</span>
+      <span class="vendor-name">Cohere</span>
+      <span class="vendor-name">Voyage AI</span>
+      <span class="vendor-name">小米 MiMo</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="section-inner">
+    <div class="cta-card reveal">
+      <h2>找到性价比最高的 AI API 方案</h2>
+      <p>数据每日自动更新，无需注册，打开即用。<br>从今天开始，不再为 AI API 选型多花一分冤枉钱。</p>
+      <div class="hero-actions">
+        <a href="index.html" class="btn btn-primary">
+          开始比价
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="monitor.html" class="btn btn-outline">查看服务监控</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">模型比价</a>
+      <a href="monitor.html">服务监控</a>
+      <a href="capabilities.html">能力分类</a>
+      <a href="vendors.html">厂商列表</a>
+    </div>
+    <div class="footer-text">
+      AI 模型比价 &middot; 数据每日自动更新 &middot; 价格仅供参考，以各供应商官网为准
+    </div>
+  </div>
+</footer>
+
+<!-- ===== SCROLL SCRIPTS ===== -->
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Scroll reveal (Intersection Observer)
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Smooth scroll for anchor links (fallback for older browsers)
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

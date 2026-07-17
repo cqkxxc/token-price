@@ -1,0 +1,569 @@
+{
+  "updated_at": "2026-07-14T07:18:23Z",
+  "models": [
+    {
+      "slug": "gpt-5.6-sol",
+      "display_name": "Gpt 5.6 Sol",
+      "canonical_id": "openai-gpt-5.6-sol",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "语音",
+        "视频",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.67,
+      "official_output_price": 28.05,
+      "official_currency": "USD",
+      "publish_date": "2026-07-09",
+      "description": "GPT-5.6 Sol 重新树立智能与效率双重行业标准，在代码开发、专业知识工作、网络安全、前沿科研四大领域取得业界顶尖成绩；对比前代及竞品旗舰模型，完成同等任务消耗更少 Token、综合成本更低，单位投入可产出更高质量工作成果。\nSol 专为极限深度推理、长周期复杂智能体任务打造，独家开放max极限推理强度、ultra多智能体协同工作模式。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.6-luna",
+      "display_name": "Gpt 5.6 Luna",
+      "canonical_id": "openai-gpt-5.6-luna",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "视频",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.7776,
+      "official_output_price": 40.6656,
+      "official_currency": "CNY",
+      "publish_date": "2026-07-09",
+      "description": "GPT-5.6 Luna 是 GPT-5.6 全系中速度最快、成本最低的模型。它以极低延迟与成本，性能超越上一代旗舰 Opus 4.8，专为高并发、轻量化线上生产场景打造。该模型完整继承系列全部基础能力：150 万 token 上下文窗口、原生图像输入、多步骤推理、轻量 Codex 代码工具、适配简易智能体流程的函数调用。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.5",
+      "display_name": "Gpt 5.5",
+      "canonical_id": "openai-gpt-5.5",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.67,
+      "official_output_price": 28.05,
+      "official_currency": "USD",
+      "publish_date": "2026-04-24",
+      "description": "GPT-5.5 是 OpenAI 面向复杂专业工作负载打造的前沿模型，在 GPT-5.4 的基础上进一步增强了推理能力、可靠性，并提升了困难任务中的 token 效率。它具备 100 万以上 token 的上下文窗口（922K 输入、128K 输出），支持文本和图像输入，可在单一系统中完成大规模推理、编码和多模态工作流。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-sonnet-5",
+      "display_name": "Claude Sonnet 5",
+      "canonical_id": "anthropic-claude-sonnet-5",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "语音",
+        "视频",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 13.5552,
+      "official_output_price": 67.776,
+      "official_currency": "CNY",
+      "publish_date": "2026-07-01",
+      "description": "Claude Sonnet 5 是迄今为止智能体能力最强的 Sonnet 系列模型。它能够自主制定任务规划、调用浏览器 / 终端等工具完成任务，其自主执行能力在数月前还仅存在于规格更大、定价更高的旗舰 Opus 模型中。\n",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-fable-5",
+      "display_name": "Claude Fable 5",
+      "canonical_id": "anthropic-claude-fable-5",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 9.35,
+      "official_output_price": 46.74,
+      "official_currency": "USD",
+      "publish_date": "2026-06-10",
+      "description": "Claude-Fable-5 是 Anthropic 推出的 Mythos 级模型，专为自主知识工作和编码而构建。它支持文本、图像和文件输入，并输出文本，具备推理能力，拥有 100 万 token 的上下文窗口。它尤其擅长端到端完成原本需要人花费数小时、数天甚至数周的工作，能够处理耗时较长、定义模糊或高度多步骤的问题。它能以较少错误执行边界清晰的任务，通过验证循环自动自我纠正，并配备了可靠的安全防护机制。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-opus-4.8",
+      "display_name": "Claude Opus 4.8",
+      "canonical_id": "anthropic-claude-opus-4.8",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.67,
+      "official_output_price": 23.37,
+      "official_currency": "USD",
+      "publish_date": "2026-05-28",
+      "description": "Claude Opus 4.8 是 Anthropic Opus 系列中能力最强的通用可用模型。它支持文本、图像和文件输入，并输出文本，具备推理能力，拥有 100 万 token 的上下文窗口。它适合高度自主的智能体、长周期智能体任务、知识工作，以及需要在长时间会话中保持连贯性的记忆驱动型任务。它尤其擅长多步骤推理、复杂编码和端到端项目编排，例如大型代码库、多阶段调试，以及长时间运行的异步智能体流水线。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.6-terra",
+      "display_name": "Gpt 5.6 Terra",
+      "canonical_id": "openai-gpt-5.6-terra",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "语音",
+        "视频",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.34,
+      "official_output_price": 14.02,
+      "official_currency": "USD",
+      "publish_date": "2026-07-09",
+      "description": "Terra 是 GPT-5.6 系列中的均衡日用生产力模型，综合性能对标上一代旗舰 GPT-5.5，但调用成本直接减半，定位为企业线上业务通用主力模型。\n完整继承 GPT-5.6 全系核心能力：150 万 token 超长上下文窗口、原生图像视觉输入、多步骤深度推理、完整 Codex 代码工具链，以及适配中等复杂度智能体流程的函数调用。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-image-2",
+      "display_name": "Gpt Image 2",
+      "canonical_id": "openai-gpt-image-2",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "识图"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.67,
+      "official_output_price": 28.05,
+      "official_currency": "USD",
+      "publish_date": "2026-04-21",
+      "description": "gpt-image-2 是 2026 年 4 月 21 日发布的、具备推理能力的商用级图像模型，以 99% 文字准确率、4K 分辨率、精准编辑与世界知识理解，成为当前最强文生图模型。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "grok-4.5",
+      "display_name": "Grok 4.5",
+      "canonical_id": "xai-grok-4.5",
+      "company": {
+        "slug": "xai",
+        "name": "xAI",
+        "name_zh": "xAI",
+        "logo_color": "#0f172a"
+      },
+      "series": "Grok",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 13.5552,
+      "official_output_price": 40.6656,
+      "official_currency": "CNY",
+      "publish_date": "2026-07-09",
+      "description": "Grok 4.5 是 SpaceXAI 打造的顶尖模型，在编程、智能体任务、专业知识工作领域表现突出，是XAI 迄今为止性能最强的模型，且与 Cursor 联合完成训练。可处理高难度、长周期复杂任务，能够灵活调用各类工具解决问题，适配软件工程、数据科学、金融、法律等各类专业知识场景。模型支持图像输入、结构化输出、深度推理，同时提供函数调用能力以搭建复杂智能体工作流。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-5.2",
+      "display_name": "Glm 5.2",
+      "canonical_id": "zhipu-glm-5.2",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8,
+      "official_output_price": 28,
+      "official_currency": "CNY",
+      "publish_date": "2026-06-15",
+      "description": "GLM-5.2 是面向长任务时代的旗舰模型。支持真正可用的 1M 上下文，可承载项目级工程上下文，长程任务执行更稳定、工程规范遵循更可靠，一次任务即可完成从需求到多端部署的完整开发链路。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "deepseek-v4-pro",
+      "display_name": "Deepseek V4 Pro",
+      "canonical_id": "deepseek-deepseek-v4-pro",
+      "company": {
+        "slug": "deepseek",
+        "name": "DeepSeek",
+        "name_zh": "DeepSeek",
+        "logo_color": "#4d6bfe"
+      },
+      "series": "DeepSeek",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3,
+      "official_output_price": 6,
+      "official_currency": "CNY",
+      "publish_date": "2026-04-24",
+      "description": "DeepSeek V4 Pro 是 DeepSeek 推出的大规模混合专家（Mixture-of-Experts, MoE）模型，拥有 1.6T 总参数和 49B 激活参数，支持 100 万 token 的上下文窗口。它面向高级推理、编码和长周期智能体工作流而设计，在知识、数学和软件工程基准测试中表现强劲。该模型非常适合全代码库分析、多步骤自动化和大规模信息综合等复杂工作负载，尤其适用于同时要求能力与效率的场景。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-opus-4.7",
+      "display_name": "Claude Opus 4.7",
+      "canonical_id": "anthropic-claude-opus-4.7",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.67,
+      "official_output_price": 23.37,
+      "official_currency": "USD",
+      "publish_date": "2026-04-17",
+      "description": "Opus 4.7 是 Anthropic Opus 系列的上一代模型，专为长时间运行的异步智能体而构建。它继承并强化了 Opus 4.6 在编码和智能体任务方面的优势，在复杂、多步骤任务上表现更强，并能在延展工作流中实现更可靠的智能体执行。它尤其适合任务随时间逐步展开的异步智能体流水线，例如大型代码库、多阶段调试，以及端到端项目编排。除编码之外，Opus 4.7 也提升了知识工作能力，包括文档撰写、演示文稿制作和数据分析等。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-sonnet-4.6",
+      "display_name": "Claude Sonnet 4.6",
+      "canonical_id": "anthropic-claude-sonnet-4.6",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.8,
+      "official_output_price": 14.02,
+      "official_currency": "USD",
+      "publish_date": "2026-02-17",
+      "description": "Claude Sonnet 4.6 是 Sonnet 线的全面升级版，官方强调其在编码、计算机使用、长上下文推理、Agent 规划、知识工作与设计任务上整体增强，并提供最高 100 万上下文（Beta）能力，适合作为高质量通用主力模型。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "minimax-m3",
+      "display_name": "Minimax M3",
+      "canonical_id": "minimax-minimax-m3",
+      "company": {
+        "slug": "minimax",
+        "name": "MiniMax",
+        "name_zh": "MiniMax",
+        "logo_color": "#ec4899"
+      },
+      "series": "MiniMax",
+      "capabilities": [
+        "识图",
+        "语音",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.2,
+      "official_output_price": 16.8,
+      "official_currency": "CNY",
+      "publish_date": "2026-06-01",
+      "description": "MiniMax-M3 是 MiniMax 推出的多模态基础模型。它支持文本、图像和视频输入，并输出文本，拥有 100 万 token 的上下文窗口，适合长周期智能体任务、编码和工具调用。它基于 MiniMax Sparse Attention（MSA）构建，用 KV 块选择取代全量注意力，以降低长上下文场景下的逐 token 计算成本。在 100 万 token 上下文下，其成本约为上一代的 1/20，同时显著提升预填充和解码速度，并在大多数任务中保持质量。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-2.1-turbo",
+      "display_name": "Doubao Seed 2.1 Turbo",
+      "canonical_id": "bytedance-doubao-seed-2.1-turbo",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "语音",
+        "视频",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3,
+      "official_output_price": 15,
+      "official_currency": "CNY",
+      "publish_date": "2026-06-23",
+      "description": "doubao-seed-2.1-turbo 是 Seed 2.1 系列面向规模化量产、高吞吐线上业务的低成本低时延深度思考模型，基础全能力对齐同系列 Pro 版本，主打极致性价比，在大幅降低调用成本的前提下保留完整通用与多模态能力，适配需要海量并发调用的生产场景。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-2.1-pro",
+      "display_name": "Doubao Seed 2.1 Pro",
+      "canonical_id": "bytedance-doubao-seed-2.1-pro",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "语音",
+        "视频",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6,
+      "official_output_price": 30,
+      "official_currency": "CNY",
+      "publish_date": "2026-06-23",
+      "description": "Doubao-Seed-2.1-pro 是 Seed 2.1 系列的旗舰深度推理版本，面向高复杂度探索场景，聚焦 AI 生产力提升，在编程工程交付、智能体长链路任务执行、多模态理解三大方向实现全面升级，对标并多项指标超越 GPT-5.5、Claude Opus 等海外旗舰模型。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "kimi-k2.7-code",
+      "display_name": "Kimi K2.7 Code",
+      "canonical_id": "moonshot-kimi-k2.7-code",
+      "company": {
+        "slug": "moonshot",
+        "name": "Moonshot",
+        "name_zh": "月之暗面",
+        "logo_color": "#7c3aed"
+      },
+      "series": "Kimi",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.5,
+      "official_output_price": 27,
+      "official_currency": "CNY",
+      "publish_date": "2026-06-13",
+      "description": "Kimi K2.7 Code 是月之暗面（Moonshot AI）推出、完全开源的代码专项优化混合专家大模型，基于 K2 系列 1 万亿总参数 MoE 架构，单 Token 激活 32B 参数，专为长周期软件工程、复杂代码工程任务打造，支持 256K 超长上下文窗口。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-opus-4.6",
+      "display_name": "Claude Opus 4.6",
+      "canonical_id": "anthropic-claude-opus-4.6",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.67,
+      "official_output_price": 23.37,
+      "official_currency": "USD",
+      "publish_date": "2026-02-05",
+      "description": "Claude Opus 4.6 是 Anthropic 当前最强旗舰，官方强调其在 Agentic coding、计算机使用、工具调用、搜索与金融等高精度任务上具行业领先表现，并进一步提升了可靠性、精度与企业工作流适配性。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "kimi-k2.6",
+      "display_name": "Kimi K2.6",
+      "canonical_id": "moonshot-kimi-k2.6",
+      "company": {
+        "slug": "moonshot",
+        "name": "Moonshot",
+        "name_zh": "月之暗面",
+        "logo_color": "#7c3aed"
+      },
+      "series": "Kimi",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.5,
+      "official_output_price": 27,
+      "official_currency": "CNY",
+      "publish_date": "2026-04-20",
+      "description": "Kimi K2.6 是 Moonshot AI 的下一代多模态模型，专为长周期编码、编码驱动的 UI/UX 生成，以及多智能体编排而设计。它能够处理跨 Python、Rust 和 Go 的复杂端到端编码任务，并能将提示词和视觉输入转化为可用于生产环境的界面。其智能体集群架构可扩展到数百个并行子智能体，实现自主任务拆解，无需人工监督即可在单次运行中交付文档、网站和电子表格。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "deepseek-v4-flash",
+      "display_name": "Deepseek V4 Flash",
+      "canonical_id": "deepseek-deepseek-v4-flash",
+      "company": {
+        "slug": "deepseek",
+        "name": "DeepSeek",
+        "name_zh": "DeepSeek",
+        "logo_color": "#4d6bfe"
+      },
+      "series": "DeepSeek",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1,
+      "official_output_price": 2,
+      "official_currency": "CNY",
+      "publish_date": "2026-04-24",
+      "description": "DeepSeek V4 Flash 是 DeepSeek 推出的效率优化型混合专家（Mixture-of-Experts, MoE）模型，拥有 284B 总参数和 13B 激活参数，支持 100 万 token 的上下文窗口。它专为快速推理和高吞吐工作负载而设计，同时保持了强大的推理和编码能力。该模型包含混合注意力机制，可高效处理长上下文。它非常适合编码助手、聊天系统和智能体工作流等应用，尤其适用于重视响应速度和成本效率的场景。",
+      "supplier_count": 1,
+      "has_online_supplier": true
+    }
+  ]
+}

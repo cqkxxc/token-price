@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI 模型价格比价 — 官方价与中转站价格对比</title>
+<meta name="description" content="查看 OpenAI、Claude、Gemini、DeepSeek 等 AI 模型官方价格，对比中转站报价。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="css/style.css">
+<!-- 浏览器禁止 file:// 页面 fetch 本地 JSON；此脚本提供同源静态数据后备。 -->
+<script src="data-bundle.js"></script>
+</head><body>
+
+<!-- 全站最底层背景装饰：两侧纵向流动光束（参考 composio.dev）。不参与页面布局或交互。 -->
+<div class="rails" aria-hidden="true">
+  <div class="rails-glow"></div>
+  <div class="rails-grid"></div>
+  <div class="rail rail-left">
+    <span class="rail-line"></span><span class="rail-line rail-line-2"></span>
+    <i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i>
+  </div>
+  <div class="rail rail-right">
+    <span class="rail-line"></span><span class="rail-line rail-line-2"></span>
+    <i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i>
+  </div>
+</div>
+
+<nav class="topnav" id="topNav"><div class="topnav-inner">
+  <a class="topnav-brand" href="#" data-nav="home"><div class="topnav-brand-dot">AI</div>AI 模型比价</a>
+  <div class="topnav-links">
+    <a class="topnav-link active" href="#" data-nav="home">首页</a>
+    <a class="topnav-link" href="#" data-nav="monitor">监控</a>
+  </div>
+  <div class="topnav-search" id="searchBox">
+    <svg class="topnav-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="globalSearch" placeholder="搜索模型..." oninput="handleSearch()">
+  </div>
+</div></nav>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <header class="page-intro">
+    <div class="intro-eyebrow"><span class="pulse-dot"></span>实时价格指数 · LIVE PRICING INDEX</div>
+    <h1>AI 大模型全网比价</h1>
+    <p>覆盖主流官方厂商与中转站。统一人民币口径，一目了然。<span style="color:var(--color-text-muted);margin-left:12px;font-size:13px">数据每日自动更新</span></p>
+  </header>
+  <section class="hot-models" aria-label="热门模型">
+    <div class="hot-models-label"><span aria-hidden="true">🔥</span> 热门模型</div>
+    <div class="hot-models-viewport"><div class="hot-models-track" id="hotModelsTrack"></div></div>
+  </section>
+  <div class="content-shell">
+    <div class="filter-panel">
+      <div class="filter-row"><span class="filter-label">厂商</span><div class="filter-group" id="companyChips"></div></div>
+      <div class="filter-row"><span class="filter-label">能力</span><div class="filter-group" id="capabilityChips"></div></div>
+      <div class="filter-row filter-summary-row"><span id="resultsInfo"></span></div>
+    </div>
+    <div class="table-wrap"><div class="table-scroll"><table><thead><tr>
+      <th class="sortable" onclick="sortTable('name')" id="th-name"><span>模型</span><i class="sort-arrow" aria-hidden="true"></i></th><th>厂商</th><th>能力</th>
+      <th class="sortable" onclick="sortTable('input_price')" id="th-input"><span>输入价</span><i class="sort-arrow" aria-hidden="true"></i></th><th class="sortable" onclick="sortTable('output_price')" id="th-output"><span>输出价</span><i class="sort-arrow" aria-hidden="true"></i></th>
+      <th class="sortable active desc" onclick="sortTable('composite_price')" id="th-composite"><span>综合价</span><i class="sort-arrow" aria-hidden="true"></i></th><th>折扣</th>
+      <th>渠道</th><th></th></tr></thead><tbody id="tableBody"></tbody></table></div>
+      <div class="empty-state" id="emptyState" style="display:none">没有匹配的模型</div></div>
+  </div>
+</div>
+
+<!-- MODEL DETAIL -->
+<div id="page-model" class="page">
+  <div class="page-container" style="padding-top:32px">
+    <div class="back-link" data-nav="home">← 返回比价列表</div>
+    <div id="mdCard"></div>
+  </div>
+</div>
+
+<!-- MONITOR -->
+<div id="page-monitor" class="page">
+  <div class="page-container" style="padding-top:32px">
+    <div class="back-link" data-nav="home">← 返回首页</div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:8px">供应商<em style="color:var(--color-accent)">可用性监控</em></h2>
+    <p style="color:var(--color-text-secondary);margin-bottom:24px">每 30 分钟探测各供应商 API 可用性与响应延迟。</p>
+    <div class="monitor-summary" id="monitorStats"></div>
+    <div class="monitor-grid" id="monitorGrid"></div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="btn-drawer-close" onclick="closeDrawer()">✕</button>
+  <div class="drawer-inner" id="drawerContent"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA LAYER — 从静态 JSON 文件加载数据
+// ═══════════════════════════════════════════════════════
+let MODELS=[], SUPPLIERS=[], PRICES=new Map(), META={}, ICON_MANIFEST={vendors:[]};
+
+const ICON_ALIASES={bytedance:'doubao','volcengine':'doubao','alibaba':'qwen','alibaba-cloud':'qwen','zhipu-ai':'zhipu','google-gemini':'google','tencent':'hunyuan'};
+const PRICING_UNITS={per_token:'百万 tokens',per_call:'次',per_image:'张',per_second:'秒'};
+const hotScrollModels=[
+  {modelKey:'gpt-5.5',name:'GPT 5.5',vendor:'OpenAI'},
+  {modelKey:'claude-sonnet-5',name:'Claude Sonnet 5',vendor:'Anthropic'},
+  {modelKey:'gpt-5.6-sol',name:'GPT 5.6 Sol',vendor:'OpenAI'},
+  {modelKey:'grok-4.5',name:'Grok 4.5',vendor:'xAI'},
+  {modelKey:'deepseek-v4-pro',name:'DeepSeek V4 Pro',vendor:'DeepSeek'},
+  {modelKey:'glm-5.2',name:'GLM 5.2',vendor:'智谱'},
+  {modelKey:'kimi-k2.7-code',name:'Kimi K2.7 Code',vendor:'月之暗面'}
+];
+const esc=value=>String(value??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+const num=value=>Number.isFinite(Number(value))?Number(value):0;
+function iconFor(company){
+  const slug=ICON_ALIASES[company.slug]||company.slug;
+  const item=(ICON_MANIFEST.vendors||[]).find(v=>v.vendorId===slug);
+  const file=item?.file||item?.files?.[0];
+  return file?`icons/${file}`:'';
+}
+function modelLogo(m,size=''){
+  const icon=iconFor(m.company);
+  return `<div class="model-avatar ${size}">${icon?`<img src="${esc(icon)}" alt="${esc(m.company.name)} Logo" onerror="this.parentElement.classList.add('logo-fallback');this.remove()">`:''}<span>${esc((m.company.name||'?')[0].toUpperCase())}</span></div>`;
+}
+function unitFor(m){return PRICING_UNITS[m.pricing_method]||'单位';}
+function isToken(m){return m.pricing_method==='per_token';}
+function composite(m){return isToken(m)?num(m.official_input_price)+num(m.official_output_price):null;}
+function priceText(value,m){return `¥${num(value).toFixed(2)}<span class="price-unit">/${unitFor(m)}</span>`;}
+function activePrices(m){return (PRICES.get(m.canonical_id)||[]).filter(p=>p.is_active===true&&p.source_url);}
+function quoteTotal(p,m){return isToken(m)?num(p.input_price)+num(p.output_price):num(p.input_price)||num(p.output_price);}
+
+async function loadData(){
+  try{
+    let md,sp,pr,mt,icons;
+    if(location.protocol==='file:'&&window.__STATIC_DATA__){
+      ({models:md,suppliers:sp,prices:pr,meta:mt,icons}=window.__STATIC_DATA__);
+    }else{
+      [md,sp,pr,mt,icons]=await Promise.all([
+        fetch('data/models.json').then(r=>r.json()),
+        fetch('data/suppliers.json').then(r=>r.json()),
+        fetch('data/prices.json').then(r=>r.json()),
+        fetch('data/meta.json').then(r=>r.json()).catch(()=>({})),
+        fetch('icons/manifest.json').then(r=>r.json()).catch(()=>({vendors:[]}))
+      ]);
+    }
+    META=mt; ICON_MANIFEST=icons;
+    MODELS=Array.isArray(md.models)?md.models:[];
+    SUPPLIERS=Array.isArray(sp.suppliers)?sp.suppliers:[];
+    PRICES=new Map();
+    (pr.prices||[]).forEach(p=>{
+      if(!PRICES.has(p.canonical_id))PRICES.set(p.canonical_id,[]);
+      PRICES.get(p.canonical_id).push(p);
+    });
+    console.log(`Data loaded: ${MODELS.length} models, ${SUPPLIERS.length} suppliers, ${pr.prices?.length||0} prices`);
+    return true;
+  }catch(e){
+    console.warn('JSON load failed, using fallback:',e.message);
+    return false;
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════
+// RENDER LOGIC (unchanged from original, reads MODELS/SUPPLIERS/PRICES)
+// ═══════════════════════════════════════════════════════
+let ac=null,acc=null,sq='',hotModelKey=null,csort={f:'composite_price',asc:false};
+
+function companyName(m){return m.company.name_zh||m.company.name;}
+function rc(){const companies=[...new Map(MODELS.map(m=>[m.company.slug,companyName(m)])).entries()];document.getElementById('companyChips').innerHTML=`<button class="chip ${ac?'':'active'}" onclick="sc(null)">全部</button>`+companies.map(([slug,name])=>`<button class="chip ${ac===slug?'active':''}" onclick="sc('${esc(slug)}')">${esc(name)}</button>`).join('');}
+function rcp(){const caps=[...new Set(MODELS.flatMap(m=>m.capabilities||[]))];document.getElementById('capabilityChips').innerHTML=`<button class="chip ${acc?'':'active'}" onclick="scp(null)">全部</button>`+caps.map(c=>`<button class="chip ${acc===c?'active':''}" onclick="scp('${esc(c)}')">${esc(c)}</button>`).join('');}
+function renderHotModels(){const cards=hotScrollModels.map(item=>{const model=MODELS.find(m=>m.slug===item.modelKey);if(!model)return'';return `<button class="hot-model-card ${hotModelKey===item.modelKey?'active':''}" type="button" data-hot-model="${esc(item.modelKey)}" aria-pressed="${hotModelKey===item.modelKey}">${modelLogo(model,'hot-model-logo')}<span>${esc(item.name)}</span></button>`;}).join('');document.getElementById('hotModelsTrack').innerHTML=`<div class="hot-models-marquee"><div class="hot-models-group">${cards}</div><div class="hot-models-group" aria-hidden="true">${cards}</div></div>`;}
+function initHotModelsMarquee(){const track=document.getElementById('hotModelsTrack');let resumeTimer=null;const pause=()=>{clearTimeout(resumeTimer);track.classList.add('user-paused');};const resume=()=>{clearTimeout(resumeTimer);resumeTimer=setTimeout(()=>track.classList.remove('user-paused'),1500);};track.addEventListener('pointerdown',pause,{passive:true});window.addEventListener('pointerup',resume,{passive:true});window.addEventListener('pointercancel',resume,{passive:true});track.addEventListener('touchstart',pause,{passive:true});track.addEventListener('touchend',resume,{passive:true});}
+function toggleHotModel(modelKey){hotModelKey=hotModelKey===modelKey?null:modelKey;ac=null;acc=null;sq='';document.getElementById('globalSearch').value='';rc();rcp();renderHotModels();af();}
+function gf(){let f=[...MODELS];if(hotModelKey)f=f.filter(m=>m.slug===hotModelKey);if(sq){const q=sq.toLowerCase();f=f.filter(m=>[m.display_name,m.slug,m.series,companyName(m),...(m.capabilities||[])].some(v=>String(v).toLowerCase().includes(q)));}if(ac)f=f.filter(m=>m.company.slug===ac);if(acc)f=f.filter(m=>(m.capabilities||[]).includes(acc));return f;}
+function discountFor(m){const official=composite(m),quotes=activePrices(m);if(!official||!quotes.length)return 0;const best=Math.min(...quotes.map(p=>quoteTotal(p,m)));return Math.max(0,(1-best/official)*100);}
+function sm(arr){if(csort.f==='default')return arr;return[...arr].sort((a,b)=>{let va,vb;switch(csort.f){case'name':va=a.display_name;vb=b.display_name;break;case'company':va=companyName(a);vb=companyName(b);break;case'input_price':va=num(a.official_input_price);vb=num(b.official_input_price);break;case'output_price':va=num(a.official_output_price);vb=num(b.official_output_price);break;case'composite_price':va=composite(a)??Infinity;vb=composite(b)??Infinity;break;case'suppliers':va=activePrices(a).length;vb=activePrices(b).length;break;case'discount':va=discountFor(a);vb=discountFor(b);break;default:return 0;}return typeof va==='string'?(csort.asc?va.localeCompare(vb):vb.localeCompare(va)):(csort.asc?va-vb:vb-va);});}
+function af(){const f=gf(),s=sm(f);rt(s);document.getElementById('resultsInfo').textContent='共 '+s.length+' 个模型 · '+(META.data_updated_at||'').slice(0,10);}
+function rt(models){const tb=document.getElementById('tableBody'),em=document.getElementById('emptyState');if(!models.length){tb.innerHTML='';em.style.display='block';return}em.style.display='none';
+  tb.innerHTML=models.map(m=>{const comp=composite(m),ps=activePrices(m),disc=discountFor(m),caps=m.capabilities||[];
+    return'<tr><td><div class="model-cell">'+modelLogo(m)+'<div><div class="model-name"><a onclick="nv(\'model\',\''+esc(m.slug)+'\')">'+esc(m.display_name)+'</a></div><div class="model-tags">'+caps.slice(0,3).map(c=>'<span class="model-tag">'+esc(c)+'</span>').join('')+'</div></div></div></td>'+
+    '<td><span style="font-size:13px;color:var(--color-text-secondary)">'+esc(companyName(m))+'</span></td>'+
+    '<td class="capabilities-cell">'+caps.map(esc).join(' · ')+'</td>'+
+    '<td class="price-cell">'+priceText(m.official_input_price,m)+'</td><td class="price-cell">'+priceText(m.official_output_price,m)+'</td><td class="price-cell">'+(comp===null?'—':priceText(comp,m))+'</td>'+
+    '<td class="price-cell'+(disc>0?' price-lowest':'')+'">'+(disc>0?'-'+disc.toFixed(0)+'%':'—')+'</td>'+
+    '<td style="font-family:var(--font-mono);font-size:13px">'+ps.length+' 家</td>'+
+    '<td><button class="btn-compare" data-compare="'+esc(m.slug)+'">比价 →</button></td></tr>';}).join('');}
+function sc(c){ac=c;rc();af()}function scp(c){acc=c;rcp();af()}
+function handleSearch(){sq=document.getElementById('globalSearch').value;af()}
+function updateSortHeaders(){document.querySelectorAll('thead th.sortable').forEach(th=>{const active=th.id===`th-${csort.f.replace('_price','')}`;th.classList.toggle('active',active);th.classList.toggle('asc',active&&csort.asc);th.classList.toggle('desc',active&&!csort.asc);th.setAttribute('aria-sort',active?(csort.asc?'ascending':'descending'):'none');});}
+function sortTable(f){if(csort.f===f)csort.asc=!csort.asc;else{csort.f=f;csort.asc=true}updateSortHeaders();af()}
+
+function openDrawer(slug){
+  const m=MODELS.find(x=>x.slug===slug);if(!m)return;const ps=activePrices(m),comp=composite(m),sorted=[...ps].sort((a,b)=>quoteTotal(a,m)-quoteTotal(b,m)),min=sorted.length?quoteTotal(sorted[0],m):null;
+  document.getElementById('drawerContent').innerHTML='<div class="drawer-model-header">'+modelLogo(m,'model-avatar-lg')+'<div><div class="drawer-model-name">'+esc(m.display_name)+'</div><div class="drawer-model-meta">'+esc(companyName(m))+' · '+(m.capabilities||[]).slice(0,3).map(esc).join(' · ')+' · '+esc(m.context_window||'—')+' · '+ps.length+' 家供应方</div></div></div>'+
+  (m.description?'<p class="model-description">'+esc(m.description)+'</p>':'')+
+  '<div class="price-summary"><div><small>输入价</small><div class="price-cell">'+priceText(m.official_input_price,m)+'</div></div><div><small>输出价</small><div class="price-cell">'+priceText(m.official_output_price,m)+'</div></div><div><small>综合价</small><div class="price-cell">'+(comp===null?'—':priceText(comp,m))+'</div></div></div>'+
+  '<div class="drawer-section-title">供应商比价</div>'+
+  '<table class="drawer-table"><thead><tr><th>供应方</th><th>类型</th><th>线路</th><th>输入</th><th>输出</th><th>综合</th><th>来源</th></tr></thead><tbody>'+
+  sorted.map(p=>{const pc=quoteTotal(p,m);return'<tr><td style="font-weight:600">'+esc(p.supplier_name)+'</td><td><span class="tag '+(p.supplier_type==='official'?'tag-official':'tag-relay')+'">'+(p.supplier_type==='official'?'官方':'中转')+'</span></td><td>'+esc(p.route)+'</td><td class="price-cell">¥'+num(p.input_price).toFixed(2)+'</td><td class="price-cell">¥'+num(p.output_price).toFixed(2)+'</td><td class="price-cell '+(pc===min?'price-lowest':'')+'">¥'+pc.toFixed(2)+(pc===min?'<span class="lowest-badge">最低</span>':'')+'</td><td><a href="'+esc(p.source_url)+'" target="_blank" rel="noopener" class="source-link">来源 ↗</a></td></tr>';}).join('')+'</tbody></table>';
+  document.getElementById('drawerOverlay').style.display='block';document.getElementById('drawer').style.display='block';document.body.style.overflow='hidden';
+}
+function closeDrawer(){document.getElementById('drawerOverlay').style.display='none';document.getElementById('drawer').style.display='none';document.body.style.overflow='';}
+
+function renderModel(slug){
+  const m=MODELS.find(x=>x.slug===slug);if(!m)return nv('home');
+  document.getElementById('mdCard').innerHTML='<div class="detail-card"><div class="drawer-model-header">'+modelLogo(m,'model-avatar-lg')+'<div><div class="drawer-model-name">'+esc(m.display_name)+'</div><div class="drawer-model-meta">'+esc(companyName(m))+' · '+(m.capabilities||[]).map(esc).join(' · ')+' · '+esc(m.context_window||'—')+' · '+activePrices(m).length+' 家供应方</div></div></div><p class="model-description">'+esc(m.description||'暂无模型简介')+'</p><button class="btn-compare" data-compare="'+esc(m.slug)+'">查看供应商比价 →</button></div>';
+}
+
+function renderMonitor(){
+  const on=SUPPLIERS.filter(s=>s.status==='online').length,de=SUPPLIERS.filter(s=>s.status==='degraded').length,off=SUPPLIERS.filter(s=>s.status==='offline').length;
+  document.getElementById('monitorStats').innerHTML='<div class="monitor-stat"><span class="status-dot online" style="width:10px;height:10px"></span> 在线 <strong>'+on+'</strong></div><div class="monitor-stat"><span class="status-dot degraded" style="width:10px;height:10px"></span> 部分异常 <strong>'+de+'</strong></div><div class="monitor-stat"><span class="status-dot offline" style="width:10px;height:10px"></span> 宕机 <strong>'+off+'</strong></div>';
+  document.getElementById('monitorGrid').innerHTML=SUPPLIERS.map(s=>{
+    const stl=s.status==='online'?'正常':s.status==='degraded'?'部分异常':s.status==='offline'?'宕机':'未检查';
+    return'<div class="monitor-card '+esc(s.status)+'"><div class="monitor-card-name">'+esc(s.name)+'</div><div class="monitor-card-stats">'+
+    '<div class="monitor-card-stat"><span class="monitor-card-stat-label">状态</span><span class="status-text '+esc(s.status)+'">'+stl+'</span></div>'+
+    '<div class="monitor-card-stat"><span class="monitor-card-stat-label">7 天在线率</span><span class="monitor-card-stat-value">'+(s.uptime_7d!=null?num(s.uptime_7d).toFixed(1)+'%':'—')+'</span></div>'+
+    '<div class="monitor-card-stat"><span class="monitor-card-stat-label">平均延迟</span><span class="monitor-card-latency">'+(s.avg_latency_ms!=null?num(s.avg_latency_ms)+'ms':'—')+'</span></div>'+
+    '<div class="monitor-card-stat"><span class="monitor-card-stat-label">支付方式</span><span>'+esc((s.payment_methods||[]).join(' · ')||'—')+'</span></div>'+
+    '</div></div>';
+  }).join('');
+}
+
+function hp(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));}
+function nv(page,param){
+  hp();closeDrawer();document.querySelectorAll('.topnav-link').forEach(l=>l.classList.remove('active'));
+  switch(page){
+    case'home':document.getElementById('page-home').classList.add('active');document.querySelector('[data-nav="home"]')?.classList.add('active');af();window.location.hash='';break;
+    case'model':document.getElementById('page-model').classList.add('active');renderModel(param);window.location.hash='model/'+param;document.title=(MODELS.find(m=>m.slug===param)?.display_name||param)+' 价格比价';break;
+    case'monitor':document.getElementById('page-monitor').classList.add('active');document.querySelector('[data-nav="monitor"]')?.classList.add('active');renderMonitor();window.location.hash='monitor';break;
+  }
+}
+
+document.addEventListener('click',e=>{
+  const nav=e.target.closest('[data-nav]');if(nav){e.preventDefault();nv(nav.dataset.nav);return}
+  const cmp=e.target.closest('[data-compare]');if(cmp){e.preventDefault();openDrawer(cmp.dataset.compare)}
+  const hot=e.target.closest('[data-hot-model]');if(hot){e.preventDefault();toggleHotModel(hot.dataset.hotModel)}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+
+// ═══════════════════════════════════════════════════════
+// INIT — load data then render
+// ═══════════════════════════════════════════════════════
+(async function init(){
+  const ok=await loadData();
+  if(!ok){document.getElementById('emptyState').textContent='数据加载失败，请通过本地 HTTP 服务打开页面';document.getElementById('emptyState').style.display='block';return;}
+  rc();rcp();renderHotModels();initHotModelsMarquee();updateSortHeaders();af();
+
+  if(window.location.hash){
+    const h=window.location.hash.replace('#','');
+    const[p,pm]=h.split('/');
+    if(p==='model')nv('model',pm);
+    else if(p==='monitor')nv('monitor');
+    else nv('home');
+  }
+})();
+</script>
+</body></html>

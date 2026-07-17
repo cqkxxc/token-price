@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { SUPPLIERS } from '../lib/data';
+import { num } from '../lib/render';
+
+const on = SUPPLIERS.filter((s) => s.status === 'online').length;
+const de = SUPPLIERS.filter((s) => s.status === 'degraded').length;
+const off = SUPPLIERS.filter((s) => s.status === 'offline').length;
+const statusLabel = (s: string) =>
+  s === 'online' ? '正常' : s === 'degraded' ? '部分异常' : s === 'offline' ? '宕机' : '未检查';
+---
+<Base title="供应商可用性监控 — AI 模型比价" active="monitor">
+  <div class="page active">
+    <div class="page-container" style="padding-top:32px">
+      <a class="back-link" href="/">← 返回首页</a>
+      <h2 style="font-size:24px;font-weight:700;margin-bottom:8px">供应商<em style="color:var(--color-accent);font-style:normal">可用性监控</em></h2>
+      <p style="color:var(--color-text-secondary);margin-bottom:24px">每 30 分钟探测各供应商 API 可用性与响应延迟。</p>
+
+      <div class="monitor-summary">
+        <div class="monitor-stat"><span class="status-dot online" style="width:10px;height:10px"></span> 在线 <strong>{on}</strong></div>
+        <div class="monitor-stat"><span class="status-dot degraded" style="width:10px;height:10px"></span> 部分异常 <strong>{de}</strong></div>
+        <div class="monitor-stat"><span class="status-dot offline" style="width:10px;height:10px"></span> 宕机 <strong>{off}</strong></div>
+      </div>
+
+      <div class="monitor-grid">
+        {SUPPLIERS.map((s) => (
+          <div class={`monitor-card ${s.status}`}>
+            <div class="monitor-card-name">{s.name}</div>
+            <div class="monitor-card-stats">
+              <div class="monitor-card-stat"><span class="monitor-card-stat-label">状态</span><span class={`status-text ${s.status}`}>{statusLabel(s.status)}</span></div>
+              <div class="monitor-card-stat"><span class="monitor-card-stat-label">7 天在线率</span><span class="monitor-card-stat-value">{s.uptime_7d != null ? num(s.uptime_7d).toFixed(1) + '%' : '—'}</span></div>
+              <div class="monitor-card-stat"><span class="monitor-card-stat-label">平均延迟</span><span class="monitor-card-latency">{s.avg_latency_ms != null ? num(s.avg_latency_ms) + 'ms' : '—'}</span></div>
+              <div class="monitor-card-stat"><span class="monitor-card-stat-label">支付方式</span><span>{(s.payment_methods || []).join(' · ') || '—'}</span></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>
