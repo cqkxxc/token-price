@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import { MODELS, MANIFEST, pricesOf } from '../../lib/data';
+import {
+  modelLogo, companyName, composite, activePrices, priceText, priceTableHTML, esc,
+} from '../../lib/render';
+
+export function getStaticPaths() {
+  return MODELS.map((m) => ({ params: { slug: m.slug }, props: { model: m } }));
+}
+
+const { model: m } = Astro.props;
+const ps = activePrices(pricesOf(m.canonical_id));
+const comp = composite(m);
+const caps = (m.capabilities || []).slice(0, 3).join(' · ');
+const desc = m.description
+  ? m.description.slice(0, 140)
+  : `${m.display_name} 官方价格与各中转站报价对比。`;
+const header = modelLogo(m, MANIFEST, 'model-avatar-lg');
+const priceTable = priceTableHTML(m, pricesOf(m.canonical_id));
+---
+<Base title={`${m.display_name} 价格比价 — 官方价与中转站对比`} description={desc}>
+  <div class="page active">
+    <div class="page-container" style="padding-top:32px">
+      <a class="back-link" href="/">← 返回比价列表</a>
+      <div class="detail-card">
+        <div class="drawer-model-header" set:html={header + `<div><div class="drawer-model-name">${esc(m.display_name)}</div><div class="drawer-model-meta">${esc(companyName(m))} · ${(m.capabilities || []).map(esc).join(' · ')} · ${esc(m.context_window || '—')} · ${ps.length} 家供应方</div></div>`}></div>
+        {m.description && <p class="model-description">{m.description}</p>}
+        <div class="price-summary" style="margin-top:20px">
+          <div><small>输入价</small><div class="price-cell" set:html={priceText(m.official_input_price, m)}></div></div>
+          <div><small>输出价</small><div class="price-cell" set:html={priceText(m.official_output_price, m)}></div></div>
+          <div><small>综合价</small><div class="price-cell" set:html={comp === null ? '—' : priceText(comp, m)}></div></div>
+        </div>
+        <div class="drawer-section-title">供应商比价（{ps.length} 家）</div>
+        <div class="table-wrap" set:html={priceTable}></div>
+      </div>
+    </div>
+  </div>
+</Base>
