@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output and Astro cache
+dist/
+**/dist/
+.astro/
+**/.astro/
+
+# Local tool / editor state
+.agents/
+.codex/
+.claude/
+**/.claude/
+.vscode/
+.idea/
+
+# Logs and OS junk
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# Legacy/static files from the old non-Astro version
+site/_legacy/
+前端/_legacy/
+site/css/
+前端/css/
+site/data/
+前端/data/
+site/icons/
+前端/icons/
+site/data-bundle.js
+前端/data-bundle.js
+site/index.html
+前端/index.html
+site/landing.html
+前端/landing.html
+
+# Local-only notes; keep only if you intentionally want docs in the repo
+json-schema.md
