@@ -1,0 +1,78 @@
+﻿name: PR Notify
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, review_requested, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build and send message
+        env:
+          WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+        run: |
+          PR_NUM="${{ github.event.number }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_ACTION="${{ github.event.action }}"
+          PR_USER="${{ github.event.pull_request.user.login }}"
+          PR_MERGED="${{ github.event.pull_request.merged }}"
+
+          if [ "$PR_ACTION" = "closed" ] && [ "$PR_MERGED" = "true" ]; then
+            TITLE="🔀 已合并"
+            COLOR="green"
+          elif [ "$PR_ACTION" = "opened" ]; then
+            TITLE="🆕 新 PR"
+            COLOR="blue"
+          elif [ "$PR_ACTION" = "reopened" ]; then
+            TITLE="♻️ 重新打开"
+            COLOR="blue"
+          elif [ "$PR_ACTION" = "ready_for_review" ]; then
+            TITLE="👀 待审核"
+            COLOR="orange"
+          elif [ "$PR_ACTION" = "review_requested" ]; then
+            TITLE="👤 请求审核"
+            COLOR="orange"
+          else
+            TITLE="📋 PR 更新"
+            COLOR="grey"
+          fi
+
+          cat > /tmp/feishu.json << JSONEOF
+          {
+            "msg_type": "interactive",
+            "card": {
+              "elements": [
+                {
+                  "tag": "markdown",
+                  "content": "**${PR_TITLE}**\nby **${PR_USER}**\n\n[查看 PR](${PR_URL})"
+                },
+                {
+                  "tag": "hr"
+                },
+                {
+                  "tag": "note",
+                  "elements": [
+                    {
+                      "tag": "plain_text",
+                      "content": "token-price · PR #${PR_NUM}"
+                    }
+                  ]
+                }
+              ],
+              "header": {
+                "title": {
+                  "tag": "plain_text",
+                  "content": "${TITLE}"
+                },
+                "template": "${COLOR}"
+              }
+            }
+          }
+          JSONEOF
+
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/feishu.json
