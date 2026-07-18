@@ -5,6 +5,7 @@
     "allowJs": true,
     "strict": false
   },
-  "include": ["src", "astro.config.mjs"],
+  "include": [
+    "src", "astro.config.mjs"],
   "exclude": ["dist", "node_modules", "_legacy"]
 }
