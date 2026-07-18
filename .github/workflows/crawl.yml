@@ -9,7 +9,7 @@ on:
         default: false
 
 env:
-  SITE_DIR: 页面/前端/site
+  SITE_DIR: 页面/frontend/site
 
 jobs:
   crawl:

@@ -28,19 +28,19 @@ __MACOSX/
 
 # Legacy/static files from the old non-Astro version
 site/_legacy/
-前端/_legacy/
+../frontend/_legacy/
 site/css/
-前端/css/
+../frontend/css/
 site/data/
-前端/data/
+../frontend/data/
 site/icons/
-前端/icons/
+../frontend/icons/
 site/data-bundle.js
-前端/data-bundle.js
+../frontend/data-bundle.js
 site/index.html
-前端/index.html
+../frontend/index.html
 site/landing.html
-前端/landing.html
+../frontend/landing.html
 
 # Local-only notes; keep only if you intentionally want docs in the repo
 json-schema.md
