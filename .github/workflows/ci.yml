@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: 页面/frontend/site
+        working-directory: frontend/site
 
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: 页面/frontend/site/package-lock.json
+          cache-dependency-path: frontend/site/package-lock.json
 
       - run: npm ci
 
