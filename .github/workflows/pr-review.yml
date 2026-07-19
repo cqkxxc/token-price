@@ -8,10 +8,15 @@ permissions:
   pull-requests: write
   contents: read
 
+concurrency:
+  group: pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
     name: AI PR Review
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -45,8 +50,10 @@ jobs:
 
       - name: AI Code Review
         id: ai
+        continue-on-error: true
+        if: github.actor != 'dependabot[bot]'
         env:
-          API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ toJson(github.event.pull_request.body) }}
@@ -57,8 +64,8 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           if [ -z "$API_KEY" ]; then
-            echo "::error::OPENCODE_API_KEY secret 未配置，请在仓库 Settings → Secrets 中添加"
-            echo "❌ AI 审查未执行：OPENCODE_API_KEY secret 未配置。请在仓库 Settings → Secrets and variables → Actions 中添加。" > /tmp/ai-result.md
+            echo "::error::OPENAI_API_KEY secret 未配置，请在仓库 Settings → Secrets 中添加"
+            echo "❌ AI 审查未执行：OPENAI_API_KEY secret 未配置。请在仓库 Settings → Secrets and variables → Actions 中添加。" > /tmp/ai-result.md
             echo "risk_level=unknown" >> $GITHUB_OUTPUT
             echo "label=" >> $GITHUB_OUTPUT
             exit 0
@@ -77,6 +84,7 @@ jobs:
             --arg title "$PR_TITLE" \
             --arg body "$(echo "$PR_BODY" | jq -r .)" \
             --arg user "$PR_USER" \
+            --arg pr_number "$PR_NUMBER" \
             --arg base "$BASE_REF" \
             --arg head "$HEAD_REF" \
             --arg files "$CHANGED_FILES" \
@@ -93,7 +101,7 @@ jobs:
               content: (
                 "## PR 信息\n\n" +
                 "- 仓库: \($repo)\n" +
-                "- PR 编号: #\($repo) 仓库\n" +
+                "- PR 编号: #\($pr_number)\n" +
                 "- 提交者: \($user)\n" +
                 "- 标题: \($title)\n" +
                 "- 分支: \($head) → \($base)\n" +
@@ -296,6 +304,7 @@ jobs:
           echo "$CLEAN_REVIEW" >> /tmp/ai-result.md
 
       - name: Post review comment on PR
+        if: github.actor != 'dependabot[bot]'
         uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -303,7 +312,7 @@ jobs:
           body-file: /tmp/ai-result.md
 
       - name: Apply risk label
-        if: steps.ai.outputs.label != ''
+        if: steps.ai.outputs.label != '' && github.actor != 'dependabot[bot]'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LABEL: ${{ steps.ai.outputs.label }}
@@ -316,5 +325,5 @@ jobs:
             "risk:low")    LABEL_COLOR="22c55e" ;;
           esac
 
-          gh label create "$LABEL" --color "$LABEL_COLOR" --description "AI PR Review 风险评估" 2>/dev/null || true
+          gh label create "$LABEL" --color "$LABEL_COLOR" --description "AI 风险评估" 2>/dev/null || true
           gh pr edit "${{ github.event.pull_request.number }}" --add-label "$LABEL"
