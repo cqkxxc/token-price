@@ -1,0 +1,275 @@
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    name: AI Issue Triage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate repo tree
+        id: tree
+        run: |
+          tree -L 3 -I 'node_modules|.git|dist|.astro|__pycache__|.vite' --charset=utf-8 > /tmp/repo-tree.txt
+          echo "::group::Repository Structure"
+          cat /tmp/repo-tree.txt
+          echo "::endgroup::"
+
+      - name: AI Analysis
+        id: ai
+        env:
+          API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ toJson(github.event.issue.body) }}
+          ISSUE_USER: ${{ github.event.issue.user.login }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$API_KEY" ]; then
+            echo "::error::OPENCODE_API_KEY secret 未配置，请在仓库 Settings → Secrets 中添加"
+            echo "❌ AI 分析未执行：OPENCODE_API_KEY secret 未配置。请在仓库 Settings → Secrets and variables → Actions 中添加。" > /tmp/ai-result.md
+            echo "risk_level=unknown" >> $GITHUB_OUTPUT
+            echo "label=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Read repo tree
+          REPO_TREE=$(cat /tmp/repo-tree.txt)
+
+          # Read key config files
+          PACKAGE_JSON=$(cat frontend/site/package.json 2>/dev/null || echo "(not found)")
+          ASTRO_CONFIG=$(cat frontend/site/astro.config.mjs 2>/dev/null || echo "(not found)")
+          TSCONFIG=$(cat frontend/site/tsconfig.json 2>/dev/null || echo "(not found)")
+          NGINX_CONF=$(cat nginx.conf 2>/dev/null || echo "(not found)")
+          CRAWLER_MAIN=$(cat crawler/main.py 2>/dev/null || echo "(not found)")
+
+          # Build user prompt
+          USER_PROMPT=$(jq -n \
+            --arg title "$ISSUE_TITLE" \
+            --arg body "$(echo "$ISSUE_BODY" | jq -r .)" \
+            --arg user "$ISSUE_USER" \
+            --arg repo "$REPO" \
+            --arg tree "$REPO_TREE" \
+            --arg pkg "$PACKAGE_JSON" \
+            --arg astro "$ASTRO_CONFIG" \
+            --arg ts "$TSCONFIG" \
+            --arg nginx "$NGINX_CONF" \
+            --arg crawler "$CRAWLER_MAIN" \
+            '{
+              role: "user",
+              content: (
+                "## Issue 信息\n\n" +
+                "- 编号: #\($repo) 仓库\n" +
+                "- 提交者: \($user)\n" +
+                "- 标题: \($title)\n\n" +
+                "### Issue 正文\n---\n" + $body + "\n---\n\n" +
+                "## 项目代码库结构\n\n```\n" + $tree + "\n```\n\n" +
+                "## 关键配置文件\n\n" +
+                "### package.json\n```json\n" + $pkg + "\n```\n\n" +
+                "### astro.config.mjs\n```js\n" + $astro + "\n```\n\n" +
+                "### tsconfig.json\n```json\n" + $ts + "\n```\n\n" +
+                "### nginx.conf\n```nginx\n" + $nginx + "\n```\n\n" +
+                "### crawler/main.py\n```python\n" + $crawler + "\n```"
+              )
+            }')
+
+          # Build system prompt
+          SYSTEM_PROMPT=$(jq -n \
+            '{
+              role: "system",
+              content: (
+                "你是一个资深技术评估工程师，负责分析 GitHub Issue，并给出技术变更方案及风险评估。\n\n" +
+                "## 你的任务\n\n" +
+                "1. 理解 Issue 的问题描述和期望行为\n" +
+                "2. 根据提供的代码库文件树和配置文件，推断哪些模块/文件需要改动\n" +
+                "3. 输出技术变更方案（根因分析 + 变更列表 + 风险点）\n" +
+                "4. 按 5 维度评分模型输出风险评估 JSON\n\n" +
+                "## 第一步：分析\n\n" +
+                "- 理解 Issue 描述的问题和期望行为\n" +
+                "- 根据文件树和配置文件推断项目架构，定位需要改动的模块\n" +
+                "- 如果 Issue 信息不足以确定改动范围，明确指出需要澄清的点\n\n" +
+                "## 第二步：输出技术变更方案（Markdown）\n\n" +
+                "用以下结构输出（中文）：\n\n" +
+                "### 🔧 根因分析\n" +
+                "导致问题的根因，定位到具体模块/文件，说明当前行为和期望行为的差距。\n\n" +
+                "### 📝 变更方案\n" +
+                "以 checklist 列出每个需要改动的文件及具体改动内容。格式：\n" +
+                "- [ ] `路径/文件` — 改动描述\n\n" +
+                "### ⚠️ 风险点\n" +
+                "实现过程中的技术风险，1-3 条。\n\n" +
+                "## 第三步：输出风险评估 JSON\n\n" +
+                "按以下 5 维度评分，上限 100 分。得分越高 = 风险越大。评分规则：\n\n" +
+                "### 1. 数据库变更 (权重 40, 三级: 无/中/高)\n" +
+                "- 无(0): 不涉及数据库或数据文件（如 site/public/data/*.json）\n" +
+                "- 中(20): 新增可空列、向后兼容的 JSON 字段新增、新增索引、加非阻塞约束\n" +
+                "- 高(40): ALTER TABLE 删列/改列类型、删表、破坏性 schema 变更\n" +
+                "注：JSON 数据文件作为一等公民——仅内容值更新=0；改 JSON 键/字段 schema=按中档 20 计入，并在 reason 中标明"数据 schema"。\n\n" +
+                "### 2. 接口契约变更 (权重 30, 三级: 无/中/高)\n" +
+                "- 无(0): 无 API / 纯前端 / 不动公开契约\n" +
+                "- 中(15): 新增可选字段、新增端点（不删不改现有）、向后兼容扩展\n" +
+                "- 高(30): 改 path / 改必填 / 删字段 / 重命名 / 改 response 结构\n\n" +
+                "### 3. 核心依赖变更 (权重 20, 三级: 无/中/高)\n" +
+                "- 无(0): 无依赖文件改动 / 仅用现有 import 与内置\n" +
+                "- 中(10): package.json / requirements.txt 等 minor/patch 升级，风险可控\n" +
+                "- 高(20): 引入新框架或第三方库 / 跨 major 升级\n\n" +
+                "### 4. 影响范围 (动态: 阈值×入度系数)\n" +
+                "先按改动文件数取基础分：>10 文件=15，5-10 文件=5，<5 文件=0\n" +
+                "再按受影响文件的依赖入度加权：\n" +
+                "- isolated (×1.0): 无被引用 / 仅本模块自用\n" +
+                "- shared (×1.2): 被 1-N 个模块引用\n" +
+                "- core (×1.5): 多入口 / 跨服务共享 / 公共数据契约\n" +
+                "仅统计真实代码/逻辑改动文件，排除自动生成、mockfile、构建产物。scope_score = round(file_points × in_degree_factor)\n\n" +
+                "### 5. 破坏性变更 (分级放大系数)\n" +
+                "- 无(×1.0): 无破坏性变更\n" +
+                "- 内部(×1.2): 仅内部私有函数/类签名变化\n" +
+                "- 内公开(×1.5): 仓库内 export 公开符号被删/改名/必参变化\n" +
+                "- 外契约(×1.8): 外部 API / 跨服务契约 / 公开类型破坏\n" +
+                "- 删能力(×2.0): 删除已发布能力且无 deprecation，并强制判为高风险\n\n" +
+                "### 交互项—部署顺序\n" +
+                "当 db 档位 ≥ 中 且 api 档位 ≥ 中，说明迁移与接口须同序部署，额外 +10，并在 reason 中标明"deploy-ordering"。\n\n" +
+                "### 总分公式\n" +
+                "base = db_score + api_score + dep_score + scope_score\n" +
+                "interaction = 0 | 10 (deploy-ordering 触发)\n" +
+                "post = (base + interaction) × breaking_multiplier\n" +
+                "final = min(post, 100)\n\n" +
+                "### 分数等级\n" +
+                "- 0-20: 低风险\n" +
+                "- 21-50: 中风险\n" +
+                "- 51-100: 高风险\n" +
+                "删能力 breaking 档强制 level=高风险，无视最终分数。\n\n" +
+                "## 输出 JSON 格式\n\n" +
+                "将 JSON 放在 ```json 代码块中：\n\n" +
+                "```json\n" +
+                "{\n" +
+                "  \"schema_version\": 2,\n" +
+                "  \"issue\": \"#编号\",\n" +
+                "  \"title\": \"Issue 标题\",\n" +
+                "  \"confidence\": \"high|medium|low\",\n" +
+                "  \"total_score\": 0-100,\n" +
+                "  \"dimensions\": [\n" +
+                "    {\"dimension\": \"数据库变更\", \"risk_level\": \"无风险\", \"weight\": 40, \"tier\": \"无|中|高\", \"applicable\": true, \"score\": 0-40, \"reason\": \"简述理由\"},\n" +
+                "    {\"dimension\": \"接口契约变更\", \"risk_level\": \"无风险\", \"weight\": 30, \"tier\": \"无|中|高\", \"applicable\": true, \"score\": 0-30, \"reason\": \"简述理由\"},\n" +
+                "    {\"dimension\": \"核心依赖变更\", \"risk_level\": \"无风险\", \"weight\": 20, \"tier\": \"无|中|高\", \"applicable\": true, \"score\": 0-20, \"reason\": \"简述理由\"},\n" +
+                "    {\"dimension\": \"影响范围\", \"risk_level\": \"动态分\", \"weight\": \"阈值×入度\", \"tier\": \"isolated|shared|core\", \"applicable\": true, \"score\": 0-22, \"reason\": \"文件数 + 入度\"},\n" +
+                "    {\"dimension\": \"破坏性变更\", \"risk_level\": \"分级放大\", \"weight\": \"multiplier\", \"tier\": \"无|内部|内公开|外契约|删能力\", \"multiplier\": 1.0-2.0, \"applicable\": true, \"reason\": \"简述理由\"}\n" +
+                "  ],\n" +
+                "  \"interaction\": 0-10,\n" +
+                "  \"summary\": {\n" +
+                "    \"level\": \"低风险|中风险|高风险\",\n" +
+                "    \"conclusion\": \"一句话结论\",\n" +
+                "    \"suggested_action\": \"实现|需评估|变更方案|阻断\"\n" +
+                "  }\n" +
+                "}\n" +
+                "```\n\n" +
+                "## 重要规则\n" +
+                "- 评分必须有据可依，不要凭感觉\n" +
+                "- confidence 标注你对分析的把握度：high=已明确定位到文件/模块，medium=大致定位但未穷尽可能路径，low=仅基于 Issue 描述推断\n" +
+                "- 变更方案要具体、可执行\n" +
+                "- 如果 Issue 信息不足，在根因分析中指出需要澄清的点\n" +
+                "- 所有输出使用中文"
+              )
+            }')
+
+          # Build messages array for chat/completions
+          MESSAGES=$(jq -n -c \
+            --argjson sys "$SYSTEM_PROMPT" \
+            --argjson user "$USER_PROMPT" \
+            '[ $sys, $user ]')
+
+          echo "::group::Calling AI API"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            "https://opencode.ai/zen/go/v1/chat/completions" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $API_KEY" \
+            -d "$(jq -n \
+              --argjson messages "$MESSAGES" \
+              '{
+                model: "deepseek-v4-pro",
+                max_tokens: 4096,
+                temperature: 0.1,
+                messages: $messages
+              }')" \
+            --max-time 120)
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::warning::AI API 调用失败 (HTTP $HTTP_CODE)"
+            echo "❌ AI 分析失败 (HTTP $HTTP_CODE)，请手动查看此 Issue。" > /tmp/ai-result.md
+            echo "risk_level=unknown" >> $GITHUB_OUTPUT
+            echo "label=" >> $GITHUB_OUTPUT
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          # Extract content from response
+          RESULT=$(echo "$BODY" | jq -r '.choices[0].message.content // empty')
+
+          if [ -z "$RESULT" ]; then
+            echo "::warning::AI API 返回了空内容"
+            echo "❌ AI 返回了空内容，请手动查看此 Issue。" > /tmp/ai-result.md
+            echo "risk_level=unknown" >> $GITHUB_OUTPUT
+            echo "label=" >> $GITHUB_OUTPUT
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          echo "::endgroup::"
+
+          # Extract risk level from JSON block in the response
+          JSON_BLOCK=$(echo "$RESULT" | sed -n '/```json/,/```/p' | sed '1d;$d')
+          RISK_LEVEL=$(echo "$JSON_BLOCK" | jq -r '.summary.level // "unknown"' 2>/dev/null || echo "unknown")
+
+          # Map Chinese risk level to label suffix
+          case "$RISK_LEVEL" in
+            "高风险") LABEL="risk:high" ;;
+            "中风险") LABEL="risk:medium" ;;
+            "低风险") LABEL="risk:low" ;;
+            *)       LABEL="" ;;
+          esac
+
+          echo "risk_level=$RISK_LEVEL" >> $GITHUB_OUTPUT
+          echo "label=$LABEL" >> $GITHUB_OUTPUT
+
+          # Write result to file for comment step
+          echo "$RESULT" > /tmp/ai-result.md
+
+      - name: Post comment on issue
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body-file: /tmp/ai-result.md
+
+      - name: Apply risk label
+        if: steps.ai.outputs.label != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABEL: ${{ steps.ai.outputs.label }}
+        run: |
+          echo "Applying label: $LABEL"
+          LABEL_COLOR=""
+          case "$LABEL" in
+            "risk:high")   LABEL_COLOR="dc2626" ;;  # red
+            "risk:medium") LABEL_COLOR="f59e0b" ;;  # amber
+            "risk:low")    LABEL_COLOR="22c55e" ;;  # green
+          esac
+
+          # Create label if it doesn't exist
+          gh label create "$LABEL" --color "$LABEL_COLOR" --description "AI Triage 风险评估" 2>/dev/null || true
+
+          # Apply label to issue
+          gh issue edit "${{ github.event.issue.number }}" --add-label "$LABEL"
