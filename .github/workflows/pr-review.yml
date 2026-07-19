@@ -1,0 +1,296 @@
+name: PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  review:
+    name: AI PR Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate repo tree
+        run: |
+          tree -L 3 -I 'node_modules|.git|dist|.astro|__pycache__|.vite' --charset=utf-8 > /tmp/repo-tree.txt
+          echo "::group::Repository Structure"
+          cat /tmp/repo-tree.txt
+          echo "::endgroup::"
+
+      - name: Get PR diff
+        run: |
+          git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} > /tmp/pr-diff.txt
+
+          DIFF_SIZE=$(wc -c < /tmp/pr-diff.txt)
+          echo "Diff size: ${DIFF_SIZE} bytes"
+
+          # Truncate if over 60KB to stay within API context limits
+          if [ "$DIFF_SIZE" -gt 61440 ]; then
+            head -c 61440 /tmp/pr-diff.txt > /tmp/pr-diff-truncated.txt
+            echo -e "\n\n---\n⚠️ diff 内容已截断（原始大小 ${DIFF_SIZE} bytes），仅展示前 60KB。" >> /tmp/pr-diff-truncated.txt
+            mv /tmp/pr-diff-truncated.txt /tmp/pr-diff.txt
+          fi
+
+          echo "::group::PR Diff (first 100 lines)"
+          head -100 /tmp/pr-diff.txt
+          echo "::endgroup::"
+
+      - name: AI Code Review
+        id: ai
+        env:
+          API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ toJson(github.event.pull_request.body) }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          CHANGED_FILES: ${{ toJson(github.event.pull_request.changed_files) }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$API_KEY" ]; then
+            echo "::error::OPENCODE_API_KEY secret 未配置，请在仓库 Settings → Secrets 中添加"
+            echo "❌ AI 审查未执行：OPENCODE_API_KEY secret 未配置。请在仓库 Settings → Secrets and variables → Actions 中添加。" > /tmp/ai-result.md
+            echo "risk_level=unknown" >> $GITHUB_OUTPUT
+            echo "label=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          REPO_TREE=$(cat /tmp/repo-tree.txt)
+          PR_DIFF=$(cat /tmp/pr-diff.txt)
+
+          PACKAGE_JSON=$(cat frontend/site/package.json 2>/dev/null || echo "(not found)")
+          ASTRO_CONFIG=$(cat frontend/site/astro.config.mjs 2>/dev/null || echo "(not found)")
+          TSCONFIG=$(cat frontend/site/tsconfig.json 2>/dev/null || echo "(not found)")
+          NGINX_CONF=$(cat nginx.conf 2>/dev/null || echo "(not found)")
+          CRAWLER_MAIN=$(cat crawler/main.py 2>/dev/null || echo "(not found)")
+
+          USER_PROMPT=$(jq -n \
+            --arg title "$PR_TITLE" \
+            --arg body "$(echo "$PR_BODY" | jq -r .)" \
+            --arg user "$PR_USER" \
+            --arg base "$BASE_REF" \
+            --arg head "$HEAD_REF" \
+            --arg files "$CHANGED_FILES" \
+            --arg repo "$REPO" \
+            --arg tree "$REPO_TREE" \
+            --arg pkg "$PACKAGE_JSON" \
+            --arg astro "$ASTRO_CONFIG" \
+            --arg ts "$TSCONFIG" \
+            --arg nginx "$NGINX_CONF" \
+            --arg crawler "$CRAWLER_MAIN" \
+            --arg diff "$PR_DIFF" \
+            '{
+              role: "user",
+              content: (
+                "## PR 信息\n\n" +
+                "- 仓库: \($repo)\n" +
+                "- PR 编号: #\($repo) 仓库\n" +
+                "- 提交者: \($user)\n" +
+                "- 标题: \($title)\n" +
+                "- 分支: \($head) → \($base)\n" +
+                "- 变更文件数: \($files)\n\n" +
+                "### PR 描述\n---\n" + $body + "\n---\n\n" +
+                "## 项目代码库结构\n\n```\n" + $tree + "\n```\n\n" +
+                "## 关键配置文件\n\n" +
+                "### package.json\n```json\n" + $pkg + "\n```\n\n" +
+                "### astro.config.mjs\n```js\n" + $astro + "\n```\n\n" +
+                "### tsconfig.json\n```json\n" + $ts + "\n```\n\n" +
+                "### nginx.conf\n```nginx\n" + $nginx + "\n```\n\n" +
+                "### crawler/main.py\n```python\n" + $crawler + "\n```\n\n" +
+                "## PR Diff\n\n```diff\n" + $diff + "\n```"
+              )
+            }')
+
+          SYSTEM_PROMPT=$(jq -n \
+            '{
+              role: "system",
+              content: (
+                "你是一个资深代码审查工程师，负责审查 Pull Request 的代码变更。\n\n" +
+                "## 你的任务\n\n" +
+                "1. 理解 PR 的目的和变更范围\n" +
+                "2. 逐文件审查 diff 中的代码变更\n" +
+                "3. 按严重程度分类输出审查发现\n" +
+                "4. 使用 5 维度风险评估模型给本次变更评分\n\n" +
+                "## 审查维度\n\n" +
+                "按以下维度分析代码变更，优先关注高影响问题：\n\n" +
+                "- **逻辑正确性**: 边界条件、空值处理、异常路径、竞态条件\n" +
+                "- **安全性**: 注入风险、密钥泄露、权限校验、输入验证\n" +
+                "- **性能**: 不必要的循环/IO、内存泄漏、N+1 查询\n" +
+                "- **可维护性**: 命名清晰度、重复代码、过度耦合、缺少注释\n" +
+                "- **一致性**: 是否遵循项目现有代码风格和模式\n" +
+                "- **配置/依赖**: package.json、环境变量、构建配置变更的影响\n" +
+                "- **CI/CD 影响**: workflow 变更的正确性和安全性\n\n" +
+                "## 输出格式（中文）\n\n" +
+                "### 📋 变更概览\n" +
+                "一句话总结本次 PR 做了什么，涉及哪些模块。\n\n" +
+                "### 🚨 严重问题（必须修复）\n" +
+                "列出会导致 bug、安全漏洞、或破坏现有功能的代码问题。每条格式：\n" +
+                "- **`文件路径`** (第X行附近): 问题描述 + 修复建议\n\n" +
+                "### ⚠️ 需要关注（建议修改）\n" +
+                "列出可能导致问题但不紧急的代码问题。同样格式。\n\n" +
+                "### 💡 改进建议（可选优化）\n" +
+                "列出可以让代码更好的优化建议。同样格式。\n\n" +
+                "### ✅ 做得好的地方\n" +
+                "指出 PR 中做得好的代码实践（1-2 条）。\n\n" +
+                "### 📊 风险评估\n" +
+                "使用 5 维度模型评分（与 issue-triage 一致），将 JSON 放在 ```json 代码块中。\n\n" +
+                "## 5 维度评分模型\n\n" +
+                "公式: base = db_score + api_score + dep_score + scope_score\n" +
+                "     interaction = 0 | 10 (db ≥ 中 且 api ≥ 中 触发 deploy-ordering)\n" +
+                "     post = (base + interaction) × breaking_multiplier\n" +
+                "     final = min(post, 100)\n\n" +
+                "### 1. 数据库变更 (权重 40, 三级: 无/中/高)\n" +
+                "- 无(0): 不改数据库或数据文件\n" +
+                "- 中(20): 新增可空列、JSON 字段新增、向后兼容的 schema 扩展\n" +
+                "- 高(40): 删列/改类型/删表/破坏性 schema 变更\n" +
+                "JSON 数据文件为一级公民：仅值更新=0；改键/schema=中档 20\n\n" +
+                "### 2. 接口契约变更 (权重 30, 三级: 无/中/高)\n" +
+                "- 无(0): 不动 API / 纯前端\n" +
+                "- 中(15): 新增可选字段/端点，向后兼容\n" +
+                "- 高(30): 改 path/改必填/删字段/改 response 结构\n\n" +
+                "### 3. 核心依赖变更 (权重 20, 三级: 无/中/高)\n" +
+                "- 无(0): 不改依赖文件\n" +
+                "- 中(10): minor/patch 升级\n" +
+                "- 高(20): 新框架/库或 major 升级\n\n" +
+                "### 4. 影响范围 (动态: 阈值×入度系数)\n" +
+                "基础分: >10 文件=15, 5-10 文件=5, <5 文件=0\n" +
+                "入度系数: isolated×1.0, shared×1.2, core×1.5\n" +
+                "排除自动生成/lockfile。scope_score = round(file_points × in_degree_factor)\n\n" +
+                "### 5. 破坏性变更 (分级放大系数)\n" +
+                "- 无×1.0, 内部×1.2, 内公开×1.5, 外契约×1.8, 删能力×2.0(强制高风险)\n\n" +
+                "### JSON 输出格式\n" +
+                "```json\n" +
+                "{\n" +
+                "  \"schema_version\": 2,\n" +
+                "  \"pr\": \"#编号\",\n" +
+                "  \"title\": \"PR 标题\",\n" +
+                "  \"confidence\": \"high|medium|low\",\n" +
+                "  \"total_score\": 0-100,\n" +
+                "  \"dimensions\": [\n" +
+                "    {\"dimension\": \"数据库变更\", \"risk_level\": \"无风险\", \"weight\": 40, \"tier\": \"无|中|高\", \"applicable\": true, \"score\": 0-40, \"reason\": \"理由\"},\n" +
+                "    {\"dimension\": \"接口契约变更\", \"risk_level\": \"无风险\", \"weight\": 30, \"tier\": \"无|中|高\", \"applicable\": true, \"score\": 0-30, \"reason\": \"理由\"},\n" +
+                "    {\"dimension\": \"核心依赖变更\", \"risk_level\": \"无风险\", \"weight\": 20, \"tier\": \"无|中|高\", \"applicable\": true, \"score\": 0-20, \"reason\": \"理由\"},\n" +
+                "    {\"dimension\": \"影响范围\", \"risk_level\": \"动态分\", \"weight\": \"阈值×入度\", \"tier\": \"isolated|shared|core\", \"applicable\": true, \"score\": 0-22, \"reason\": \"文件数 + 入度\"},\n" +
+                "    {\"dimension\": \"破坏性变更\", \"risk_level\": \"分级放大\", \"weight\": \"multiplier\", \"tier\": \"无|内部|内公开|外契约|删能力\", \"multiplier\": 1.0-2.0, \"applicable\": true, \"reason\": \"理由\"}\n" +
+                "  ],\n" +
+                "  \"interaction\": 0-10,\n" +
+                "  \"summary\": {\n" +
+                "    \"level\": \"低风险|中风险|高风险\",\n" +
+                "    \"conclusion\": \"一句话结论\",\n" +
+                "    \"suggested_action\": \"合并|需修改|需评估|阻断\"\n" +
+                "  }\n" +
+                "}\n" +
+                "```\n\n" +
+                "分数等级: 0-20=低风险, 21-50=中风险, 51-100=高风险\n" +
+                "删能力 breaking 强制 level=高风险\n\n" +
+                "## 重要规则\n" +
+                "- 基于实际 diff 内容评分，不要猜测未出现的变更\n" +
+                "- 严重问题必须具体引用文件路径和行号\n" +
+                "- confidence: high=读完所有 diff 且理解透彻, medium=大致理解但可能有遗漏, low=diff 过大截断或逻辑复杂难判\n" +
+                "- 不要重复 diff 中的代码，指出问题位置和修复方向即可\n" +
+                "- suggested_action: 无严重/需关注问题=合并, 有需关注问题=需评估, 有严重问题=需修改, 删能力/安全漏洞=阻断\n" +
+                "- 所有输出使用中文"
+              )
+            }')
+
+          MESSAGES=$(jq -n -c \
+            --argjson sys "$SYSTEM_PROMPT" \
+            --argjson user "$USER_PROMPT" \
+            '[ $sys, $user ]')
+
+          echo "::group::Calling AI API"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            "https://opencode.ai/zen/go/v1/chat/completions" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $API_KEY" \
+            -d "$(jq -n \
+              --argjson messages "$MESSAGES" \
+              '{
+                model: "deepseek-v4-pro",
+                max_tokens: 4096,
+                temperature: 0.1,
+                messages: $messages
+              }')" \
+            --max-time 180)
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::warning::AI API 调用失败 (HTTP $HTTP_CODE)"
+            echo "❌ AI 审查失败 (HTTP $HTTP_CODE)，请手动审查此 PR。" > /tmp/ai-result.md
+            echo "risk_level=unknown" >> $GITHUB_OUTPUT
+            echo "label=" >> $GITHUB_OUTPUT
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          RESULT=$(echo "$BODY" | jq -r '.choices[0].message.content // empty')
+
+          if [ -z "$RESULT" ]; then
+            echo "::warning::AI API 返回了空内容"
+            echo "❌ AI 返回了空内容，请手动审查此 PR。" > /tmp/ai-result.md
+            echo "risk_level=unknown" >> $GITHUB_OUTPUT
+            echo "label=" >> $GITHUB_OUTPUT
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          echo "::endgroup::"
+
+          # Extract risk level from JSON block
+          JSON_BLOCK=$(echo "$RESULT" | sed -n '/```json/,/```/p' | sed '1d;$d')
+          RISK_LEVEL=$(echo "$JSON_BLOCK" | jq -r '.summary.level // "unknown"' 2>/dev/null || echo "unknown")
+
+          case "$RISK_LEVEL" in
+            "高风险") LABEL="risk:high" ;;
+            "中风险") LABEL="risk:medium" ;;
+            "低风险") LABEL="risk:low" ;;
+            *)       LABEL="" ;;
+          esac
+
+          echo "risk_level=$RISK_LEVEL" >> $GITHUB_OUTPUT
+          echo "label=$LABEL" >> $GITHUB_OUTPUT
+
+          # Add review header with PR context
+          echo "🤖 **AI 代码审查** — PR #$PR_NUMBER: $PR_TITLE" > /tmp/ai-result.md
+          echo "" >> /tmp/ai-result.md
+          echo "---" >> /tmp/ai-result.md
+          echo "" >> /tmp/ai-result.md
+          echo "$RESULT" >> /tmp/ai-result.md
+
+      - name: Post review comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: /tmp/ai-result.md
+
+      - name: Apply risk label
+        if: steps.ai.outputs.label != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABEL: ${{ steps.ai.outputs.label }}
+        run: |
+          echo "Applying label: $LABEL"
+          LABEL_COLOR=""
+          case "$LABEL" in
+            "risk:high")   LABEL_COLOR="dc2626" ;;
+            "risk:medium") LABEL_COLOR="f59e0b" ;;
+            "risk:low")    LABEL_COLOR="22c55e" ;;
+          esac
+
+          gh label create "$LABEL" --color "$LABEL_COLOR" --description "AI PR Review 风险评估" 2>/dev/null || true
+          gh pr edit "${{ github.event.pull_request.number }}" --add-label "$LABEL"
