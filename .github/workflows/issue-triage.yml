@@ -1,4 +1,4 @@
-name: Issue Triage
+﻿name: Issue Triage
 
 on:
   issues:
@@ -152,6 +152,7 @@ jobs:
                 "- 21-50: 中风险\n" +
                 "- 51-100: 高风险\n" +
                 "删能力 breaking 档强制 level=高风险，无视最终分数。\n\n" +
+                "## 输出 JSON 格式\n\n" +
                 "## 评论末尾格式（必须严格遵守）\n\n" +
                 "正文结束后另起一行写 `<!-- @risk-json -->`，然后紧接着放一个 ```json 代码块。\n" +
                 "此 JSON 块仅用于自动提取风险标签，不会显示在评论区。\n" +
