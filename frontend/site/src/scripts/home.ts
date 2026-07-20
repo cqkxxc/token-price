@@ -46,17 +46,22 @@ function filtered(): Model[] {
 }
 function sorted(arr: Model[]): Model[] {
   return [...arr].sort((a, b) => {
-    let va: any, vb: any;
+    let va: string | number | null, vb: string | number | null;
     switch (sort.f) {
       case 'name': va = a.display_name; vb = b.display_name; break;
       case 'input_price': va = num(a.official_input_price); vb = num(b.official_input_price); break;
       case 'output_price': va = num(a.official_output_price); vb = num(b.official_output_price); break;
-      case 'composite_price': va = composite(a) ?? Infinity; vb = composite(b) ?? Infinity; break;
+      case 'composite_price': va = composite(a); vb = composite(b); break;
       default: return 0;
     }
-    return typeof va === 'string'
-      ? (sort.asc ? va.localeCompare(vb) : vb.localeCompare(va))
-      : (sort.asc ? va - vb : vb - va);
+    // Missing prices always stay at the end, regardless of direction.
+    if (va === null && vb === null) return a.display_name.localeCompare(b.display_name);
+    if (va === null) return 1;
+    if (vb === null) return -1;
+    const compared = typeof va === 'string'
+      ? va.localeCompare(String(vb))
+      : va - Number(vb);
+    return (sort.asc ? compared : -compared) || a.display_name.localeCompare(b.display_name);
   });
 }
 
@@ -67,7 +72,7 @@ function renderTable() {
   const em = $('emptyState')!;
   if (!list.length) { tb.innerHTML = ''; em.style.display = 'block'; }
   else { em.style.display = 'none'; tb.innerHTML = list.map((m) => rowHTML(m, pricesOf(m.canonical_id), MANIFEST)).join(''); }
-  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · ${String(META.data_updated_at || '').slice(0, 10)}`;
+  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · 表内为官方价 · ${String(META.data_updated_at || '').slice(0, 10)}`;
 }
 function syncChips() {
   document.querySelectorAll<HTMLElement>('#companyChips .chip').forEach((c) =>
@@ -77,7 +82,7 @@ function syncChips() {
   document.querySelectorAll<HTMLElement>('[data-hot-model]').forEach((el) => {
     const on = el.dataset.hotModel === hotModelKey;
     el.classList.toggle('active', on);
-    el.setAttribute('aria-pressed', String(on));
+    if (el.matches('button')) el.setAttribute('aria-pressed', String(on));
   });
 }
 function updateSortHeaders() {
@@ -102,9 +107,9 @@ function openDrawer(slug: string) {
       '<div class="drawer-model-meta">' + esc(companyName(m)) + ' · ' + (m.capabilities || []).slice(0, 3).map(esc).join(' · ') +
       ' · ' + esc(m.context_window || '—') + ' · ' + ps.length + ' 家供应方</div></div></div>' +
     (m.description ? '<p class="model-description">' + esc(m.description) + '</p>' : '') +
-    '<div class="price-summary"><div><small>输入价</small><div class="price-cell">' + priceText(m.official_input_price, m) + '</div></div>' +
-      '<div><small>输出价</small><div class="price-cell">' + priceText(m.official_output_price, m) + '</div></div>' +
-      '<div><small>综合价</small><div class="price-cell">' + (comp === null ? '—' : priceText(comp, m)) + '</div></div></div>' +
+    '<div class="price-summary"><div><small>官方输入价</small><div class="price-cell">' + priceText(m.official_input_price, m) + '</div></div>' +
+      '<div><small>官方输出价</small><div class="price-cell">' + priceText(m.official_output_price, m) + '</div></div>' +
+      '<div><small>官方综合价</small><div class="price-cell">' + (comp === null ? '—' : priceText(comp, m)) + '</div></div></div>' +
     '<div class="drawer-section-title">供应商比价</div>' +
     '<div class="drawer-table-scroll">' + priceTableHTML(m, pricesOf(m.canonical_id)) + '</div>';
   $('drawerOverlay')!.style.display = 'block';
@@ -133,9 +138,19 @@ function initMarquee() {
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
   const company = target.closest<HTMLElement>('[data-company]');
-  if (company) { activeCompany = company.dataset.company || null; syncChips(); renderTable(); return; }
+  if (company) {
+    activeCompany = company.dataset.company || null;
+    hotModelKey = null; searchQuery = '';
+    const search = $('globalSearch') as HTMLInputElement | null; if (search) search.value = '';
+    syncChips(); renderTable(); return;
+  }
   const cap = target.closest<HTMLElement>('[data-capability]');
-  if (cap) { activeCapability = cap.dataset.capability || null; syncChips(); renderTable(); return; }
+  if (cap) {
+    activeCapability = cap.dataset.capability || null;
+    hotModelKey = null; searchQuery = '';
+    const search = $('globalSearch') as HTMLInputElement | null; if (search) search.value = '';
+    syncChips(); renderTable(); return;
+  }
   const hot = target.closest<HTMLElement>('[data-hot-model]');
   if (hot) {
     const key = hot.dataset.hotModel!;
@@ -155,7 +170,11 @@ document.addEventListener('click', (e) => {
   if (target.closest('#drawerOverlay') || target.closest('#drawerClose')) closeDrawer();
 });
 $('globalSearch')?.addEventListener('input', (e) => {
-  searchQuery = (e.target as HTMLInputElement).value; renderTable();
+  searchQuery = (e.target as HTMLInputElement).value.trim();
+  if (searchQuery) {
+    hotModelKey = null; activeCompany = null; activeCapability = null;
+  }
+  syncChips(); renderTable();
 });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
 

@@ -137,10 +137,14 @@ export function priceTableHTML(m: Model, prices: Price[]): string {
   return (
     '<table class="drawer-table">' +
     '<colgroup><col class="dt-col-supplier"><col class="dt-col-type"><col class="dt-col-route"><col class="dt-col-price"><col class="dt-col-price"><col class="dt-col-composite"><col class="dt-col-action"></colgroup>' +
-    '<thead><tr><th>供应方</th><th>类型</th><th>线路</th><th class="dt-num">输入</th><th class="dt-num">输出</th><th class="dt-num">综合</th><th class="dt-action">操作</th></tr></thead><tbody>' +
+    '<thead><tr><th>供应方</th><th>类型</th><th>线路</th>' +
+      '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="input"><span>输入</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
+      '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="output"><span>输出</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
+      '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="composite"><span>综合</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
+      '<th class="dt-action">操作</th></tr></thead><tbody>' +
     sorted.map((p) => {
       const pc = quoteTotal(p, m);
-      return '<tr><td class="dt-supplier">' + esc(p.supplier_name) + '</td>' +
+      return '<tr data-input-price="' + num(p.input_price) + '" data-output-price="' + num(p.output_price) + '" data-composite-price="' + pc + '" data-supplier="' + esc(p.supplier_name) + '"><td class="dt-supplier">' + esc(p.supplier_name) + '</td>' +
         '<td><span class="tag ' + (p.supplier_type === 'official' ? 'tag-official' : 'tag-relay') + '">' + (p.supplier_type === 'official' ? '官方' : '中转') + '</span></td>' +
         '<td class="dt-route">' + esc(p.route) + '</td>' +
         '<td class="price-cell dt-num">¥' + num(p.input_price).toFixed(2) + '</td>' +

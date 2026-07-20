@@ -574,7 +574,9 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .hot-models-track::-webkit-scrollbar{display:none}
 .hot-models-marquee{display:flex;width:max-content;animation:hotModelsMarquee 36s linear infinite;will-change:transform}
 .hot-models-group{display:flex;flex-shrink:0;gap:10px;padding-right:10px}
-.hot-models-viewport:hover .hot-models-marquee,.hot-models-track.user-paused .hot-models-marquee{animation-play-state:paused}
+.hot-models-viewport:hover .hot-models-marquee,
+.hot-models-viewport:focus-within .hot-models-marquee,
+.hot-models-track.user-paused .hot-models-marquee{animation-play-state:paused}
 @keyframes hotModelsMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .hot-model-card{
   height:44px;
@@ -775,22 +777,21 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 }
 .sort-control:hover{color:#d7e6f1;background:rgba(78,168,255,.045)}
 .model-table thead th.sortable.active{color:#d6ecfa}
-.sort-arrow{position:relative;display:inline-block;width:14px;height:14px;margin-left:7px;color:#53616f}
-.sort-arrow::before,.sort-arrow::after{
-  content:'';
-  position:absolute;
-  left:4px;
-  width:5px;
-  height:5px;
-  border-right:1.5px solid currentColor;
-  border-bottom:1.5px solid currentColor;
+.sort-arrow{
+  width:14px;
+  height:16px;
+  margin-left:4px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#596979;
+  font:600 13px/1 var(--font-mono);
 }
-.sort-arrow::before{top:1px;transform:rotate(225deg)}
-.sort-arrow::after{bottom:1px;transform:rotate(45deg)}
+.sort-arrow::before{content:'⇅'}
 .model-table thead th.sortable:hover .sort-arrow{color:#8eb8d9}
 .model-table thead th.sortable.active .sort-arrow{color:var(--cyan)}
-.model-table thead th.sortable.active.asc .sort-arrow::after,
-.model-table thead th.sortable.active.desc .sort-arrow::before{opacity:.18}
+.model-table thead th.sortable.active.asc .sort-arrow::before{content:'↑'}
+.model-table thead th.sortable.active.desc .sort-arrow::before{content:'↓'}
 .model-table tbody tr{background:#070b10}
 .model-table tbody td{
   height:64px;
@@ -956,6 +957,30 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .drawer-table colgroup .dt-col-composite{width:19%}
 .drawer-table colgroup .dt-col-action{width:13%}
 .drawer-table th{padding:10px 12px;border-bottom:1px solid rgba(140,190,236,.22);color:#8a98a7;font-size:10px;font-weight:600;text-align:left;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.drawer-table th.dt-sortable{padding:0}
+.dt-sort-control{
+  width:100%;
+  min-height:39px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  border:0;
+  outline:none;
+  color:inherit;
+  background:transparent;
+  font:inherit;
+  text-transform:inherit;
+  letter-spacing:inherit;
+  cursor:pointer;
+  transition:color .15s ease,background .15s ease;
+}
+.dt-sort-control:hover{color:#d7e6f1;background:rgba(78,168,255,.055)}
+.drawer-table th.dt-sortable.active{color:#d6ecfa}
+.drawer-table th.dt-sortable:hover .sort-arrow{color:#8eb8d9}
+.drawer-table th.dt-sortable.active .sort-arrow{color:var(--cyan)}
+.drawer-table th.dt-sortable.active.asc .sort-arrow::before{content:'↑'}
+.drawer-table th.dt-sortable.active.desc .sort-arrow::before{content:'↓'}
 .drawer-table td{padding:12px;border-bottom:1px solid rgba(151,193,229,.09);color:#cbd5dd;font-size:13px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .drawer-table th.dt-num,.drawer-table td.dt-num{text-align:right;font-variant-numeric:tabular-nums}
 .drawer-table th.dt-action,.drawer-table td.dt-action{text-align:right}
@@ -1020,6 +1045,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .hot-model-card:focus-visible,
 .chip:focus-visible,
 .sort-control:focus-visible,
+.dt-sort-control:focus-visible,
 .btn-compare:focus-visible,
 .source-link:focus-visible,
 .btn-drawer-close:focus-visible,

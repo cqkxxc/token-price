@@ -16,13 +16,18 @@ const hotScrollModels = [
   { slug: 'gpt-5.5' }, { slug: 'claude-sonnet-5' }, { slug: 'gpt-5.6-sol' },
   { slug: 'grok-4.5' }, { slug: 'deepseek-v4-pro' }, { slug: 'glm-5.2' }, { slug: 'kimi-k2.7-code' },
 ];
-const hotCards = hotScrollModels
+const renderHotCards = (isVisualClone = false) => hotScrollModels
   .map((h) => {
     const m = MODELS.find((x) => x.slug === h.slug);
     if (!m) return '';
-    return `<button class="hot-model-card" type="button" data-hot-model="${m.slug}" aria-pressed="false">${modelLogo(m, MANIFEST, 'hot-model-logo')}<span>${m.display_name}</span></button>`;
+    const content = `${modelLogo(m, MANIFEST, 'hot-model-logo')}<span>${m.display_name}</span>`;
+    return isVisualClone
+      ? `<span class="hot-model-card" data-hot-model="${m.slug}">${content}</span>`
+      : `<button class="hot-model-card" type="button" data-hot-model="${m.slug}" aria-pressed="false">${content}</button>`;
   })
   .join('');
+const hotCards = renderHotCards();
+const hotCardsClone = renderHotCards(true);
 
 const updatedAt = String(META.data_updated_at || '');
 const updated = updatedAt.slice(0, 10);
@@ -82,7 +87,7 @@ const dataset = JSON.stringify(clientDataset()).replace(/</g, '\\u003c');
       <div class="hot-models-viewport"><div class="hot-models-track" id="hotModelsTrack">
         <div class="hot-models-marquee">
           <div class="hot-models-group" set:html={hotCards}></div>
-          <div class="hot-models-group" aria-hidden="true" inert set:html={hotCards}></div>
+          <div class="hot-models-group" aria-hidden="true" set:html={hotCardsClone}></div>
         </div>
       </div></div>
     </section>
@@ -98,7 +103,7 @@ const dataset = JSON.stringify(clientDataset()).replace(/</g, '\\u003c');
             <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
             <input type="text" id="globalSearch" placeholder="搜索模型名称、厂商、能力…" autocomplete="off" aria-label="搜索模型">
           </div>
-          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · {updated}</span>
+          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · 表内为官方价 · {updated}</span>
         </div>
         <div class="filter-controls">
           <div class="filter-row"><span class="filter-label">厂商</span>
@@ -131,11 +136,11 @@ const dataset = JSON.stringify(clientDataset()).replace(/</g, '\\u003c');
       </div>
 
       <div class="table-wrap"><div class="table-scroll"><table class="model-table"><caption class="sr-only">AI 模型官方价格与供应商报价对比</caption><thead><tr>
-        <th class="sortable" data-sort="name" id="th-name" scope="col"><button type="button" class="sort-control"><span>模型</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
-        <th scope="col">厂商</th><th scope="col">能力</th>
-        <th class="sortable" data-sort="input_price" id="th-input" scope="col"><button type="button" class="sort-control"><span>输入价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
-        <th class="sortable" data-sort="output_price" id="th-output" scope="col"><button type="button" class="sort-control"><span>输出价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
-        <th class="sortable active desc" data-sort="composite_price" id="th-composite" scope="col"><button type="button" class="sort-control"><span>综合价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
+        <th class="sortable" data-sort="name" id="th-name" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>模型</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
+        <th scope="col">模型厂商</th><th scope="col">能力</th>
+        <th class="sortable" data-sort="input_price" id="th-input" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输入价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
+        <th class="sortable" data-sort="output_price" id="th-output" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输出价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
+        <th class="sortable active desc" data-sort="composite_price" id="th-composite" scope="col" aria-sort="descending"><button type="button" class="sort-control"><span>官方综合价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
         <th scope="col">折扣</th><th scope="col">渠道</th><th scope="col"><span class="sr-only">操作</span></th>
       </tr></thead><tbody id="tableBody" set:html={initialRows}></tbody></table></div>
         <div class="empty-state" id="emptyState" style="display:none">没有匹配的模型</div>
