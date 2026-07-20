@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { MODELS, MANIFEST, pricesOf } from '../../lib/data';
+import { MODELS, MANIFEST, pricesOf, stabilityOf } from '../../lib/data';
 import {
   modelLogo, companyName, composite, activePrices, priceText, priceTableHTML, esc,
 } from '../../lib/render';
@@ -17,7 +17,7 @@ const desc = m.description
   ? m.description.slice(0, 140)
   : `${m.display_name} 官方价格与各中转站报价对比。`;
 const header = modelLogo(m, MANIFEST, 'model-avatar-lg');
-const priceTable = priceTableHTML(m, pricesOf(m.canonical_id));
+const priceTable = priceTableHTML(m, pricesOf(m.canonical_id), stabilityOf(m.canonical_id));
 ---
 <Base title={`${m.display_name} 价格比价 — 官方价与中转站对比`} description={desc}>
   <div class="page active">

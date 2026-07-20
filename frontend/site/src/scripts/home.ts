@@ -5,10 +5,10 @@
 import {
   rowHTML, priceTableHTML, modelLogo, companyName, composite, activePrices,
   discountFor, quoteTotal, num, esc, priceText,
-  type Model, type Price, type Manifest,
+  type Model, type Price, type Manifest, type Stability,
 } from '../lib/render';
 
-interface Dataset { models: Model[]; prices: Price[]; meta: any; manifest: Manifest; }
+interface Dataset { models: Model[]; prices: Price[]; stability: Stability[]; meta: any; manifest: Manifest; }
 const raw = document.getElementById('__DATA__')?.textContent || '{}';
 const DATA: Dataset = JSON.parse(raw);
 const MODELS = DATA.models || [];
@@ -21,6 +21,13 @@ for (const p of DATA.prices || []) {
   priceMap.get(p.canonical_id)!.push(p);
 }
 const pricesOf = (cid: string): Price[] => priceMap.get(cid) || [];
+
+const stabilityMap = new Map<string, Stability[]>();
+for (const item of DATA.stability || []) {
+  if (!stabilityMap.has(item.canonical_id)) stabilityMap.set(item.canonical_id, []);
+  stabilityMap.get(item.canonical_id)!.push(item);
+}
+const stabilityOf = (cid: string): Stability[] => stabilityMap.get(cid) || [];
 
 // ── 状态 ────────────────────────────────────────────────
 let activeCompany: string | null = null;
@@ -111,7 +118,7 @@ function openDrawer(slug: string) {
       '<div><small>官方输出价</small><div class="price-cell">' + priceText(m.official_output_price, m) + '</div></div>' +
       '<div><small>官方综合价</small><div class="price-cell">' + (comp === null ? '—' : priceText(comp, m)) + '</div></div></div>' +
     '<div class="drawer-section-title">供应商比价</div>' +
-    '<div class="drawer-table-scroll">' + priceTableHTML(m, pricesOf(m.canonical_id)) + '</div>';
+    '<div class="drawer-table-scroll">' + priceTableHTML(m, pricesOf(m.canonical_id), stabilityOf(m.canonical_id)) + '</div>';
   $('drawerOverlay')!.style.display = 'block';
   $('drawer')!.style.display = 'block';
   document.body.style.overflow = 'hidden';
