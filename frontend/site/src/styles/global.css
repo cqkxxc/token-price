@@ -802,9 +802,10 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   font-size:14px;
   vertical-align:middle;
   white-space:nowrap;
-  transition:background .16s ease,box-shadow .16s ease;
+  transition:background-color .16s ease;
 }
-.model-table tbody tr:hover td{background:linear-gradient(90deg,rgba(78,168,255,.075),rgba(34,211,238,.025) 52%,rgba(7,11,16,.96))}
+.model-table tbody tr:hover td{background-color:#0a1118}
+.model-table tbody td:first-child{transition:background-color .16s ease,box-shadow .16s ease}
 .model-table tbody tr:hover td:first-child{box-shadow:inset 2px 0 var(--cyan)}
 .model-table tbody tr:last-child td{border-bottom:none}
 .model-table thead th:last-child,.model-table tbody td:last-child{
@@ -815,7 +816,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   box-shadow:-18px 0 24px -20px rgba(0,0,0,.96),-1px 0 rgba(136,187,231,.08);
 }
 .model-table thead th:last-child{z-index:3;background:#0a0f15}
-.model-table tbody tr:hover td:last-child{background:#0c151d}
+.model-table tbody tr:hover td:last-child{background-color:#0c151d}
 
 /* ── Model cells and prices ───────────────────────────── */
 .model-cell{display:flex;align-items:center;gap:12px;min-width:0}

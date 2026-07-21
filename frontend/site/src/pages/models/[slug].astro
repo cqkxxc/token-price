@@ -1,9 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { MODELS, MANIFEST, pricesOf, stabilityOf } from '../../lib/data';
+import { MODELS, MANIFEST, META, pricesOf, stabilityOf } from '../../lib/data';
 import {
   modelLogo, companyName, composite, activePrices, priceText, priceTableHTML, esc,
 } from '../../lib/render';
+import { modelJsonLd } from '../../lib/seo';
 
 export function getStaticPaths() {
   return MODELS.map((m) => ({ params: { slug: m.slug }, props: { model: m } }));
@@ -18,8 +19,14 @@ const desc = m.description
   : `${m.display_name} 官方价格与各中转站报价对比。`;
 const header = modelLogo(m, MANIFEST, 'model-avatar-lg');
 const priceTable = priceTableHTML(m, pricesOf(m.canonical_id), stabilityOf(m.canonical_id));
+const jsonLd = modelJsonLd(
+  Astro.site || new URL(Astro.url.origin),
+  m,
+  pricesOf(m.canonical_id),
+  META.data_updated_at,
+);
 ---
-<Base title={`${m.display_name} 价格比价 — 官方价与中转站对比`} description={desc}>
+<Base title={`${m.display_name} 价格比价 — 官方价与中转站对比`} description={desc} jsonLd={jsonLd}>
   <div class="page active">
     <div class="page-container" style="padding-top:32px">
       <a class="back-link" href="/">← 返回比价列表</a>

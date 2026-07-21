@@ -8,7 +8,7 @@ export interface Model {
   slug: string; display_name: string; canonical_id: string; company: Company;
   series?: string; capabilities?: string[]; pricing_method: string; context_window?: string | null;
   official_input_price: number; official_output_price: number; official_currency?: string;
-  description?: string; supplier_count?: number; has_online_supplier?: boolean;
+  publish_date?: string; description?: string; supplier_count?: number; has_online_supplier?: boolean;
 }
 export interface Price {
   canonical_id: string; supplier_slug: string; supplier_name: string; supplier_type: string;

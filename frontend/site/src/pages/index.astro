@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { MODELS, PRICES, SUPPLIERS, MANIFEST, META, pricesOf, clientDataset } from '../lib/data';
 import { rowHTML, modelLogo, vendorIconFor, companyName, composite, num } from '../lib/render';
+import { homeJsonLd } from '../lib/seo';
 
 // ── 首屏筛选器数据（构建期计算）────────────────────────
 const companies = [...new Map(MODELS.map((m) => [m.company.slug, m])).values()];
@@ -33,8 +34,9 @@ const updatedAt = String(META.data_updated_at || '');
 const updated = updatedAt.slice(0, 10);
 const activeQuoteCount = PRICES.filter((p) => p.is_active === true && p.source_url).length;
 const dataset = JSON.stringify(clientDataset()).replace(/</g, '\\u003c');
+const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), MODELS, updatedAt);
 ---
-<Base title="AI 模型价格比价 — 官方价与中转站价格对比">
+<Base title="AI 模型价格比价 — 官方价与中转站价格对比" jsonLd={jsonLd}>
   <div id="page-home" class="page active">
     <header class="page-intro">
       <div class="hero-effects" aria-hidden="true">
