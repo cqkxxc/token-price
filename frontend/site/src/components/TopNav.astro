@@ -1,5 +1,17 @@
 ---
+const pathname = Astro.url.pathname;
+const isModels = pathname === '/' || pathname.startsWith('/models/');
+const isMonitor = pathname === '/monitor' || pathname.startsWith('/monitor/');
 ---
-<nav class="topnav" id="topNav" aria-label="主导航"><div class="topnav-inner">
-  <a class="topnav-brand" href="/"><div class="topnav-brand-dot">AI</div>AI 模型比价</a>
-</div></nav>
+<nav class="topnav" id="topNav" aria-label="主导航">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="/" aria-label="AI 模型比价首页">
+      <span class="topnav-brand-dot" aria-hidden="true">AI</span>
+      <span>AI 模型比价</span>
+    </a>
+    <div class="topnav-links">
+      <a class="topnav-link" href="/" aria-current={isModels ? 'page' : undefined}>模型比价</a>
+      <a class="topnav-link" href="/monitor/" aria-current={isMonitor ? 'page' : undefined}>可用性监控</a>
+    </div>
+  </div>
+</nav>

@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { MODELS, MANIFEST, META, pricesOf, stabilityOf } from '../../lib/data';
 import {
-  modelLogo, companyName, composite, activePrices, priceText, priceTableHTML, esc,
+  modelLogo, companyName, activePrices, officialPriceDisplay, priceTableHTML, esc,
 } from '../../lib/render';
 import { modelJsonLd } from '../../lib/seo';
 
@@ -12,13 +12,15 @@ export function getStaticPaths() {
 
 const { model: m } = Astro.props;
 const ps = activePrices(pricesOf(m.canonical_id));
-const comp = composite(m);
-const caps = (m.capabilities || []).slice(0, 3).join(' · ');
+const supplierCount = new Set(ps.map((price) => price.supplier_slug)).size;
+const official = officialPriceDisplay(m);
 const desc = m.description
   ? m.description.slice(0, 140)
   : `${m.display_name} 官方价格与各中转站报价对比。`;
 const header = modelLogo(m, MANIFEST, 'model-avatar-lg');
-const priceTable = priceTableHTML(m, pricesOf(m.canonical_id), stabilityOf(m.canonical_id));
+const priceTable = ps.length
+  ? priceTableHTML(m, pricesOf(m.canonical_id), stabilityOf(m.canonical_id))
+  : '';
 const jsonLd = modelJsonLd(
   Astro.site || new URL(Astro.url.origin),
   m,
@@ -31,15 +33,22 @@ const jsonLd = modelJsonLd(
     <div class="page-container" style="padding-top:32px">
       <a class="back-link" href="/">← 返回比价列表</a>
       <div class="detail-card">
-        <div class="drawer-model-header" set:html={header + `<div><div class="drawer-model-name">${esc(m.display_name)}</div><div class="drawer-model-meta">${esc(companyName(m))} · ${(m.capabilities || []).map(esc).join(' · ')} · ${esc(m.context_window || '—')} · ${ps.length} 家供应方</div></div>`}></div>
+        <div class="drawer-model-header" set:html={header + `<div><h1 class="drawer-model-name">${esc(m.display_name)}</h1><div class="drawer-model-meta">${esc(companyName(m))} · ${(m.capabilities || []).map(esc).join(' · ')} · ${esc(m.context_window || '上下文未提供')} · ${supplierCount} 家供应商 · ${ps.length} 条报价线路</div></div>`}></div>
         {m.description && <p class="model-description">{m.description}</p>}
         <div class="price-summary" style="margin-top:20px">
-          <div><small>官方输入价</small><div class="price-cell" set:html={priceText(m.official_input_price, m)}></div></div>
-          <div><small>官方输出价</small><div class="price-cell" set:html={priceText(m.official_output_price, m)}></div></div>
-          <div><small>官方综合价</small><div class="price-cell" set:html={comp === null ? '—' : priceText(comp, m)}></div></div>
+          <div><small>{official.primaryLabel}</small><div class="price-cell" set:html={official.primaryHtml}></div></div>
+          <div><small>官方输出价</small><div class="price-cell" set:html={official.outputHtml}></div></div>
+          <div><small>官方综合价</small><div class="price-cell" set:html={official.compositeHtml}></div></div>
         </div>
-        <div class="drawer-section-title">供应商比价（{ps.length} 家）</div>
-        <div class="table-wrap" set:html={priceTable}></div>
+        <h2 class="drawer-section-title">供应商比价（{supplierCount} 家 · {ps.length} 条线路）</h2>
+        {ps.length ? (
+          <div class="table-wrap" set:html={priceTable}></div>
+        ) : (
+          <section class="verified-quotes-empty" aria-labelledby="verifiedQuotesEmptyTitle">
+            <h2 id="verifiedQuotesEmptyTitle">暂无已验证报价</h2>
+            <p>当前数据快照没有带可追溯来源的有效供应商报价，页面不会使用估算价格补齐。</p>
+          </section>
+        )}
       </div>
     </div>
   </div>

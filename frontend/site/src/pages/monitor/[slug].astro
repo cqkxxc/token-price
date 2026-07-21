@@ -1,0 +1,134 @@
+---
+import Base from '../../layouts/Base.astro';
+import { MODELS, STABILITY } from '../../lib/data';
+import { monitorSupplierJsonLd } from '../../lib/seo';
+
+type StabilityRecord = (typeof STABILITY)[number] & {
+  response_text?: string | null;
+  source_url?: string | null;
+};
+type MonitorStatus = StabilityRecord['status'];
+
+export function getStaticPaths() {
+  const recordsBySupplier = new Map<string, StabilityRecord[]>();
+  for (const record of STABILITY as StabilityRecord[]) {
+    if (!(
+      record.last_checked_at
+      && record.source_url
+      && (
+        record.uptime_7d != null
+        || record.avg_latency_ms != null
+        || record.last_response_time_ms != null
+      )
+    )) continue;
+    const records = recordsBySupplier.get(record.supplier_slug) ?? [];
+    records.push(record);
+    recordsBySupplier.set(record.supplier_slug, records);
+  }
+  return Array.from(recordsBySupplier, ([slug, records]) => ({
+    params: { slug },
+    props: { records },
+  }));
+}
+
+const { records } = Astro.props as { records: StabilityRecord[] };
+const supplierName = records[0]?.supplier_name || Astro.params.slug || '供应商';
+const modelBySlug = new Map(MODELS.map((model) => [model.slug, model]));
+
+const statusLabel = (status: MonitorStatus) => ({
+  online: '正常',
+  degraded: '波动',
+  offline: '离线',
+  unknown: '待确认',
+}[status]);
+
+const formatTime = (value: string | null | undefined) => {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return new Intl.DateTimeFormat('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(date);
+};
+
+const sortedRecords = [...records].sort((left, right) => {
+  const leftName = modelBySlug.get(left.model_slug)?.display_name || left.model_slug;
+  const rightName = modelBySlug.get(right.model_slug)?.display_name || right.model_slug;
+  return leftName.localeCompare(rightName, 'zh-CN') || left.route.localeCompare(right.route, 'zh-CN');
+});
+const modelCount = new Set(records.map((record) => record.model_slug)).size;
+const latestCheckedAt = records
+  .map((record) => record.last_checked_at)
+  .filter((value): value is string => Boolean(value))
+  .sort((left, right) => Date.parse(right) - Date.parse(left))[0] ?? null;
+const description = `${supplierName} 模型线路的上游近 7 天稳定率、响应延迟与最近更新时间。指标直接来自带来源链接的上游监控记录，不代表本站主动探测。`;
+const jsonLd = monitorSupplierJsonLd(
+  Astro.site || new URL(Astro.url.origin),
+  Astro.params.slug || supplierName,
+  supplierName,
+  description,
+  modelCount,
+  records.length,
+  latestCheckedAt || undefined,
+);
+---
+<Base title={`${supplierName} 可用性监控 — AI 模型比价`} description={description} jsonLd={jsonLd}>
+  <div class="page active">
+    <div class="page-container monitor-page">
+      <a class="back-link" href="/monitor/">← 返回供应商监控</a>
+      <header class="monitor-page-header monitor-detail-header">
+        <p class="monitor-kicker">SUPPLIER ROUTE DETAIL</p>
+        <h1>{supplierName}<em>线路监控</em></h1>
+        <p>{description}</p>
+      </header>
+
+      <dl class="monitor-detail-summary">
+        <div><dt>已验证模型</dt><dd>{modelCount}</dd></div>
+        <div><dt>线路记录</dt><dd>{records.length}</dd></div>
+        <div><dt>最近更新</dt><dd><time datetime={latestCheckedAt || undefined}>{formatTime(latestCheckedAt)}</time></dd></div>
+      </dl>
+
+      <div class="monitor-table-wrap">
+        <table class="monitor-detail-table">
+          <caption class="sr-only">{supplierName} 上游近 7 天模型线路监控详情</caption>
+          <thead>
+            <tr>
+              <th scope="col">模型</th>
+              <th scope="col">线路</th>
+              <th scope="col">状态</th>
+              <th scope="col">稳定率</th>
+              <th scope="col">响应延迟</th>
+              <th scope="col">检查时间</th>
+              <th scope="col">数据来源</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedRecords.map((record) => {
+              const model = modelBySlug.get(record.model_slug);
+              const latency = record.last_response_time_ms ?? record.avg_latency_ms;
+              return (
+                <tr>
+                  <th scope="row"><a href={`/models/${encodeURIComponent(record.model_slug)}/`}>{model?.display_name || record.model_slug}</a></th>
+                  <td class="monitor-route">{record.route}</td>
+                  <td><span class="monitor-status"><span class={`status-dot ${record.status}`} aria-hidden="true"></span><span class={`status-text ${record.status}`}>{statusLabel(record.status)}</span></span></td>
+                  <td class="monitor-metric">{record.uptime_7d != null ? `${record.uptime_7d.toFixed(2)}%` : '—'}</td>
+                  <td class="monitor-metric">{latency != null ? `${Math.round(latency)}ms` : '—'}</td>
+                  <td><time datetime={record.last_checked_at || undefined}>{formatTime(record.last_checked_at)}</time></td>
+                  <td><a class="source-link" href={record.source_url!} target="_blank" rel="noopener noreferrer">查看上游记录<span class="sr-only">（新窗口打开）</span></a></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p class="monitor-data-note">数据来自上游近 7 天监控，并非本站主动探测。“—” 表示上游未提供该项指标，页面不会用估算值补齐。</p>
+    </div>
+  </div>
+</Base>

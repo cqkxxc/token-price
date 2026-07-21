@@ -9,12 +9,14 @@ import suppliersJson from '../data/suppliers.json';
 import metaJson from '../data/meta.json';
 import manifestJson from '../data/manifest.json';
 import stabilityJson from '../data/stability.json';
-import type { Model, Price, Supplier, Manifest, Stability } from './render';
+import type { Model, Price, Supplier, Manifest, Stability, DataMeta } from './render';
 
 export const MODELS: Model[] = (modelsJson as any).models ?? [];
 export const PRICES: Price[] = (pricesJson as any).prices ?? [];
 export const SUPPLIERS: Supplier[] = (suppliersJson as any).suppliers ?? [];
-export const META: any = metaJson ?? {};
+// JSON is validated before every production build; the double assertion keeps
+// stale local fixtures from weakening the TypeScript contract.
+export const META: DataMeta = metaJson as unknown as DataMeta;
 export const MANIFEST: Manifest = manifestJson as Manifest;
 export const STABILITY: Stability[] = (stabilityJson as any).stability ?? [];
 
@@ -40,17 +42,4 @@ export function stabilityOf(canonicalId: string): Stability[] {
 
 export function getModel(slug: string): Model | undefined {
   return MODELS.find((m) => m.slug === slug);
-}
-
-// 客户端交互脚本需要的最小数据集（序列化进 <script type="application/json">）
-export function clientDataset() {
-  // 完整稳定性文件约 890KB；首页抽屉只下发当前有效报价能用到的记录。
-  const quotedKeys = new Set(
-    PRICES
-      .filter((p) => p.is_active === true && p.source_url)
-      .map((p) => `${p.supplier_slug}::${p.canonical_id}::${p.route || 'default'}`),
-  );
-  const stability = STABILITY.filter((item) =>
-    quotedKeys.has(`${item.supplier_slug}::${item.canonical_id}::${item.route || 'default'}`));
-  return { models: MODELS, prices: PRICES, stability, meta: META, manifest: MANIFEST };
 }

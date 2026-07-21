@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-20T06:20:06Z",
+  "updated_at": "2026-07-21T08:21:41Z",
   "models": [
     {
       "slug": "gpt-5.6-sol",
@@ -23,13 +23,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "1M",
-      "official_input_price": 33.89,
-      "official_output_price": 203.32,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 203.007,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
       "publish_date": "2026-07-09",
       "description": "GPT-5.6 Sol 重新树立智能与效率双重行业标准，在代码开发、专业知识工作、网络安全、前沿科研四大领域取得业界顶尖成绩；对比前代及竞品旗舰模型，完成同等任务消耗更少 Token、综合成本更低，单位投入可产出更高质量工作成果。\nSol 专为极限深度推理、长周期复杂智能体任务打造，独家开放max极限推理强度、ultra多智能体协同工作模式。",
-      "supplier_count": 7,
+      "supplier_count": 63,
       "has_online_supplier": true
     },
     {
@@ -52,13 +53,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "1M",
-      "official_input_price": 6.78,
-      "official_output_price": 40.66,
+      "context_window": null,
+      "official_input_price": 6.7669,
+      "official_output_price": 40.6014,
       "official_currency": "CNY",
+      "official_price_source": "OpenAI",
       "publish_date": "2026-07-09",
       "description": "GPT-5.6 Luna 是 GPT-5.6 全系中速度最快、成本最低的模型。它以极低延迟与成本，性能超越上一代旗舰 Opus 4.8，专为高并发、轻量化线上生产场景打造。该模型完整继承系列全部基础能力：150 万 token 上下文窗口、原生图像输入、多步骤推理、轻量 Codex 代码工具、适配简易智能体流程的函数调用。",
-      "supplier_count": 7,
+      "supplier_count": 63,
       "has_online_supplier": true
     },
     {
@@ -82,12 +84,13 @@
       ],
       "pricing_method": "per_token",
       "context_window": null,
-      "official_input_price": 20,
-      "official_output_price": 100,
+      "official_input_price": 20.0,
+      "official_output_price": 100.0,
       "official_currency": "CNY",
+      "official_price_source": "Kimi",
       "publish_date": "2026-07-16",
       "description": "Kimi K3 是月之暗面（Moonshot AI）迄今为止最强旗舰模型，一款拥有 2.8 万亿参数的混合专家模型，基于自研 KDA（Kimi Delta Attention）架构打造。\n模型原生搭载 100 万 Token 上下文窗口，内置视觉理解能力，支持图片与视频输入；默认持续开启思考模式，适配复杂、长周期智能体任务。\nK3 在长周期代码开发、深度学术研究、多模态闭环推理、超长文档分析领域实现性能突破。能够持续运行长时间工程流程、读懂大型代码库，并依托截图、设计素材等视觉反馈持续迭代方案。",
-      "supplier_count": 7,
+      "supplier_count": 26,
       "has_online_supplier": true
     },
     {
@@ -107,13 +110,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "1M",
-      "official_input_price": 33.89,
-      "official_output_price": 203.32,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 203.007,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
       "publish_date": "2026-04-24",
       "description": "GPT-5.5 是 OpenAI 面向复杂专业工作负载打造的前沿模型，在 GPT-5.4 的基础上进一步增强了推理能力、可靠性，并提升了困难任务中的 token 效率。它具备 100 万以上 token 的上下文窗口（922K 输入、128K 输出），支持文本和图像输入，可在单一系统中完成大规模推理、编码和多模态工作流。",
-      "supplier_count": 7,
+      "supplier_count": 64,
       "has_online_supplier": true
     },
     {
@@ -138,13 +142,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "200K",
-      "official_input_price": 13.55,
-      "official_output_price": 67.78,
+      "context_window": null,
+      "official_input_price": 13.5338,
+      "official_output_price": 67.669,
       "official_currency": "CNY",
+      "official_price_source": "Anthropic",
       "publish_date": "2026-07-01",
-      "description": "Claude Sonnet 5 是迄今为止智能体能力最强的 Sonnet 系列模型。它能够自主制定任务规划、调用浏览器 / 终端等工具完成任务，其自主执行能力在数月前还仅存在于规格更大、定价更高的旗舰 Opus 模型中。\n",
-      "supplier_count": 7,
+      "description": "Claude Sonnet 5 是迄今为止智能体能力最强的 Sonnet 系列模型。它能够自主制定任务规划、调用浏览器 / 终端等工具完成任务，其自主执行能力在数月前还仅存在于规格更大、定价更高的旗舰 Opus 模型中。",
+      "supplier_count": 54,
       "has_online_supplier": true
     },
     {
@@ -167,13 +172,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "200K",
-      "official_input_price": 67.78,
-      "official_output_price": 338.88,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 67.669,
+      "official_output_price": 338.345,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
       "publish_date": "2026-06-10",
       "description": "Claude-Fable-5 是 Anthropic 推出的 Mythos 级模型，专为自主知识工作和编码而构建。它支持文本、图像和文件输入，并输出文本，具备推理能力，拥有 100 万 token 的上下文窗口。它尤其擅长端到端完成原本需要人花费数小时、数天甚至数周的工作，能够处理耗时较长、定义模糊或高度多步骤的问题。它能以较少错误执行边界清晰的任务，通过验证循环自动自我纠正，并配备了可靠的安全防护机制。",
-      "supplier_count": 7,
+      "supplier_count": 54,
       "has_online_supplier": true
     },
     {
@@ -194,13 +200,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "200K",
-      "official_input_price": 33.89,
-      "official_output_price": 169.44,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 169.1725,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
       "publish_date": "2026-05-28",
       "description": "Claude Opus 4.8 是 Anthropic Opus 系列中能力最强的通用可用模型。它支持文本、图像和文件输入，并输出文本，具备推理能力，拥有 100 万 token 的上下文窗口。它适合高度自主的智能体、长周期智能体任务、知识工作，以及需要在长时间会话中保持连贯性的记忆驱动型任务。它尤其擅长多步骤推理、复杂编码和端到端项目编排，例如大型代码库、多阶段调试，以及长时间运行的异步智能体流水线。",
-      "supplier_count": 7,
+      "supplier_count": 62,
       "has_online_supplier": true
     },
     {
@@ -225,13 +232,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "1M",
-      "official_input_price": 16.94,
-      "official_output_price": 101.66,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 16.9173,
+      "official_output_price": 101.5035,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
       "publish_date": "2026-07-09",
       "description": "Terra 是 GPT-5.6 系列中的均衡日用生产力模型，综合性能对标上一代旗舰 GPT-5.5，但调用成本直接减半，定位为企业线上业务通用主力模型。\n完整继承 GPT-5.6 全系核心能力：150 万 token 超长上下文窗口、原生图像视觉输入、多步骤深度推理、完整 Codex 代码工具链，以及适配中等复杂度智能体流程的函数调用。",
-      "supplier_count": 7,
+      "supplier_count": 62,
       "has_online_supplier": true
     },
     {
@@ -250,12 +258,13 @@
       ],
       "pricing_method": "per_token",
       "context_window": null,
-      "official_input_price": 33.89,
-      "official_output_price": 203.32,
-      "official_currency": "USD",
+      "official_input_price": 33.8345,
+      "official_output_price": 203.007,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
       "publish_date": "2026-04-21",
       "description": "gpt-image-2 是 2026 年 4 月 21 日发布的、具备推理能力的商用级图像模型，以 99% 文字准确率、4K 分辨率、精准编辑与世界知识理解，成为当前最强文生图模型。",
-      "supplier_count": 7,
+      "supplier_count": 26,
       "has_online_supplier": true
     },
     {
@@ -279,12 +288,13 @@
       ],
       "pricing_method": "per_token",
       "context_window": null,
-      "official_input_price": 13.55,
-      "official_output_price": 40.66,
+      "official_input_price": 13.5338,
+      "official_output_price": 40.6014,
       "official_currency": "CNY",
+      "official_price_source": "xAI",
       "publish_date": "2026-07-09",
       "description": "Grok 4.5 是 SpaceXAI 打造的顶尖模型，在编程、智能体任务、专业知识工作领域表现突出，是XAI 迄今为止性能最强的模型，且与 Cursor 联合完成训练。可处理高难度、长周期复杂任务，能够灵活调用各类工具解决问题，适配软件工程、数据科学、金融、法律等各类专业知识场景。模型支持图像输入、结构化输出、深度推理，同时提供函数调用能力以搭建复杂智能体工作流。",
-      "supplier_count": 7,
+      "supplier_count": 28,
       "has_online_supplier": true
     },
     {
@@ -305,13 +315,14 @@
         "长文本处理"
       ],
       "pricing_method": "per_token",
-      "context_window": "128K",
-      "official_input_price": 8,
-      "official_output_price": 28,
+      "context_window": null,
+      "official_input_price": 8.0,
+      "official_output_price": 28.0,
       "official_currency": "CNY",
+      "official_price_source": "智谱AI",
       "publish_date": "2026-06-15",
       "description": "GLM-5.2 是面向长任务时代的旗舰模型。支持真正可用的 1M 上下文，可承载项目级工程上下文，长程任务执行更稳定、工程规范遵循更可靠，一次任务即可完成从需求到多端部署的完整开发链路。",
-      "supplier_count": 7,
+      "supplier_count": 52,
       "has_online_supplier": true
     },
     {
@@ -334,13 +345,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "128K",
-      "official_input_price": 3,
-      "official_output_price": 6,
+      "context_window": null,
+      "official_input_price": 3.0,
+      "official_output_price": 6.0,
       "official_currency": "CNY",
+      "official_price_source": "DeepSeek",
       "publish_date": "2026-04-24",
       "description": "DeepSeek V4 Pro 是 DeepSeek 推出的大规模混合专家（Mixture-of-Experts, MoE）模型，拥有 1.6T 总参数和 49B 激活参数，支持 100 万 token 的上下文窗口。它面向高级推理、编码和长周期智能体工作流而设计，在知识、数学和软件工程基准测试中表现强劲。该模型非常适合全代码库分析、多步骤自动化和大规模信息综合等复杂工作负载，尤其适用于同时要求能力与效率的场景。",
-      "supplier_count": 7,
+      "supplier_count": 56,
       "has_online_supplier": true
     },
     {
@@ -361,13 +373,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "200K",
-      "official_input_price": 33.89,
-      "official_output_price": 169.44,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 169.1725,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
       "publish_date": "2026-04-17",
       "description": "Opus 4.7 是 Anthropic Opus 系列的上一代模型，专为长时间运行的异步智能体而构建。它继承并强化了 Opus 4.6 在编码和智能体任务方面的优势，在复杂、多步骤任务上表现更强，并能在延展工作流中实现更可靠的智能体执行。它尤其适合任务随时间逐步展开的异步智能体流水线，例如大型代码库、多阶段调试，以及端到端项目编排。除编码之外，Opus 4.7 也提升了知识工作能力，包括文档撰写、演示文稿制作和数据分析等。",
-      "supplier_count": 7,
+      "supplier_count": 51,
       "has_online_supplier": true
     },
     {
@@ -387,13 +400,14 @@
         "长文本处理"
       ],
       "pricing_method": "per_token",
-      "context_window": "200K",
-      "official_input_price": 20.33,
-      "official_output_price": 101.66,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 20.3007,
+      "official_output_price": 101.5035,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
       "publish_date": "2026-02-17",
       "description": "Claude Sonnet 4.6 是 Sonnet 线的全面升级版，官方强调其在编码、计算机使用、长上下文推理、Agent 规划、知识工作与设计任务上整体增强，并提供最高 100 万上下文（Beta）能力，适合作为高质量通用主力模型。",
-      "supplier_count": 7,
+      "supplier_count": 50,
       "has_online_supplier": true
     },
     {
@@ -413,13 +427,14 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "128K",
+      "context_window": null,
       "official_input_price": 4.2,
       "official_output_price": 16.8,
       "official_currency": "CNY",
+      "official_price_source": "阿里云",
       "publish_date": "2026-06-01",
       "description": "MiniMax-M3 是 MiniMax 推出的多模态基础模型。它支持文本、图像和视频输入，并输出文本，拥有 100 万 token 的上下文窗口，适合长周期智能体任务、编码和工具调用。它基于 MiniMax Sparse Attention（MSA）构建，用 KV 块选择取代全量注意力，以降低长上下文场景下的逐 token 计算成本。在 100 万 token 上下文下，其成本约为上一代的 1/20，同时显著提升预填充和解码速度，并在大多数任务中保持质量。",
-      "supplier_count": 7,
+      "supplier_count": 29,
       "has_online_supplier": true
     },
     {
@@ -445,12 +460,13 @@
       ],
       "pricing_method": "per_token",
       "context_window": null,
-      "official_input_price": 3,
-      "official_output_price": 15,
+      "official_input_price": 3.0,
+      "official_output_price": 15.0,
       "official_currency": "CNY",
+      "official_price_source": "火山引擎",
       "publish_date": "2026-06-23",
       "description": "doubao-seed-2.1-turbo 是 Seed 2.1 系列面向规模化量产、高吞吐线上业务的低成本低时延深度思考模型，基础全能力对齐同系列 Pro 版本，主打极致性价比，在大幅降低调用成本的前提下保留完整通用与多模态能力，适配需要海量并发调用的生产场景。",
-      "supplier_count": 7,
+      "supplier_count": 5,
       "has_online_supplier": true
     },
     {
@@ -476,12 +492,13 @@
       ],
       "pricing_method": "per_token",
       "context_window": null,
-      "official_input_price": 6,
-      "official_output_price": 30,
+      "official_input_price": 6.0,
+      "official_output_price": 30.0,
       "official_currency": "CNY",
+      "official_price_source": "火山引擎",
       "publish_date": "2026-06-23",
       "description": "Doubao-Seed-2.1-pro 是 Seed 2.1 系列的旗舰深度推理版本，面向高复杂度探索场景，聚焦 AI 生产力提升，在编程工程交付、智能体长链路任务执行、多模态理解三大方向实现全面升级，对标并多项指标超越 GPT-5.5、Claude Opus 等海外旗舰模型。",
-      "supplier_count": 7,
+      "supplier_count": 8,
       "has_online_supplier": true
     },
     {
@@ -502,13 +519,14 @@
         "长文本处理"
       ],
       "pricing_method": "per_token",
-      "context_window": "128K",
+      "context_window": null,
       "official_input_price": 6.5,
-      "official_output_price": 27,
+      "official_output_price": 27.0,
       "official_currency": "CNY",
+      "official_price_source": "Kimi",
       "publish_date": "2026-06-13",
       "description": "Kimi K2.7 Code 是月之暗面（Moonshot AI）推出、完全开源的代码专项优化混合专家大模型，基于 K2 系列 1 万亿总参数 MoE 架构，单 Token 激活 32B 参数，专为长周期软件工程、复杂代码工程任务打造，支持 256K 超长上下文窗口。",
-      "supplier_count": 7,
+      "supplier_count": 32,
       "has_online_supplier": true
     },
     {
@@ -528,13 +546,14 @@
         "长文本处理"
       ],
       "pricing_method": "per_token",
-      "context_window": "200K",
-      "official_input_price": 33.89,
-      "official_output_price": 169.44,
-      "official_currency": "USD",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 169.1725,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
       "publish_date": "2026-02-05",
       "description": "Claude Opus 4.6 是 Anthropic 当前最强旗舰，官方强调其在 Agentic coding、计算机使用、工具调用、搜索与金融等高精度任务上具行业领先表现，并进一步提升了可靠性、精度与企业工作流适配性。",
-      "supplier_count": 7,
+      "supplier_count": 47,
       "has_online_supplier": true
     },
     {
@@ -556,13 +575,2658 @@
         "多模态融合"
       ],
       "pricing_method": "per_token",
-      "context_window": "128K",
+      "context_window": null,
       "official_input_price": 6.5,
-      "official_output_price": 27,
+      "official_output_price": 27.0,
       "official_currency": "CNY",
+      "official_price_source": "Kimi",
       "publish_date": "2026-04-20",
       "description": "Kimi K2.6 是 Moonshot AI 的下一代多模态模型，专为长周期编码、编码驱动的 UI/UX 生成，以及多智能体编排而设计。它能够处理跨 Python、Rust 和 Go 的复杂端到端编码任务，并能将提示词和视觉输入转化为可用于生产环境的界面。其智能体集群架构可扩展到数百个并行子智能体，实现自主任务拆解，无需人工监督即可在单次运行中交付文档、网站和电子表格。",
+      "supplier_count": 36,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "deepseek-v4-flash",
+      "display_name": "DeepSeek V4 Flash",
+      "canonical_id": "deepseek-deepseek-v4-flash",
+      "company": {
+        "slug": "deepseek",
+        "name": "DeepSeek",
+        "name_zh": "DeepSeek",
+        "logo_color": "#4d6bfe"
+      },
+      "series": "DeepSeek",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.0,
+      "official_output_price": 2.0,
+      "official_currency": "CNY",
+      "official_price_source": "DeepSeek",
+      "publish_date": "2026-04-24",
+      "description": "DeepSeek V4 Flash 是 DeepSeek 推出的效率优化型混合专家（Mixture-of-Experts, MoE）模型，拥有 284B 总参数和 13B 激活参数，支持 100 万 token 的上下文窗口。它专为快速推理和高吞吐工作负载而设计，同时保持了强大的推理和编码能力。该模型包含混合注意力机制，可高效处理长上下文。它非常适合编码助手、聊天系统和智能体工作流等应用，尤其适用于重视响应速度和成本效率的场景。",
+      "supplier_count": 58,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.4",
+      "display_name": "GPT 5.4",
+      "canonical_id": "openai-gpt-5.4",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 16.9173,
+      "official_output_price": 101.5035,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-03-05",
+      "description": "GPT-5.4 是 OpenAI 当前主力前沿模型，官方定位为面向专业工作的旗舰，具备状态领先的编码、复杂推理、工具搜索、内置 computer use 与 100 万上下文能力，特别适合长链路 Agent、复杂知识工作与高要求软件工程。",
+      "supplier_count": 47,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-3.5-flash",
+      "display_name": "Gemini 3.5 Flash",
+      "canonical_id": "google-gemini-3.5-flash",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [
+        "识图",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 10.1504,
+      "official_output_price": 60.9021,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2026-05-19",
+      "description": "Gemini 3.5 Flash 是 Google 的高效率多模态模型，以 Flash 级别的成本和速度提供接近 Pro 级别的编码和推理能力。它针对编码能力和并行智能体执行循环进行了高度优化，支持文本、图像、视频、音频和 PDF 输入。它默认使用 medium 思考强度，以实现更快速、更具成本效率的响应；同时完整支持 minimal、low、medium、high 等思考级别，便于在成本与性能之间进行精细权衡。",
+      "supplier_count": 37,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3.6-plus",
+      "display_name": "Qwen3.6 Plus",
+      "canonical_id": "alibaba-qwen3.6-plus",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "视频",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 12.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-04-01",
+      "description": "阿里 Qwen 3.6 系列中的核心增强模型，定位为面向真实世界 Agent 场景的高性能通用模型。官方强调其在 agentic coding、仓库级问题处理、前端开发、多模态感知与推理方面较前代有明显提升；同时在实际部署上兼顾质量、速度与成本，支持文本、图像、视频输入，并提供最长 100 万 token 级上下文，适合企业级智能体、复杂开发助手、多模态知识处理与大上下文工作流。",
+      "supplier_count": 25,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-3.1-pro-preview",
+      "display_name": "Gemini 3.1 Pro Preview",
+      "canonical_id": "google-gemini-3.1-pro-preview",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 13.5338,
+      "official_output_price": 81.2028,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2026-02-01",
+      "description": "Gemini Pro 系列是 Google 的高能力多模态旗舰，官方定位为 advanced intelligence / complex problem-solving，并突出 agentic 与 vibe coding 能力，适合复杂分析、长文档理解、代码协作、工具调用与高价值知识工作。 该 SKU 处于预览/实验阶段，便于抢先体验新能力，但接口、效果与可用性仍可能继续迭代。",
+      "supplier_count": 34,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "deepseek-v3.2",
+      "display_name": "DeepSeek V3.2",
+      "canonical_id": "deepseek-deepseek-v3.2",
+      "company": {
+        "slug": "deepseek",
+        "name": "DeepSeek",
+        "name_zh": "DeepSeek",
+        "logo_color": "#4d6bfe"
+      },
+      "series": "DeepSeek",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 3.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-12-01",
+      "description": "DeepSeek-V3.2 是官方当前主力通用/推理统一版本之一，强调“reasoning-first”与面向 Agent 的设计，支持在工具调用中进行思考，更适合复杂任务拆解、工具编排与可执行工作流。",
+      "supplier_count": 28,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "kimi-k2.5",
+      "display_name": "Kimi K2.5",
+      "canonical_id": "moonshot-kimi-k2.5",
+      "company": {
+        "slug": "moonshot",
+        "name": "Moonshot",
+        "name_zh": "月之暗面",
+        "logo_color": "#7c3aed"
+      },
+      "series": "Kimi",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.0,
+      "official_output_price": 21.0,
+      "official_currency": "CNY",
+      "official_price_source": "Kimi",
+      "publish_date": "2026-01-27",
+      "description": "Kimi K2.5 是 Moonshot/Kimi 官方称“迄今最智能”的模型，支持文本、图像、视频输入，并提供思考与非思考两种模式，适用于通用对话、复杂分析、Agent 执行与多模态内容理解。",
+      "supplier_count": 37,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-3-flash-preview",
+      "display_name": "Gemini 3 Flash Preview",
+      "canonical_id": "google-gemini-3-flash-preview",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3.3835,
+      "official_output_price": 20.3007,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2025-12-17",
+      "description": "Gemini Flash 系列是 Google 面向低时延、高吞吐场景的主力多模态模型，官方强调其能够以更低成本提供接近更大模型的 frontier-class 性能，适合在线问答、应用 Copilot、轻量 Agent 与批量内容处理。 该 SKU 处于预览/实验阶段，便于抢先体验新能力，但接口、效果与可用性仍可能继续迭代。",
+      "supplier_count": 31,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.2",
+      "display_name": "GPT 5.2",
+      "canonical_id": "openai-gpt-5.2",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 11.8421,
+      "official_output_price": 94.7366,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-12-11",
+      "description": "GPT-5.2 是 OpenAI 前代 frontier / professional work 模型，官方强调其支持可配置 reasoning effort，适用于复杂专业分析、编码、Agent 工作流与高质量知识工作，是 GPT-5.4 之前的重要生产版本。",
+      "supplier_count": 25,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "minimax-m2.5",
+      "display_name": "MiniMax M2.5",
+      "canonical_id": "minimax-minimax-m2.5",
+      "company": {
+        "slug": "minimax",
+        "name": "MiniMax",
+        "name_zh": "MiniMax",
+        "logo_color": "#ec4899"
+      },
+      "series": "MiniMax",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.1,
+      "official_output_price": 8.4,
+      "official_currency": "CNY",
+      "official_price_source": "MiniMax",
+      "publish_date": "2026-02-12",
+      "description": "MiniMax-M2.5 是 MiniMax 面向复杂任务的高性能通用模型，官方强调“顶尖性能与极致性价比”，适合复杂问答、内容生成、推理与企业级 API 集成。",
+      "supplier_count": 31,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "minimax-m2.7",
+      "display_name": "MiniMax M2.7",
+      "canonical_id": "minimax-minimax-m2.7",
+      "company": {
+        "slug": "minimax",
+        "name": "MiniMax",
+        "name_zh": "MiniMax",
+        "logo_color": "#ec4899"
+      },
+      "series": "MiniMax",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.1,
+      "official_output_price": 8.4,
+      "official_currency": "CNY",
+      "official_price_source": "MiniMax",
+      "publish_date": "2026-03-18",
+      "description": "MiniMax-M2.7 是 MiniMax 新一代 Agentic 模型，官方强调其具备原生交错思考（interleaved thinking）、优秀工具使用与长复杂任务处理能力，适合多工具编排、复杂工作流和高要求自动化场景。",
+      "supplier_count": 23,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5",
+      "display_name": "GPT 5",
+      "canonical_id": "openai-gpt-5",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-08-07",
+      "description": "GPT-5 是 OpenAI GPT-5 代的主力模型家族，官方强调其面向编码、推理和 Agent 任务，并可通过 reasoning effort 在质量、时延与成本之间进行权衡，适合生产级自动化与复杂知识工作。",
+      "supplier_count": 25,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-sonnet-4.5",
+      "display_name": "Claude Sonnet 4.5",
+      "canonical_id": "anthropic-claude-sonnet-4.5",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 20.3007,
+      "official_output_price": 101.5035,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
+      "publish_date": "2025-09-29",
+      "description": "Claude Sonnet 4.5 是 Anthropic 面向生产环境的主力旗舰，官方强调其在编码、复杂 Agent、计算机操作、推理与数学方面显著增强，在质量、速度与成本之间取得平衡，适合企业知识工作、开发助手与多步骤工作流。",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.2-codex",
+      "display_name": "GPT 5.2 Codex",
+      "canonical_id": "openai-gpt-5.2-codex",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 11.8421,
+      "official_output_price": 94.7366,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-12-11",
+      "description": "GPT-5.2 Codex 是面向软件工程与 Agentic coding 优化的代码模型，适合仓库级代码理解、自动修复、重构、测试生成、工具调用和开发工作流自动化。",
+      "supplier_count": 14,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.3-codex",
+      "display_name": "GPT 5.3 Codex",
+      "canonical_id": "openai-gpt-5.3-codex",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 11.8421,
+      "official_output_price": 94.7366,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-02-05",
+      "description": "GPT-5.3 Codex 属于 OpenAI 为 Codex/编程代理场景优化的一代代码模型，面向代码生成、仓库理解、编辑、调试与开发工作流自动化；适合 IDE、CLI、子代理与软件工程流水线。",
+      "supplier_count": 21,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.1",
+      "display_name": "GPT 5.1",
+      "canonical_id": "openai-gpt-5.1",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-11-12",
+      "description": "GPT-5.1 是 OpenAI 官方定位为“最适合编码与 Agentic tasks”的 GPT-5 代版本，支持可配置 reasoning / non-reasoning effort，强调指令遵循、工具调用、自动化工作流与软件工程稳定性。",
+      "supplier_count": 23,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.4-mini",
+      "display_name": "GPT 5.4 Mini",
+      "canonical_id": "openai-gpt-5.4-mini",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 5.0752,
+      "official_output_price": 30.4511,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-03-17",
+      "description": "GPT-5.4 mini 是 GPT-5.4 家族中面向高吞吐场景的轻量版本，官方推荐用于高频编码、computer use 与 Agent 工作流，在成本/时延更优的同时保留较强推理能力。",
+      "supplier_count": 43,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5-codex",
+      "display_name": "GPT 5 Codex",
+      "canonical_id": "openai-gpt-5-codex",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "编码"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-09-15",
+      "description": "GPT-5 Codex 是面向软件工程与 Agentic coding 优化的 GPT-5 代码模型，适合代码生成、工程上下文理解、问题定位、修复、测试与命令行/IDE 工作流。",
+      "supplier_count": 18,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-4.1-mini",
+      "display_name": "GPT 4.1 Mini",
+      "canonical_id": "openai-gpt-4.1-mini",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.7068,
+      "official_output_price": 10.827,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-04-14",
+      "description": "GPT-4.1 mini 是 GPT-4.1 的小型高速版本，官方强调其在保持较强指令遵循与工具调用能力的同时显著降低延迟与成本，适合在线助手、高并发 API 与轻量 Agent 场景。",
+      "supplier_count": 20,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-4.1",
+      "display_name": "GPT 4.1",
+      "canonical_id": "openai-gpt-4.1",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 13.5338,
+      "official_output_price": 54.1352,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-04-14",
+      "description": "GPT-4.1 系列是 OpenAI 官方强调在编码、指令遵循和超长上下文处理上显著增强的一代模型，支持最高 100 万上下文，特别适合代码库理解、工具调用、复杂工作流、长文档分析与精细结构化输出。",
+      "supplier_count": 23,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-4.1-nano",
+      "display_name": "GPT 4.1 Nano",
+      "canonical_id": "openai-gpt-4.1-nano",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.6767,
+      "official_output_price": 2.7068,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-04-14",
+      "description": "GPT-4.1 nano 是 GPT-4.1 家族中速度最快、成本最低的版本，适合摘要、分类、路由、简单抽取与对延迟/吞吐敏感的高频任务。",
+      "supplier_count": 21,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.1-codex",
+      "display_name": "GPT 5.1 Codex",
+      "canonical_id": "openai-gpt-5.1-codex",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-11-13",
+      "description": "GPT-5.1 Codex 是围绕编程代理与软件工程场景优化的 GPT-5.1 代码模型，适合代码生成、代码库导航、差异修复、测试与工具协同执行。",
+      "supplier_count": 11,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5-mini",
+      "display_name": "GPT 5 Mini",
+      "canonical_id": "openai-gpt-5-mini",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.6917,
+      "official_output_price": 13.5338,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-08-07",
+      "description": "GPT-5 mini 是 GPT-5 家族中的轻量版本，适合高并发、低时延且仍需较强理解和工具调用能力的在线场景。",
+      "supplier_count": 24,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.1-codex-max",
+      "display_name": "GPT 5.1 Codex Max",
+      "canonical_id": "openai-gpt-5.1-codex-max",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-11-19",
+      "description": "GPT-5.1 Codex 是围绕编程代理与软件工程场景优化的 GPT-5.1 代码模型，适合代码生成、代码库导航、差异修复、测试与工具协同执行。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.1-codex-mini",
+      "display_name": "GPT 5.1 Codex Mini",
+      "canonical_id": "openai-gpt-5.1-codex-mini",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.6917,
+      "official_output_price": 13.5338,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-11-13",
+      "description": "GPT-5.1 Codex 是围绕编程代理与软件工程场景优化的 GPT-5.1 代码模型，适合代码生成、代码库导航、差异修复、测试与工具协同执行。",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-4-0613",
+      "display_name": "GPT 4 0613",
+      "canonical_id": "openai-gpt-4-0613",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 203.007,
+      "official_output_price": 406.014,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2023-06-13",
+      "description": "GPT-4 是 OpenAI 经典旗舰模型，官方强调其在高级推理、指令遵循与事实性方面较 GPT-3.5 有显著提升，适合高质量内容生成、复杂问答、分析写作与企业级应用；0613 为固定快照版本。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 11,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5-nano",
+      "display_name": "GPT 5 Nano",
+      "canonical_id": "openai-gpt-5-nano",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.3383,
+      "official_output_price": 2.7068,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-08-07",
+      "description": "GPT-5 nano 是 GPT-5 家族中速度最快、成本最低的版本，适合摘要、分类、抽取、路由和其他简单高吞吐任务。",
+      "supplier_count": 21,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.4-nano",
+      "display_name": "GPT 5.4 Nano",
+      "canonical_id": "openai-gpt-5.4-nano",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.3534,
+      "official_output_price": 8.4586,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-03-17",
+      "description": "GPT-5.4 nano 是 GPT-5.4 家族中最小、最快、最便宜的版本，适合简单高吞吐任务，如分类、路由、抽取、简短改写与成本敏感型在线服务。",
+      "supplier_count": 18,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3.5-plus",
+      "display_name": "Qwen3.5 Plus",
+      "canonical_id": "alibaba-qwen3.5-plus",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.8,
+      "official_output_price": 4.8,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-02-15",
+      "description": "Qwen3.5-Plus 是阿里在 Qwen3.5 系列中推出的原生多模态旗舰模型，对应公开型号 Qwen3.5-397B-A17B。官方强调它在语言理解与推理、代码生成、Agent 工作流、图像与视频理解以及 GUI 交互等任务上具备前沿竞争力，并通过更高稀疏度的 MoE、混合注意力和多 token 预测等设计显著优化推理成本与吞吐效率。它还支持视觉推理、长视频理解、跨应用操作与办公自动化等多模态智能体场景，是面向企业和开发者的高性价比通用/多模态基础模型。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-haiku-4.5",
+      "display_name": "Claude Haiku 4.5",
+      "canonical_id": "anthropic-claude-haiku-4.5",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.7669,
+      "official_output_price": 33.8345,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
+      "publish_date": "2025-10-15",
+      "description": "Claude Haiku 4.5 是 Anthropic 官方定位的最新小型模型，强调在保持极高速度与低成本的同时取得接近更大模型的代码能力；适合实时助手、轻量 Agent、批量抽取、分类路由与高并发在线服务。",
+      "supplier_count": 14,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.4-pro",
+      "display_name": "GPT 5.4 Pro",
+      "canonical_id": "openai-gpt-5.4-pro",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 203.007,
+      "official_output_price": 1218.042,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-03-05",
+      "description": "GPT-5.4 Pro 是 GPT-5.4 的更高算力版本，官方用于更难、更慢但更高价值的问题求解，适合需要更深推理、更高正确率和更强稳定性的专业分析与工程任务。",
+      "supplier_count": 16,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-3.1-pro-preview-customtools",
+      "display_name": "Gemini 3.1 Pro Preview Customtools",
+      "canonical_id": "google-gemini-3.1-pro-preview-customtools",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 13.5338,
+      "official_output_price": 81.2028,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2026-02-01",
+      "description": "Gemini Pro 系列是 Google 的高能力多模态旗舰，官方定位为 advanced intelligence / complex problem-solving，并突出 agentic 与 vibe coding 能力，适合复杂分析、长文档理解、代码协作、工具调用与高价值知识工作。 该 SKU 处于预览/实验阶段，便于抢先体验新能力，但接口、效果与可用性仍可能继续迭代。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5-pro",
+      "display_name": "GPT 5 Pro",
+      "canonical_id": "openai-gpt-5-pro",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 101.5035,
+      "official_output_price": 812.028,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-08-07",
+      "description": "GPT-5 Pro 是 GPT-5 家族中更高算力的版本，更适合复杂推理、长链路问题求解和对正确率要求更高的专业任务。",
+      "supplier_count": 16,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.3-chat-latest",
+      "display_name": "GPT 5.3 Chat Latest",
+      "canonical_id": "openai-gpt-5.3-chat-latest",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 11.8421,
+      "official_output_price": 94.7366,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-03-03",
+      "description": "GPT-5.3 是 GPT-5 代中的过渡版本/别名路由，整体面向通用对话、代码与 Agent 任务；在实际使用中更适合作为阶段性升级节点而非长期固定基线。 latest 别名通常自动指向该家族当前最新可用版本，适合希望持续获得能力升级的生产环境。",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.2-pro",
+      "display_name": "GPT 5.2 Pro",
+      "canonical_id": "openai-gpt-5.2-pro",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 142.1049,
+      "official_output_price": 1136.8392,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-12-11",
+      "description": "GPT-5.2 Pro 是 GPT-5.2 的高算力版本，适合困难问题求解、深度分析、精细代码任务与对结果质量敏感的专业工作。",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-max",
+      "display_name": "Qwen3 Max",
+      "canonical_id": "alibaba-qwen3-max",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.5,
+      "official_output_price": 10.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-01-23",
+      "description": "Qwen3-Max 是 Qwen 官方强调的高端闭源旗舰模型，官方发布信息突出其在编码与 Agent 表现上的显著提升，适合作为高质量通用模型底座，用于复杂问答、专业写作、自动化工作流与软件工程。",
+      "supplier_count": 9,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-3.5-turbo-0125",
+      "display_name": "GPT 3.5 Turbo 0125",
+      "canonical_id": "openai-gpt-3.5-turbo-0125",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3.3835,
+      "official_output_price": 10.1504,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2024-01-25",
+      "description": "GPT-3.5 Turbo 0125 是 OpenAI 的经典低成本对话模型版本，官方将其定位为适合聊天与轻量文本任务的经济型模型；相比 GPT-4 代能力较弱，但在简单问答、总结、改写与旧系统兼容场景中仍具价值。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。 Turbo 变体通常以更快响应和更高吞吐为主要优化目标。",
+      "supplier_count": 13,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.1-chat-latest",
+      "display_name": "GPT 5.1 Chat Latest",
+      "canonical_id": "openai-gpt-5.1-chat-latest",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-11-12",
+      "description": "GPT-5.1 Chat Latest 是面向通用对话体验的动态路由别名，适合无需固定版本、希望自动接入最新聊天能力的应用。 latest 别名通常自动指向该家族当前最新可用版本，适合希望持续获得能力升级的生产环境。",
+      "supplier_count": 14,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "claude-opus-4.5",
+      "display_name": "Claude Opus 4.5",
+      "canonical_id": "anthropic-claude-opus-4.5",
+      "company": {
+        "slug": "anthropic",
+        "name": "Anthropic",
+        "name_zh": "Anthropic",
+        "logo_color": "#d97757"
+      },
+      "series": "Claude",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 169.1725,
+      "official_currency": "CNY",
+      "official_price_source": "Anthropic",
+      "publish_date": "2025-11-24",
+      "description": "Claude Opus 4.5 是 Anthropic 高端旗舰模型，官方将其定位为世界级的编码、Agent 与计算机使用模型，并强化深度研究、幻灯片/表格处理与复杂办公任务，适合高价值、高复杂度的专业工作场景。",
       "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3.5-flash",
+      "display_name": "Qwen3.5 Flash",
+      "canonical_id": "alibaba-qwen3.5-flash",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.2,
+      "official_output_price": 2.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-02-15",
+      "description": "Qwen3.5-Flash 是面向低时延和高吞吐的通用模型，适合在线对话、摘要、抽取、轻量多模态处理与成本敏感的大规模服务。",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-coder-plus",
+      "display_name": "Qwen3 Coder Plus",
+      "canonical_id": "alibaba-qwen3-coder-plus",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.0,
+      "official_output_price": 16.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-09-23",
+      "description": "Qwen3-Coder-Plus 是阿里云百炼官方当前高质量代码模型，强调强 Coding Agent 能力、稳定工具调用、仓库级代码理解、环境交互与自主编程，适合 IDE 助手、工程自动化与代码代理。",
+      "supplier_count": 13,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "grok-4.20-beta-0309-non-reasoning",
+      "display_name": "Grok 4.20 Beta 0309 Non Reasoning",
+      "canonical_id": "xai-grok-4.20-beta-0309-non-reasoning",
+      "company": {
+        "slug": "xai",
+        "name": "xAI",
+        "name_zh": "xAI",
+        "logo_color": "#0f172a"
+      },
+      "series": "Grok",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合",
+        "搜索/实时信息"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 16.9173,
+      "official_currency": "CNY",
+      "official_price_source": "xAI",
+      "publish_date": "2026-03-09",
+      "description": "Grok 4.20 是 xAI 官方当前重点展示的旗舰系列，强调行业领先速度、低幻觉率、严格提示词遵循与强 Agentic tool calling 能力，并提供 200 万上下文，适合研究、自动化和高强度多工具工作流。 该 SKU 处于预览/实验阶段，便于抢先体验新能力，但接口、效果与可用性仍可能继续迭代。 该变体会分配更多思考预算或显式推理链路，更适合复杂分析、多步规划、数学/代码和工具调用任务。 该变体关闭或弱化显式推理链路，更偏向低时延、低成本和高吞吐在线响应。",
+      "supplier_count": 3,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "minimax-m2.7-highspeed",
+      "display_name": "MiniMax M2.7 Highspeed",
+      "canonical_id": "minimax-minimax-m2.7-highspeed",
+      "company": {
+        "slug": "minimax",
+        "name": "MiniMax",
+        "name_zh": "MiniMax",
+        "logo_color": "#ec4899"
+      },
+      "series": "MiniMax",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.2,
+      "official_output_price": 16.8,
+      "official_currency": "CNY",
+      "official_price_source": "MiniMax",
+      "publish_date": "2026-03-18",
+      "description": "MiniMax-M2.7 是 MiniMax 新一代 Agentic 模型，官方强调其具备原生交错思考（interleaved thinking）、优秀工具使用与长复杂任务处理能力，适合多工具编排、复杂工作流和高要求自动化场景。 HighSpeed 版本在尽量保持主模型效果的同时进一步优化时延与成本。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-coder-flash",
+      "display_name": "Qwen3 Coder Flash",
+      "canonical_id": "alibaba-qwen3-coder-flash",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.0,
+      "official_output_price": 4.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-07-28",
+      "description": "Qwen3-Coder-Flash 是面向更低时延和更高性价比的代码模型，适合代码补全、轻量重构、脚本生成、自动修复与高频编程助手场景。",
+      "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-vl-plus",
+      "display_name": "Qwen3 Vl Plus",
+      "canonical_id": "alibaba-qwen3-vl-plus",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.0,
+      "official_output_price": 10.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-12-19",
+      "description": "Qwen3-VL-Plus 是 Qwen3-VL 系列中的强能力多模态模型，官方强调其在图像/视频理解、复杂文档解析、视觉推理与 Agent 任务中的综合表现，适合高质量图文工作流。",
+      "supplier_count": 11,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-235b-a22b-thinking-2507",
+      "display_name": "Qwen3 235b A22b Thinking 2507",
+      "canonical_id": "alibaba-qwen3-235b-a22b-thinking-2507",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 20.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-07-01",
+      "description": "Qwen3-235B-A22B 是 Qwen3 开源 MoE 大模型，官方说明其具备 235B 总参数与 22B 激活参数，强调“Think Deeper, Act Faster”，在推理、多语言、工具使用与代码能力之间取得平衡。Thinking 变体更偏复杂推理，Instruct 变体更偏指令对齐与通用生产使用。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 14,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-235b-a22b-instruct-2507",
+      "display_name": "Qwen3 235b A22b Instruct 2507",
+      "canonical_id": "alibaba-qwen3-235b-a22b-instruct-2507",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 8.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-07-01",
+      "description": "Qwen3-235B-A22B 是 Qwen3 开源 MoE 大模型，官方说明其具备 235B 总参数与 22B 激活参数，强调“Think Deeper, Act Faster”，在推理、多语言、工具使用与代码能力之间取得平衡。Thinking 变体更偏复杂推理，Instruct 变体更偏指令对齐与通用生产使用。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 14,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "deepseek-reasoner-deepseek-v3.2-thinking",
+      "display_name": "DeepSeek Reasoner DeepSeek V3.2 Thinking",
+      "canonical_id": "deepseek-deepseek-reasoner-deepseek-v3.2-thinking",
+      "company": {
+        "slug": "deepseek",
+        "name": "DeepSeek",
+        "name_zh": "DeepSeek",
+        "logo_color": "#4d6bfe"
+      },
+      "series": "DeepSeek",
+      "capabilities": [
+        "深度思考"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 3.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2024-03-10",
+      "description": "DeepSeek API 通用对话别名，对应 DeepSeek-V3.2 的思考模式，适合通用生成与工具调用。",
+      "supplier_count": 15,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5-search-api",
+      "display_name": "GPT 5 Search Api",
+      "canonical_id": "openai-gpt-5-search-api",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "搜索/实时信息"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-10-14",
+      "description": "GPT-5 Search API 是面向搜索/检索增强场景的 GPT-5 变体，适合需要实时网页检索、证据收集与工具化研究工作流的应用。",
+      "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen-vl-max",
+      "display_name": "Qwen Vl Max",
+      "canonical_id": "alibaba-qwen-vl-max",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.6,
+      "official_output_price": 4.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-04-08",
+      "description": "Qwen-VL-Max（Qwen2.5-VL 系列）是阿里云百炼官方提供的高性能视觉语言模型，强调图像/视频理解、复杂文档解析、视觉推理、视觉定位、视觉 coding 与 Agent 能力，适合高要求多模态场景。",
+      "supplier_count": 9,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-max-2025-09-23",
+      "display_name": "Qwen3 Max 2025 09 23",
+      "canonical_id": "alibaba-qwen3-max-2025-09-23",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.0,
+      "official_output_price": 24.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-09-23",
+      "description": "Qwen3-Max 是 Qwen 官方强调的高端闭源旗舰模型，官方发布信息突出其在编码与 Agent 表现上的显著提升，适合作为高质量通用模型底座，用于复杂问答、专业写作、自动化工作流与软件工程。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 4,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-max-preview",
+      "display_name": "Qwen3 Max Preview",
+      "canonical_id": "alibaba-qwen3-max-preview",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.0,
+      "official_output_price": 24.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-09-23",
+      "description": "Qwen3-Max 是 Qwen 官方强调的高端闭源旗舰模型，官方发布信息突出其在编码与 Agent 表现上的显著提升，适合作为高质量通用模型底座，用于复杂问答、专业写作、自动化工作流与软件工程。 该 SKU 处于预览/实验阶段，便于抢先体验新能力，但接口、效果与可用性仍可能继续迭代。",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "deepseek-r1-250528",
+      "display_name": "DeepSeek R1 250528",
+      "canonical_id": "deepseek-deepseek-r1-250528",
+      "company": {
+        "slug": "deepseek",
+        "name": "DeepSeek",
+        "name_zh": "DeepSeek",
+        "logo_color": "#4d6bfe"
+      },
+      "series": "DeepSeek",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.0,
+      "official_output_price": 16.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-05-28",
+      "description": "DeepSeek-R1 是 DeepSeek 官方重点发布的强推理系列，强调通过大规模强化学习后训练提升长链思考能力，在数学、代码与复杂推理上达到顶尖水平，适合严谨分析、复杂规划、证明、求解与高难度工程任务。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 17,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-2.0-lite-260215",
+      "display_name": "Doubao Seed 2.0 Lite 260215",
+      "canonical_id": "bytedance-doubao-seed-2.0-lite-260215",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.6,
+      "official_output_price": 3.6,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2026-02-15",
+      "description": "豆包 Doubao-Seed-2.0-Lite 是 2.0 系列中强调高性价比的主力版本，官方指出其相较 1.8 在更少 Token 下即可完成更复杂任务，兼顾多模态理解、指令执行与成本效率，适合大规模线上服务。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-2.0-mini-260215",
+      "display_name": "Doubao Seed 2.0 Mini 260215",
+      "canonical_id": "bytedance-doubao-seed-2.0-mini-260215",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.2,
+      "official_output_price": 2.0,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2026-02-15",
+      "description": "豆包 Doubao-Seed-2.0-Mini 以速度和成本为优先目标，官方表示其在多数核心能力上已接近更高规格模型，适合高并发问答、轻量 Agent、实时交互与成本敏感场景。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 9,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-2.0-code",
+      "display_name": "Doubao Seed 2.0 Code",
+      "canonical_id": "bytedance-doubao-seed-2.0-code",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3.2,
+      "official_output_price": 16.0,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2026-02-14",
+      "description": "豆包 Doubao-Seed-2.0-Code 是火山引擎面向编程场景优化的代码模型，官方强调其在代码生成、任务规划、真实环境执行、多模态感知、高精度文本抽取、图表理解与视觉知识推理方面进行了系统增强，适合 Agentic coding 与工程自动化。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。 该 SKU 处于预览/实验阶段，便于抢先体验新能力，但接口、效果与可用性仍可能继续迭代。",
+      "supplier_count": 4,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-2.0-pro-260215",
+      "display_name": "Doubao Seed 2.0 Pro 260215",
+      "canonical_id": "bytedance-doubao-seed-2.0-pro-260215",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3.2,
+      "official_output_price": 16.0,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2026-02-15",
+      "description": "豆包 Doubao-Seed-2.0-Pro 是豆包 2.0 系列旗舰通用多模态模型，官方定位于复杂深度推理、长链路任务执行和 Agent 场景，强调复杂指令遵循、多模态理解、长上下文推理、结构化生成与工具协同执行能力。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "davinci-002",
+      "display_name": "Davinci 002",
+      "canonical_id": "openai-davinci-002",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "Other",
+      "capabilities": [
+        "对话"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 13.5338,
+      "official_output_price": 13.5338,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2023-08-22",
+      "description": "davinci-002 是 OpenAI 早期 GPT 基础模型的延续版本，主要用于传统 Completions API 和需要底层文本生成能力的旧系统。它并非面向现代指令对齐和 Agent 工作流优化的主力模型，更适合历史兼容与过渡迁移。",
+      "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "minimax-m2.5-highspeed",
+      "display_name": "MiniMax M2.5 Highspeed",
+      "canonical_id": "minimax-minimax-m2.5-highspeed",
+      "company": {
+        "slug": "minimax",
+        "name": "MiniMax",
+        "name_zh": "MiniMax",
+        "logo_color": "#ec4899"
+      },
+      "series": "MiniMax",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.2,
+      "official_output_price": 16.8,
+      "official_currency": "CNY",
+      "official_price_source": "MiniMax",
+      "publish_date": "2026-02-12",
+      "description": "MiniMax-M2.5 是 MiniMax 面向复杂任务的高性能通用模型，官方强调“顶尖性能与极致性价比”，适合复杂问答、内容生成、推理与企业级 API 集成。 HighSpeed 版本在尽量保持主模型效果的同时进一步优化时延与成本。",
+      "supplier_count": 9,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen-vl-ocr",
+      "display_name": "Qwen Vl Ocr",
+      "canonical_id": "alibaba-qwen-vl-ocr",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.3,
+      "official_output_price": 0.5,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-11-20",
+      "description": "Qwen-VL-OCR 是阿里云百炼官方提供的专用 OCR 视觉模型，强调从扫描件、表格、票据、公式与复杂版面中抽取文本和结构化信息，并支持多语言识别、关键信息提取与文档理解。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen-vl-ocr-latest",
+      "display_name": "Qwen Vl Ocr Latest",
+      "canonical_id": "alibaba-qwen-vl-ocr-latest",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.3,
+      "official_output_price": 0.5,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-11-20",
+      "description": "Qwen-VL-OCR 是阿里云百炼官方提供的专用 OCR 视觉模型，强调从扫描件、表格、票据、公式与复杂版面中抽取文本和结构化信息，并支持多语言识别、关键信息提取与文档理解。 latest 别名通常自动指向该家族当前最新可用版本，适合希望持续获得能力升级的生产环境。",
+      "supplier_count": 2,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen-vl-plus",
+      "display_name": "Qwen Vl Plus",
+      "canonical_id": "alibaba-qwen-vl-plus",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.8,
+      "official_output_price": 2.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-08-15",
+      "description": "Qwen-VL-Plus（Qwen2.5-VL 系列）是在效果、速度与成本之间平衡的多模态模型，官方强调其比 Max 更快、成本更优，适合大规模图文理解、文档解析与在线视觉问答。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-coder-plus-2025-07-22",
+      "display_name": "Qwen3 Coder Plus 2025 07 22",
+      "canonical_id": "alibaba-qwen3-coder-plus-2025-07-22",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.0,
+      "official_output_price": 16.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-07-22",
+      "description": "Qwen3-Coder-Plus 是阿里云百炼官方当前高质量代码模型，强调强 Coding Agent 能力、稳定工具调用、仓库级代码理解、环境交互与自主编程，适合 IDE 助手、工程自动化与代码代理。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 3,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-coder-plus-2025-09-23",
+      "display_name": "Qwen3 Coder Plus 2025 09 23",
+      "canonical_id": "alibaba-qwen3-coder-plus-2025-09-23",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.0,
+      "official_output_price": 16.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-09-23",
+      "description": "Qwen3-Coder-Plus 是阿里云百炼官方当前高质量代码模型，强调强 Coding Agent 能力、稳定工具调用、仓库级代码理解、环境交互与自主编程，适合 IDE 助手、工程自动化与代码代理。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 3,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-max-2026-01-23",
+      "display_name": "Qwen3 Max 2026 01 23",
+      "canonical_id": "alibaba-qwen3-max-2026-01-23",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.5,
+      "official_output_price": 10.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-01-23",
+      "description": "Qwen3-Max 是 Qwen 官方强调的高端闭源旗舰模型，官方发布信息突出其在编码与 Agent 表现上的显著提升，适合作为高质量通用模型底座，用于复杂问答、专业写作、自动化工作流与软件工程。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 6,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-vl-235b-a22b-thinking",
+      "display_name": "Qwen3 Vl 235b A22b Thinking",
+      "canonical_id": "alibaba-qwen3-vl-235b-a22b-thinking",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 20.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-10-09",
+      "description": "Qwen3-VL-235B-A22B-Thinking 是 Qwen 大规模 MoE 多模态推理模型，面向高难度视觉推理、复杂图文问答、文档理解与多步骤图像分析，适合作为高端视觉 Agent 的底座。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-vl-flash-2026-01-22",
+      "display_name": "Qwen3 Vl Flash 2026 01 22",
+      "canonical_id": "alibaba-qwen3-vl-flash-2026-01-22",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "识图",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.15,
+      "official_output_price": 1.5,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-01-22",
+      "description": "Qwen3-VL-Flash 是面向速度与成本优化的多模态模型，适合高并发图文问答、视觉抽取、轻量视觉 Agent 与在线服务部署。 该命名通常表示固定日期/快照版本，便于锁定模型行为、做回归测试、灰度发布与长期复现实验结果。",
+      "supplier_count": 2,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3.7-plus",
+      "display_name": "Qwen3.7 Plus",
+      "canonical_id": "alibaba-qwen3.7-plus",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 8.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-06-02",
+      "description": "通义千问 Qwen3.7-Plus 是阿里主打「看、想、写、做」的多模态混合智能体模型，统一视觉与语言，既能识图写代码，也能自主操控软硬件界面完成全链路自动化任务。",
+      "supplier_count": 21,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3.7-max",
+      "display_name": "Qwen3.7 Max",
+      "canonical_id": "alibaba-qwen3.7-max",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "编码",
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 12.0,
+      "official_output_price": 36.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-05-20",
+      "description": "Qwen3.7-Max 2026年5月20日阿里云发布的国产第一、面向智能体时代的全能旗舰基座，具备百万级上下文、顶尖推理与编程能力，支持35小时长程自主执行。",
+      "supplier_count": 28,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3.6-plus-2026-04-02",
+      "display_name": "Qwen3.6 Plus 2026 04 02",
+      "canonical_id": "alibaba-qwen3.6-plus-2026-04-02",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 12.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-04-02",
+      "description": "qwen3.6-plus-2026-04-02 是阿里巴巴通义千问 3.6 系列首款旗舰闭源 API 模型，定位真实世界智能体，主打编程智能体 + 超长上下文 + 强多模态三大核心能力，被官方称为 “当前中国编程能力最强的大模型",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-3.1-flash-lite",
+      "display_name": "Gemini 3.1 Flash Lite",
+      "canonical_id": "google-gemini-3.1-flash-lite",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 1.6917,
+      "official_output_price": 10.1504,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2026-05-07",
+      "description": "Gemini 3.1 Flash-Lite 是 Google DeepMind 推出的超高速、超低成本多模态轻量模型，主打高并发、低延迟、预算敏感场景",
+      "supplier_count": 21,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-realtime-flash",
+      "display_name": "GLM Realtime Flash",
+      "canonical_id": "zhipu-glm-realtime-flash",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "语音"
+      ],
+      "pricing_method": "per_second",
+      "context_window": null,
+      "official_input_price": 0.003,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2026-03-01",
+      "description": "智谱实时对话模型，低延迟响应，适用于实时客服、语音助手等即时交互场景。",
+      "supplier_count": 1,
+      "has_online_supplier": false
+    },
+    {
+      "slug": "glm-4-voice",
+      "display_name": "GLM 4 Voice",
+      "canonical_id": "zhipu-glm-4-voice",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "语音"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 80.0,
+      "official_output_price": 0.0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2025-11-20",
+      "description": "GLM-4 系列语音交互模型，支持语音对话、语音理解与合成，实现全链路语音交互。",
+      "supplier_count": 1,
+      "has_online_supplier": false
+    },
+    {
+      "slug": "grok-4.3",
+      "display_name": "Grok 4.3",
+      "canonical_id": "xai-grok-4.3",
+      "company": {
+        "slug": "xai",
+        "name": "xAI",
+        "name_zh": "xAI",
+        "logo_color": "#0f172a"
+      },
+      "series": "Grok",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "语音",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 8.4586,
+      "official_output_price": 16.9173,
+      "official_currency": "CNY",
+      "official_price_source": "xAI",
+      "publish_date": "2026-04-30",
+      "description": "Grok 4.3 是由 xAI 公司推出的新一代大语言模型，定位为一款“高性价比的工作型/推理模型”。它并不盲目追求绝对最强的推理能力，而是主打极致的性价比（API 价格较前代大幅下降）、极快的输出速度以及强大的工具适配性。采用混合专家（MoE）架构，总参数规模约 5000 亿（500B），通过降低激活参数比例来大幅优化推理成本。并且深度绑定了 X 平台的海量实时数据，使其在实时信息获取和社交语境理解上具备独特优势。",
+      "supplier_count": 18,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-5.5-pro",
+      "display_name": "GPT 5.5 Pro",
+      "canonical_id": "openai-gpt-5.5-pro",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 203.007,
+      "official_output_price": 1218.042,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-04-24",
+      "description": "GPT-5.5 Pro 是 OpenAI 2026 年 4 月推出的最高能力旗舰模型，代号 Spud，为自 GPT-4.5 以来首次从零完整重训的基座，主打深度推理、超长上下文、Agent 智能体执行",
+      "supplier_count": 14,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "wan2.7-image-pro",
+      "display_name": "Wan2.7 Image Pro",
+      "canonical_id": "alibaba-wan2.7-image-pro",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Other",
+      "capabilities": [],
+      "pricing_method": "per_call",
+      "context_window": null,
+      "official_input_price": 0.5,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-02-28",
+      "description": "阿里万相专业级图像生成模型，画质优异、语义精准，适用于商业设计与高质量绘图。",
+      "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen-image-2.0-pro",
+      "display_name": "Qwen Image 2.0 Pro",
+      "canonical_id": "alibaba-qwen-image-2.0-pro",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [],
+      "pricing_method": "per_call",
+      "context_window": null,
+      "official_input_price": 0.5,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-12-05",
+      "description": "通义千问专业级图像生成模型，画质精细、风格多样，支持复杂场景与高质量创作。",
+      "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "minimax-image-01",
+      "display_name": "MiniMax Image 01",
+      "canonical_id": "minimax-minimax-image-01",
+      "company": {
+        "slug": "minimax",
+        "name": "MiniMax",
+        "name_zh": "MiniMax",
+        "logo_color": "#ec4899"
+      },
+      "series": "MiniMax",
+      "capabilities": [],
+      "pricing_method": "per_call",
+      "context_window": null,
+      "official_input_price": 0.025,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "MiniMax",
+      "publish_date": "2025-07-01",
+      "description": "通用图像生成基础模型，支持基础文生图、简单图像编辑，满足轻量化创作需求。",
+      "supplier_count": 2,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-image-1",
+      "display_name": "GPT Image 1",
+      "canonical_id": "openai-gpt-image-1",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 270.676,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2024-11-06",
+      "description": "OpenAI 基础图像生成模型，稳定可靠，适用于常规文生图、创意设计与内容创作。",
+      "supplier_count": 16,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-image-1.5",
+      "display_name": "GPT Image 1.5",
+      "canonical_id": "openai-gpt-image-1.5",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "识图"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 33.8345,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-10-01",
+      "description": "OpenAI 高阶图像生成模型，图像细节、构图与语义一致性优秀，支持复杂提示词生成。",
+      "supplier_count": 16,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-vl-flash",
+      "display_name": "Qwen3 Vl Flash",
+      "canonical_id": "alibaba-qwen3-vl-flash",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.15,
+      "official_output_price": 1.5,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-02-05",
+      "description": "通义千问轻量多模态模型，兼顾速度与视觉理解能力，适用于高并发图像交互场景。",
+      "supplier_count": 10,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "wan2.7-videoedit",
+      "display_name": "Wan2.7 Videoedit",
+      "canonical_id": "alibaba-wan2.7-videoedit",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Other",
+      "capabilities": [
+        "视频"
+      ],
+      "pricing_method": "per_second",
+      "context_window": null,
+      "official_input_price": 0.6,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-03-10",
+      "description": "阿里万相视频编辑模型，支持视频剪辑、风格化、特效生成与内容编辑优化。",
+      "supplier_count": 1,
+      "has_online_supplier": false
+    },
+    {
+      "slug": "qwen3-tts-flash",
+      "display_name": "Qwen3 Tts Flash",
+      "canonical_id": "alibaba-qwen3-tts-flash",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [
+        "语音"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 128.0,
+      "official_output_price": 0.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-01-12",
+      "description": "通义千问轻量化语音合成模型，合成延迟低、音色自然，适用于实时语音播报场景。",
+      "supplier_count": 2,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "qwen3-asr-flash",
+      "display_name": "Qwen3 Asr Flash",
+      "canonical_id": "alibaba-qwen3-asr-flash",
+      "company": {
+        "slug": "alibaba",
+        "name": "Alibaba",
+        "name_zh": "阿里云",
+        "logo_color": "#ff6a00"
+      },
+      "series": "Qwen",
+      "capabilities": [],
+      "pricing_method": "per_second",
+      "context_window": null,
+      "official_input_price": 0.0002,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2026-01-12",
+      "description": "通义千问轻量化语音识别模型，识别速度快、准确率高，支持实时语音转文字。",
+      "supplier_count": 1,
+      "has_online_supplier": false
+    },
+    {
+      "slug": "doubao-seedream-4.5",
+      "display_name": "Doubao Seedream 4.5",
+      "canonical_id": "bytedance-doubao-seedream-4.5",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [],
+      "pricing_method": "per_call",
+      "context_window": null,
+      "official_input_price": 0.25,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2025-11-10",
+      "description": "豆包经典图像生成模型，支持文本生成图像、图像编辑与风格化处理，效果稳定成熟。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seedream-5.0-ilte",
+      "display_name": "Doubao Seedream 5.0 Ilte",
+      "canonical_id": "bytedance-doubao-seedream-5.0-ilte",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [],
+      "pricing_method": "per_call",
+      "context_window": null,
+      "official_input_price": 0.22,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2026-03-05",
+      "description": "豆包轻量级文生图 / 图生图模型，生成速度快、资源占用低，兼顾效果与性价比。",
+      "supplier_count": 3,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "grok-imagine-image",
+      "display_name": "Grok Imagine Image",
+      "canonical_id": "xai-grok-imagine-image",
+      "company": {
+        "slug": "xai",
+        "name": "xAI",
+        "name_zh": "xAI",
+        "logo_color": "#0f172a"
+      },
+      "series": "Grok",
+      "capabilities": [],
+      "pricing_method": "per_call",
+      "context_window": null,
+      "official_input_price": 0.1353,
+      "official_output_price": 0,
+      "official_currency": "CNY",
+      "official_price_source": "xAI",
+      "publish_date": "2026-01-22",
+      "description": "xAI 图像生成模型，支持文本生成图像，风格写实与创意生成兼顾，响应速度较快。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-2.5-flash-preview-tts",
+      "display_name": "Gemini 2.5 Flash Preview Tts",
+      "canonical_id": "google-gemini-2.5-flash-preview-tts",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3.3835,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2025-05-20",
+      "description": "Gemini 2.5 系列语音合成预览模型，发音流畅自然，支持多语种与快速文本转语音。",
+      "supplier_count": 9,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gemini-3.1-flash-live-preview",
+      "display_name": "Gemini 3.1 Flash Live Preview",
+      "canonical_id": "google-gemini-3.1-flash-live-preview",
+      "company": {
+        "slug": "google",
+        "name": "Google",
+        "name_zh": "Google",
+        "logo_color": "#4285f4"
+      },
+      "series": "Gemini",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 5.0752,
+      "official_output_price": 30.4511,
+      "official_currency": "CNY",
+      "official_price_source": "Google",
+      "publish_date": "2026-03-26",
+      "description": "Gemini 实时交互预览模型，低延迟语音与视频理解，支持流式实时对话与多模态即时响应。",
+      "supplier_count": 2,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-4o-transcribe",
+      "display_name": "GPT 4o Transcribe",
+      "canonical_id": "openai-gpt-4o-transcribe",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 16.9173,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2025-03-20",
+      "description": "GPT-4o 系列语音转文本模型，识别准确率高、支持多语言与长音频转写，输出格式规范稳定。",
+      "supplier_count": 7,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-audio-1.5",
+      "display_name": "GPT Audio 1.5",
+      "canonical_id": "openai-gpt-audio-1.5",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 16.9173,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-02-23",
+      "description": "OpenAI 音频理解模型，具备语音识别、语义理解与音频内容分析能力，支持多场景语音交互处理。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-realtime-1.5",
+      "display_name": "GPT Realtime 1.5",
+      "canonical_id": "openai-gpt-realtime-1.5",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 27.0676,
+      "official_output_price": 108.2704,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2026-02-23",
+      "description": "OpenAI 实时对话模型，支持低延迟语音交互、多模态实时响应，适用于实时语音助手与交互式应用。",
+      "supplier_count": 5,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-4.6",
+      "display_name": "GLM 4.6",
+      "canonical_id": "zhipu-glm-4.6",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 3.0,
+      "official_output_price": 14.0,
+      "official_currency": "CNY",
+      "official_price_source": "阿里云",
+      "publish_date": "2025-09-30",
+      "description": "GLM-4.6 是智谱 AI 推出的旗舰级通用文本大模型，采用 355B 总参数 / 32B 激活 MoE 架构，主打强推理、长文本、专业编码、智能体，定位企业级高性价比通用模型智谱AI",
+      "supplier_count": 17,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-4.5-air",
+      "display_name": "GLM 4.5 Air",
+      "canonical_id": "zhipu-glm-4.5-air",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.8,
+      "official_output_price": 2.0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2001-01-01",
+      "description": "GLM-4.5-Air 是智谱 AI 推出的轻量级高性能文本大模型，属于 GLM-4.5 系列轻量化版本，采用 MoE 混合专家架构，主打低成本、快响应、强推理、智能体友好，是中小算力与高并发场景的性价比首选智谱AI",
+      "supplier_count": 16,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-4.7",
+      "display_name": "GLM 4.7",
+      "canonical_id": "zhipu-glm-4.7",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 2.0,
+      "official_output_price": 8.0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2001-01-01",
+      "description": "GLM-4.7是智谱AI于2025年12月23日发布并开源的新一代旗舰大语言模型。它在编码、推理与智能体协同三大领域实现了跨代升级，被认为是当时全球最强的开源编程模型之一",
+      "supplier_count": 25,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-5.1",
+      "display_name": "GLM 5.1",
+      "canonical_id": "zhipu-glm-5.1",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 6.0,
+      "official_output_price": 24.0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2026-04-08",
+      "description": "GLM-5.1 是智谱 AI 于2026 年 4 月发布的高阶推理旗舰大模型，为 GLM-5 深度升级版本，定位长程自治工程级模型，综合能力与代码水平对齐 Claude Opus 4.6，主打超长自主执行、专业编码、深度思考、智能体，是面向真实工程交付的开源顶流模型。",
+      "supplier_count": 36,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-5-turbo",
+      "display_name": "GLM 5 Turbo",
+      "canonical_id": "zhipu-glm-5-turbo",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 5.0,
+      "official_output_price": 22.0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2026-03-15",
+      "description": "GLM-5-Turbo 是智谱 AI 于2026 年 3 月发布的GLM-5 系列加速增强版，全球首个面向 OpenClaw（龙虾）智能体场景深度优化的基座大模型，主打长链路稳定执行、极速推理、强工具调用、高并发，是智能体 / 自动化工作流的专用引擎",
+      "supplier_count": 12,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "glm-5",
+      "display_name": "GLM 5",
+      "canonical_id": "zhipu-glm-5",
+      "company": {
+        "slug": "zhipu",
+        "name": "Zhipu AI",
+        "name_zh": "智谱",
+        "logo_color": "#2563eb"
+      },
+      "series": "GLM",
+      "capabilities": [
+        "长文本处理"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 4.0,
+      "official_output_price": 18.0,
+      "official_currency": "CNY",
+      "official_price_source": "智谱AI",
+      "publish_date": "2026-02-11",
+      "description": "GLM-5 是智谱 AI 于 2026 年 2 月发布的第五代旗舰开源大语言模型，采用 MoE 混合专家架构，专为智能体工程、复杂推理、专业编程、长文本打造，编程与智能体能力达到开源 SOTA，真实体验逼近 Claude Opus 4.5智谱AI",
+      "supplier_count": 37,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "gpt-4o",
+      "display_name": "GPT 4o",
+      "canonical_id": "openai-gpt-4o",
+      "company": {
+        "slug": "openai",
+        "name": "OpenAI",
+        "name_zh": "OpenAI",
+        "logo_color": "#10a37f"
+      },
+      "series": "GPT",
+      "capabilities": [
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 16.9173,
+      "official_output_price": 67.669,
+      "official_currency": "CNY",
+      "official_price_source": "OpenAI",
+      "publish_date": "2024-05-13",
+      "description": "OpenAI 的旗舰级原生多模态模型，能够在统一模型内实时处理文本、图像、音频等多种输入，并生成高质量文本/语音响应。它强调跨模态理解与实时交互能力，适合通用对话、视觉理解、语音交互、内容生成与复杂助手场景，可作为高质量、多模态、低延迟应用的通用基础模型。",
+      "supplier_count": 28,
+      "has_online_supplier": true
+    },
+    {
+      "slug": "doubao-seed-1.8",
+      "display_name": "Doubao Seed 1.8",
+      "canonical_id": "bytedance-doubao-seed-1.8",
+      "company": {
+        "slug": "bytedance",
+        "name": "ByteDance",
+        "name_zh": "字节跳动",
+        "logo_color": "#0f172a"
+      },
+      "series": "Doubao",
+      "capabilities": [
+        "对话",
+        "深度思考",
+        "长文本处理",
+        "多模态融合"
+      ],
+      "pricing_method": "per_token",
+      "context_window": null,
+      "official_input_price": 0.8,
+      "official_output_price": 2.0,
+      "official_currency": "CNY",
+      "official_price_source": "火山引擎",
+      "publish_date": "2025-12-18",
+      "description": "字节跳动推出的最新通用 Agent 模型，支持文本与图片输入，强调多模态处理、信息检索、代码编写、GUI 交互和复杂工作流执行能力。官方说明其在 Agent、LLM 与 VLM 综合评测中表现突出，具备业界领先的 GUI Agent 能力，并在搜索、软件工程、多模态推理、视频理解等任务上保持第一梯队竞争力，适合智能体执行、GUI 自动化、搜索决策、代码辅助和多模态应用构建。",
+      "supplier_count": 2,
       "has_online_supplier": true
     }
   ]

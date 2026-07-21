@@ -1,6 +1,8 @@
 ﻿name: Crawl & Deploy
 
 on:
+  schedule:
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       skip_deploy:
@@ -8,25 +10,40 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write
+
+concurrency:
+  group: crawl-data-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   SITE_DIR: frontend/site
+  # 未设置时 Astro 暂用当前 IP 并给出构建警告；设置后产物校验会强制 HTTPS 域名。
+  SITE_URL: ${{ vars.SITE_URL }}
 
 jobs:
   crawl:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     defaults:
       run:
-        working-directory: ${{ env.SITE_DIR }}
+        working-directory: frontend/site
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
-      - name: Install Python deps
-        run: pip install --quiet httpx beautifulsoup4 lxml parsel jsonschema pyyaml
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: crawler/uv.lock
+
+      - name: Install crawler dependencies
+        run: uv sync --project ../../crawler --frozen
 
       - uses: actions/setup-node@v4
         with:
@@ -37,24 +54,21 @@ jobs:
       - run: npm ci
 
       - name: Run crawler
-        run: bash ../../crawler/run.sh
-        continue-on-error: true
-        env:
-          KRILL_TOKEN: ${{ secrets.KRILL_TOKEN }}
-          CCGUI_TOKEN: ${{ secrets.CCGUI_TOKEN }}
+        run: uv run --project ../../crawler python ../../crawler/main.py
 
-      - run: npm run build
+      - name: Validate data, build, and check static output
+        run: npm run verify
 
       - name: Commit data changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data
+          git add -A -- src/data
           if git diff --cached --quiet; then
             echo "No data changes"
           else
             git commit -m "data: auto update [skip ci]"
-            git push
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
 
       - name: Upload dist
@@ -66,10 +80,10 @@ jobs:
   deploy:
     needs: crawl
     runs-on: ubuntu-latest
-    if: ${{ !cancelled() && !failure() && github.event_name == 'workflow_dispatch' && !inputs.skip_deploy && secrets.DEPLOY_HOST != '' }}
+    if: ${{ needs.crawl.result == 'success' && (github.event_name == 'schedule' || !inputs.skip_deploy) }}
     environment:
       name: production
-      url: http://124.223.221.163
+      url: ${{ vars.SITE_URL || 'http://124.223.221.163' }}
 
     steps:
       - name: Download dist
@@ -77,6 +91,15 @@ jobs:
         with:
           name: site-dist-${{ github.run_id }}
           path: dist
+
+      - name: Ensure remote directory exists
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script: mkdir -p -- "${{ secrets.DEPLOY_PATH }}"
 
       - name: Deploy via rsync
         uses: burnett01/rsync-deployments@7.0.1
@@ -88,4 +111,3 @@ jobs:
           remote_user: ${{ secrets.DEPLOY_USER }}
           remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
           remote_port: ${{ secrets.DEPLOY_PORT || 22 }}
-          pre_script: mkdir -p ${{ secrets.DEPLOY_PATH }}

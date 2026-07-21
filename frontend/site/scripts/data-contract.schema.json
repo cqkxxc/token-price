@@ -1,0 +1,471 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ai-model-price:data-contract:3",
+  "title": "AI Model Price build data bundle",
+  "type": "object",
+  "required": [
+    "meta",
+    "models",
+    "prices",
+    "suppliers",
+    "stability",
+    "monitor",
+    "manifest"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "meta": { "$ref": "#/$defs/metaFile" },
+    "models": { "$ref": "#/$defs/modelsFile" },
+    "prices": { "$ref": "#/$defs/pricesFile" },
+    "suppliers": { "$ref": "#/$defs/suppliersFile" },
+    "stability": { "$ref": "#/$defs/stabilityFile" },
+    "monitor": { "$ref": "#/$defs/monitorFile" },
+    "manifest": { "$ref": "#/$defs/manifestFile" }
+  },
+  "$defs": {
+    "dateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "nullableDateTime": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "modelSlug": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9.-]*$"
+    },
+    "canonicalId": {
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^[a-z0-9][a-z0-9.-]*(?:-[a-z0-9][a-z0-9.-]*)+$"
+    },
+    "nonNegativeNumber": {
+      "type": "number",
+      "minimum": 0
+    },
+    "nullableNonNegativeNumber": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "company": {
+      "type": "object",
+      "required": ["slug", "name", "name_zh", "logo_color"],
+      "additionalProperties": false,
+      "properties": {
+        "slug": { "$ref": "#/$defs/slug" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "name_zh": { "$ref": "#/$defs/nonEmptyString" },
+        "logo_color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "slug",
+        "display_name",
+        "canonical_id",
+        "company",
+        "series",
+        "capabilities",
+        "pricing_method",
+        "context_window",
+        "official_input_price",
+        "official_output_price",
+        "official_currency",
+        "official_price_source",
+        "publish_date",
+        "description",
+        "supplier_count",
+        "has_online_supplier"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "slug": { "$ref": "#/$defs/modelSlug" },
+        "display_name": { "$ref": "#/$defs/nonEmptyString" },
+        "canonical_id": { "$ref": "#/$defs/canonicalId" },
+        "company": { "$ref": "#/$defs/company" },
+        "series": { "$ref": "#/$defs/nonEmptyString" },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "pricing_method": {
+          "enum": ["per_token", "per_call", "per_image", "per_second"]
+        },
+        "context_window": {
+          "type": ["string", "null"]
+        },
+        "official_input_price": { "$ref": "#/$defs/nonNegativeNumber" },
+        "official_output_price": { "$ref": "#/$defs/nonNegativeNumber" },
+        "official_currency": { "const": "CNY" },
+        "official_price_source": { "$ref": "#/$defs/nonEmptyString" },
+        "publish_date": {
+          "type": ["string", "null"],
+          "format": "date"
+        },
+        "description": { "type": "string" },
+        "supplier_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "has_online_supplier": { "type": "boolean" }
+      }
+    },
+    "modelsFile": {
+      "type": "object",
+      "required": ["updated_at", "models"],
+      "additionalProperties": false,
+      "properties": {
+        "updated_at": { "$ref": "#/$defs/dateTime" },
+        "models": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/model" }
+        }
+      }
+    },
+    "price": {
+      "type": "object",
+      "required": [
+        "canonical_id",
+        "supplier_slug",
+        "supplier_name",
+        "supplier_type",
+        "route",
+        "unit",
+        "currency",
+        "input_price",
+        "output_price",
+        "cache_read_price",
+        "is_active",
+        "source_url",
+        "fetched_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "canonical_id": { "$ref": "#/$defs/canonicalId" },
+        "supplier_slug": { "$ref": "#/$defs/slug" },
+        "supplier_name": { "$ref": "#/$defs/nonEmptyString" },
+        "supplier_type": {
+          "enum": ["official", "direct", "cloud", "aggregator", "relay", "other"]
+        },
+        "route": { "$ref": "#/$defs/nonEmptyString" },
+        "unit": { "enum": ["token", "call", "image", "second"] },
+        "currency": { "const": "CNY" },
+        "input_price": { "$ref": "#/$defs/nonNegativeNumber" },
+        "output_price": { "$ref": "#/$defs/nonNegativeNumber" },
+        "cache_read_price": { "$ref": "#/$defs/nullableNonNegativeNumber" },
+        "is_active": { "type": "boolean" },
+        "source_url": {
+          "type": ["string", "null"],
+          "format": "uri"
+        },
+        "fetched_at": { "$ref": "#/$defs/nullableDateTime" }
+      }
+    },
+    "pricesFile": {
+      "type": "object",
+      "required": ["updated_at", "prices"],
+      "additionalProperties": false,
+      "properties": {
+        "updated_at": { "$ref": "#/$defs/dateTime" },
+        "prices": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/price" }
+        }
+      }
+    },
+    "supplier": {
+      "type": "object",
+      "required": [
+        "slug",
+        "name",
+        "base_url",
+        "description",
+        "payment_methods",
+        "has_invoice",
+        "status",
+        "uptime_7d",
+        "avg_latency_ms",
+        "last_checked_at",
+        "available_models",
+        "total_models"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "slug": { "$ref": "#/$defs/slug" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "base_url": {
+          "type": ["string", "null"],
+          "format": "uri"
+        },
+        "description": { "type": "string" },
+        "payment_methods": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "has_invoice": { "type": ["boolean", "null"] },
+        "status": {
+          "enum": ["online", "degraded", "offline", "unknown"]
+        },
+        "uptime_7d": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "avg_latency_ms": { "$ref": "#/$defs/nullableNonNegativeNumber" },
+        "last_checked_at": { "$ref": "#/$defs/nullableDateTime" },
+        "available_models": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_models": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "suppliersFile": {
+      "type": "object",
+      "required": ["updated_at", "suppliers"],
+      "additionalProperties": false,
+      "properties": {
+        "updated_at": { "$ref": "#/$defs/dateTime" },
+        "suppliers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/supplier" }
+        }
+      }
+    },
+    "stabilityRecord": {
+      "type": "object",
+      "required": [
+        "supplier_slug",
+        "supplier_name",
+        "canonical_id",
+        "model_slug",
+        "route",
+        "uptime_7d",
+        "avg_latency_ms",
+        "samples_7d",
+        "last_checked_at",
+        "status",
+        "last_response_time_ms",
+        "last_http_status",
+        "last_error",
+        "response_text",
+        "source_url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "supplier_slug": { "$ref": "#/$defs/slug" },
+        "supplier_name": { "$ref": "#/$defs/nonEmptyString" },
+        "canonical_id": { "$ref": "#/$defs/canonicalId" },
+        "model_slug": { "$ref": "#/$defs/modelSlug" },
+        "route": { "$ref": "#/$defs/nonEmptyString" },
+        "uptime_7d": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "avg_latency_ms": { "$ref": "#/$defs/nullableNonNegativeNumber" },
+        "samples_7d": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "last_checked_at": { "$ref": "#/$defs/dateTime" },
+        "status": {
+          "enum": ["online", "degraded", "offline", "unknown"]
+        },
+        "last_response_time_ms": { "$ref": "#/$defs/nullableNonNegativeNumber" },
+        "last_http_status": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 599
+        },
+        "last_error": {
+          "type": ["string", "null"]
+        },
+        "response_text": {
+          "type": ["string", "null"]
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "stabilityFile": {
+      "type": "object",
+      "required": ["updated_at", "stability"],
+      "additionalProperties": false,
+      "properties": {
+        "updated_at": { "$ref": "#/$defs/dateTime" },
+        "stability": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stabilityRecord" }
+        }
+      }
+    },
+    "monitorRecord": {
+      "type": "object",
+      "required": [
+        "supplier_slug",
+        "model_slug",
+        "is_available",
+        "response_time_ms",
+        "http_status",
+        "checked_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "supplier_slug": { "$ref": "#/$defs/slug" },
+        "model_slug": { "$ref": "#/$defs/modelSlug" },
+        "is_available": { "type": "boolean" },
+        "response_time_ms": { "$ref": "#/$defs/nullableNonNegativeNumber" },
+        "http_status": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 599
+        },
+        "checked_at": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "monitorFile": {
+      "type": "object",
+      "required": ["updated_at", "records"],
+      "additionalProperties": false,
+      "properties": {
+        "updated_at": { "$ref": "#/$defs/dateTime" },
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/monitorRecord" }
+        }
+      }
+    },
+    "manifestVendor": {
+      "type": "object",
+      "required": ["prd_name", "vendorId"],
+      "properties": {
+        "prd_name": { "$ref": "#/$defs/nonEmptyString" },
+        "vendorId": { "$ref": "#/$defs/slug" },
+        "file": { "$ref": "#/$defs/nonEmptyString" },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "manifestMapping": {
+      "type": "object",
+      "required": ["prd_models"],
+      "properties": {
+        "prd_models": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "file": { "$ref": "#/$defs/nonEmptyString" },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "manifestFile": {
+      "type": "object",
+      "required": [
+        "collected_at",
+        "prd_source",
+        "directories",
+        "vendors",
+        "model_mappings",
+        "supplier_notes"
+      ],
+      "properties": {
+        "collected_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "prd_source": { "$ref": "#/$defs/nonEmptyString" },
+        "directories": {
+          "type": "object",
+          "required": ["vendors", "models", "suppliers"]
+        },
+        "vendors": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/manifestVendor" }
+        },
+        "model_mappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/manifestMapping" }
+        },
+        "supplier_notes": { "type": "array" }
+      }
+    },
+    "metaFile": {
+      "type": "object",
+      "required": [
+        "version",
+        "data_updated_at",
+        "source_name",
+        "source_url",
+        "total_models",
+        "total_suppliers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "3.0.0"
+        },
+        "data_updated_at": { "$ref": "#/$defs/dateTime" },
+        "source_name": {
+          "const": "Oken"
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "total_models": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_suppliers": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_total_models": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_models": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
