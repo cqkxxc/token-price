@@ -8,7 +8,7 @@ export interface Model {
   slug: string; display_name: string; canonical_id: string; company: Company;
   series?: string; capabilities?: string[]; pricing_method: string; context_window?: string | null;
   official_input_price: number; official_output_price: number; official_currency?: string;
-  description?: string; supplier_count?: number; has_online_supplier?: boolean;
+  publish_date?: string; description?: string; supplier_count?: number; has_online_supplier?: boolean;
 }
 export interface Price {
   canonical_id: string; supplier_slug: string; supplier_name: string; supplier_type: string;
@@ -18,6 +18,13 @@ export interface Price {
 export interface Supplier {
   slug: string; name: string; status: string; uptime_7d?: number | null;
   avg_latency_ms?: number | null; payment_methods?: string[];
+}
+export interface Stability {
+  supplier_slug: string; supplier_name: string; canonical_id: string; model_slug: string;
+  route: string; uptime_7d: number | null; avg_latency_ms: number | null;
+  samples_7d?: number | null; last_checked_at?: string | null;
+  status: 'online' | 'degraded' | 'offline' | 'unknown';
+  last_response_time_ms?: number | null; last_http_status?: number | null; last_error?: string | null;
 }
 export interface VendorIconEntry {
   vendorId: string;
@@ -106,6 +113,32 @@ export function modelLogo(m: Model, manifest: Manifest, size = ''): string {
   return `<div class="model-avatar ${size}" aria-hidden="true">${img}<span>${letter}</span></div>`;
 }
 
+const STABILITY_LABELS: Record<Stability['status'], string> = {
+  online: '正常', degraded: '波动', offline: '离线', unknown: '未知',
+};
+const stabilityKey = (item: Pick<Stability, 'supplier_slug' | 'canonical_id' | 'route'>): string =>
+  `${item.supplier_slug}::${item.canonical_id}::${item.route || 'default'}`;
+const normalizeStatus = (value: unknown): Stability['status'] =>
+  value === 'online' || value === 'degraded' || value === 'offline' ? value : 'unknown';
+const uptimeText = (value: number | null | undefined): string =>
+  value === null || value === undefined || !Number.isFinite(Number(value)) ? '—' : `${Number(value).toFixed(1)}%`;
+const latencyText = (value: number | null | undefined): string =>
+  value === null || value === undefined || !Number.isFinite(Number(value)) ? '—' : `${Math.round(Number(value))}ms`;
+
+function stabilityCellHTML(item?: Stability): string {
+  const status = normalizeStatus(item?.status);
+  const uptime = uptimeText(item?.uptime_7d);
+  const latency = latencyText(item?.avg_latency_ms);
+  const checked = item?.last_checked_at ? ` · 最近检测 ${item.last_checked_at}` : '';
+  const title = item
+    ? `7 天可用率 ${uptime} · 平均延迟 ${latency}${checked}`
+    : '暂无稳定性检测数据';
+  return '<td class="dt-stability" title="' + esc(title) + '">' +
+    '<div class="dt-stability-main"><span class="status-dot ' + status + '" aria-hidden="true"></span>' +
+      '<span class="status-text ' + status + '">' + STABILITY_LABELS[status] + '</span></div>' +
+    '<div class="dt-stability-detail"><span>' + uptime + '</span><span aria-hidden="true">·</span><span>' + latency + '</span></div></td>';
+}
+
 // 首页表格：单行 HTML（prices = 该模型的全部报价）
 export function rowHTML(m: Model, prices: Price[], manifest: Manifest): string {
   const comp = composite(m);
@@ -130,22 +163,33 @@ export function rowHTML(m: Model, prices: Price[], manifest: Manifest): string {
 }
 
 // 供应商比价表格（详情页 + 抽屉共用）
-export function priceTableHTML(m: Model, prices: Price[]): string {
+export function priceTableHTML(m: Model, prices: Price[], stability: Stability[] = []): string {
   const ps = activePrices(prices);
   const sorted = [...ps].sort((a, b) => quoteTotal(a, m) - quoteTotal(b, m));
   const min = sorted.length ? quoteTotal(sorted[0], m) : null;
+  const stabilityByRoute = new Map(stability.map((item) => [stabilityKey(item), item]));
   return (
     '<table class="drawer-table">' +
-    '<colgroup><col class="dt-col-supplier"><col class="dt-col-type"><col class="dt-col-route"><col class="dt-col-price"><col class="dt-col-price"><col class="dt-col-composite"><col class="dt-col-action"></colgroup>' +
-    '<thead><tr><th>供应方</th><th>类型</th><th>线路</th><th class="dt-num">输入</th><th class="dt-num">输出</th><th class="dt-num">综合</th><th class="dt-action">操作</th></tr></thead><tbody>' +
+    '<colgroup><col class="dt-col-supplier"><col class="dt-col-type"><col class="dt-col-route"><col class="dt-col-price"><col class="dt-col-price"><col class="dt-col-composite"><col class="dt-col-stability"><col class="dt-col-action"></colgroup>' +
+    '<thead><tr><th>供应方</th><th>类型</th><th>线路</th>' +
+      '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="input"><span>输入</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
+      '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="output"><span>输出</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
+      '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="composite"><span>综合</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
+      '<th>稳定性</th><th class="dt-action">操作</th></tr></thead><tbody>' +
     sorted.map((p) => {
       const pc = quoteTotal(p, m);
-      return '<tr><td class="dt-supplier">' + esc(p.supplier_name) + '</td>' +
+      const stabilityItem = stabilityByRoute.get(stabilityKey({
+        supplier_slug: p.supplier_slug,
+        canonical_id: p.canonical_id,
+        route: p.route || 'default',
+      }));
+      return '<tr data-input-price="' + num(p.input_price) + '" data-output-price="' + num(p.output_price) + '" data-composite-price="' + pc + '" data-supplier="' + esc(p.supplier_name) + '"><td class="dt-supplier">' + esc(p.supplier_name) + '</td>' +
         '<td><span class="tag ' + (p.supplier_type === 'official' ? 'tag-official' : 'tag-relay') + '">' + (p.supplier_type === 'official' ? '官方' : '中转') + '</span></td>' +
         '<td class="dt-route">' + esc(p.route) + '</td>' +
         '<td class="price-cell dt-num">¥' + num(p.input_price).toFixed(2) + '</td>' +
         '<td class="price-cell dt-num">¥' + num(p.output_price).toFixed(2) + '</td>' +
         '<td class="price-cell dt-num ' + (pc === min ? 'price-lowest' : '') + '">¥' + pc.toFixed(2) + (pc === min ? '<span class="lowest-badge">最低</span>' : '') + '</td>' +
+        stabilityCellHTML(stabilityItem) +
         '<td class="dt-action"><a href="' + esc(p.source_url) + '" target="_blank" rel="noopener" class="source-link">前往 ↗</a></td></tr>';
     }).join('') +
     '</tbody></table>'

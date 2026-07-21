@@ -7,12 +7,15 @@ interface Props {
   title: string;
   description?: string;
   showSearch?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 const {
   title,
   description = '查看 OpenAI、Claude、Gemini、DeepSeek 等 AI 模型官方价格，对比中转站报价。',
 } = Astro.props;
+const { jsonLd } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : '';
 ---
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -25,6 +28,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  {jsonLd && <script type="application/ld+json" set:html={jsonLdText}></script>}
   <meta name="theme-color" content="#000000" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,5 +39,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   <Rails />
   <TopNav />
   <slot />
+  <script src="../scripts/price-table.ts"></script>
 </body>
 </html>

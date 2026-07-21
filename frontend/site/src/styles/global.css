@@ -574,7 +574,9 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .hot-models-track::-webkit-scrollbar{display:none}
 .hot-models-marquee{display:flex;width:max-content;animation:hotModelsMarquee 36s linear infinite;will-change:transform}
 .hot-models-group{display:flex;flex-shrink:0;gap:10px;padding-right:10px}
-.hot-models-viewport:hover .hot-models-marquee,.hot-models-track.user-paused .hot-models-marquee{animation-play-state:paused}
+.hot-models-viewport:hover .hot-models-marquee,
+.hot-models-viewport:focus-within .hot-models-marquee,
+.hot-models-track.user-paused .hot-models-marquee{animation-play-state:paused}
 @keyframes hotModelsMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .hot-model-card{
   height:44px;
@@ -775,22 +777,21 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 }
 .sort-control:hover{color:#d7e6f1;background:rgba(78,168,255,.045)}
 .model-table thead th.sortable.active{color:#d6ecfa}
-.sort-arrow{position:relative;display:inline-block;width:14px;height:14px;margin-left:7px;color:#53616f}
-.sort-arrow::before,.sort-arrow::after{
-  content:'';
-  position:absolute;
-  left:4px;
-  width:5px;
-  height:5px;
-  border-right:1.5px solid currentColor;
-  border-bottom:1.5px solid currentColor;
+.sort-arrow{
+  width:14px;
+  height:16px;
+  margin-left:4px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#596979;
+  font:600 13px/1 var(--font-mono);
 }
-.sort-arrow::before{top:1px;transform:rotate(225deg)}
-.sort-arrow::after{bottom:1px;transform:rotate(45deg)}
+.sort-arrow::before{content:'⇅'}
 .model-table thead th.sortable:hover .sort-arrow{color:#8eb8d9}
 .model-table thead th.sortable.active .sort-arrow{color:var(--cyan)}
-.model-table thead th.sortable.active.asc .sort-arrow::after,
-.model-table thead th.sortable.active.desc .sort-arrow::before{opacity:.18}
+.model-table thead th.sortable.active.asc .sort-arrow::before{content:'↑'}
+.model-table thead th.sortable.active.desc .sort-arrow::before{content:'↓'}
 .model-table tbody tr{background:#070b10}
 .model-table tbody td{
   height:64px;
@@ -801,9 +802,10 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   font-size:14px;
   vertical-align:middle;
   white-space:nowrap;
-  transition:background .16s ease,box-shadow .16s ease;
+  transition:background-color .16s ease;
 }
-.model-table tbody tr:hover td{background:linear-gradient(90deg,rgba(78,168,255,.075),rgba(34,211,238,.025) 52%,rgba(7,11,16,.96))}
+.model-table tbody tr:hover td{background-color:#0a1118}
+.model-table tbody td:first-child{transition:background-color .16s ease,box-shadow .16s ease}
 .model-table tbody tr:hover td:first-child{box-shadow:inset 2px 0 var(--cyan)}
 .model-table tbody tr:last-child td{border-bottom:none}
 .model-table thead th:last-child,.model-table tbody td:last-child{
@@ -814,7 +816,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   box-shadow:-18px 0 24px -20px rgba(0,0,0,.96),-1px 0 rgba(136,187,231,.08);
 }
 .model-table thead th:last-child{z-index:3;background:#0a0f15}
-.model-table tbody tr:hover td:last-child{background:#0c151d}
+.model-table tbody tr:hover td:last-child{background-color:#0c151d}
 
 /* ── Model cells and prices ───────────────────────────── */
 .model-cell{display:flex;align-items:center;gap:12px;min-width:0}
@@ -908,6 +910,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .status-text.online{color:var(--green)}
 .status-text.degraded{color:var(--amber)}
 .status-text.offline{color:var(--red)}
+.status-text.unknown{color:var(--text3)}
 
 /* ═══════════════════════════════════════════════════════
    Comparison drawer
@@ -926,7 +929,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   top:0;
   right:0;
   z-index:60;
-  width:640px;
+  width:840px;
   max-width:94vw;
   height:100vh;
   display:none;
@@ -947,20 +950,51 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .drawer .price-summary{border-color:rgba(129,196,255,.13);background:linear-gradient(145deg,rgba(78,168,255,.065),rgba(255,255,255,.018))}
 .drawer-section-title{display:inline-block;margin:4px 0 14px;padding-bottom:9px;border-bottom:2px solid var(--cyan);color:var(--text);font-size:15px;font-weight:600;box-shadow:0 1px rgba(34,211,238,.12)}
 .drawer-table-scroll{width:100%;overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:6px;-webkit-overflow-scrolling:touch}
-.drawer .drawer-table{min-width:560px}
-.drawer-table{width:100%;table-layout:fixed;border-collapse:collapse}
-.drawer-table colgroup .dt-col-supplier{width:22%}
-.drawer-table colgroup .dt-col-type{width:10%}
-.drawer-table colgroup .dt-col-route{width:10%}
-.drawer-table colgroup .dt-col-price{width:13%}
-.drawer-table colgroup .dt-col-composite{width:19%}
-.drawer-table colgroup .dt-col-action{width:13%}
+.drawer .drawer-table{min-width:760px}
+.drawer-table{width:100%;min-width:760px;table-layout:fixed;border-collapse:collapse}
+.detail-card .table-wrap{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.drawer-table colgroup .dt-col-supplier{width:17%}
+.drawer-table colgroup .dt-col-type{width:8%}
+.drawer-table colgroup .dt-col-route{width:9%}
+.drawer-table colgroup .dt-col-price{width:11%}
+.drawer-table colgroup .dt-col-composite{width:14%}
+.drawer-table colgroup .dt-col-stability{width:20%}
+.drawer-table colgroup .dt-col-action{width:10%}
 .drawer-table th{padding:10px 12px;border-bottom:1px solid rgba(140,190,236,.22);color:#8a98a7;font-size:10px;font-weight:600;text-align:left;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.drawer-table th.dt-sortable{padding:0}
+.dt-sort-control{
+  width:100%;
+  min-height:39px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  border:0;
+  outline:none;
+  color:inherit;
+  background:transparent;
+  font:inherit;
+  text-transform:inherit;
+  letter-spacing:inherit;
+  cursor:pointer;
+  transition:color .15s ease,background .15s ease;
+}
+.dt-sort-control:hover{color:#d7e6f1;background:rgba(78,168,255,.055)}
+.drawer-table th.dt-sortable.active{color:#d6ecfa}
+.drawer-table th.dt-sortable:hover .sort-arrow{color:#8eb8d9}
+.drawer-table th.dt-sortable.active .sort-arrow{color:var(--cyan)}
+.drawer-table th.dt-sortable.active.asc .sort-arrow::before{content:'↑'}
+.drawer-table th.dt-sortable.active.desc .sort-arrow::before{content:'↓'}
 .drawer-table td{padding:12px;border-bottom:1px solid rgba(151,193,229,.09);color:#cbd5dd;font-size:13px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .drawer-table th.dt-num,.drawer-table td.dt-num{text-align:right;font-variant-numeric:tabular-nums}
 .drawer-table th.dt-action,.drawer-table td.dt-action{text-align:right}
 .drawer-table td.dt-supplier{font-weight:600;color:#e2ebf2}
 .drawer-table td.dt-route{color:#93a1af;font-family:var(--font-mono);font-size:12px}
+.drawer-table td.dt-stability{overflow:visible}
+.dt-stability-main{display:flex;align-items:center;gap:5px;line-height:1.2}
+.dt-stability-main .status-dot{margin-right:0}
+.dt-stability-main .status-text{font-size:12px}
+.dt-stability-detail{display:flex;align-items:center;gap:4px;margin-top:5px;color:#748392;font-family:var(--font-mono);font-size:10px;font-variant-numeric:tabular-nums;line-height:1}
 .drawer-table td.dt-num .lowest-badge{margin-left:6px}
 .drawer-table tbody tr:hover{background:rgba(78,168,255,.04)}
 .drawer-table tbody tr:last-child td{border-bottom:none}
@@ -1020,6 +1054,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .hot-model-card:focus-visible,
 .chip:focus-visible,
 .sort-control:focus-visible,
+.dt-sort-control:focus-visible,
 .btn-compare:focus-visible,
 .source-link:focus-visible,
 .btn-drawer-close:focus-visible,
@@ -1043,7 +1078,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   .hero-snapshot{padding:17px}
   .hero-metric{min-height:90px;padding:14px}
   .filter-panel{padding-inline:28px}
-  .drawer{width:600px}
+  .drawer{width:760px}
 }
 
 @media(max-width:900px){
