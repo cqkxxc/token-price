@@ -1,132 +1,131 @@
-"""
-爬虫调度器 — fetch → normalize → validate → output JSON
-输出到 frontend/site/src/data/
-"""
+"""Fetch a complete verified Oken snapshot and atomically write each site JSON file."""
+
+from __future__ import annotations
+
+import datetime as dt
 import json
 import os
-import sys
-import datetime
-import time
-from collections import Counter
+import tempfile
+from typing import Any
 
-from config import FRONTEND_DATA_DIR, USD_CNY_RATE
 from adapters.oken_api import (
-    fetch_models, fetch_suppliers,
-    normalize_models, normalize_prices, normalize_suppliers
+    OKEN_SITE,
+    create_session,
+    fetch_model_suppliers,
+    fetch_models,
+    fetch_supplier_directory,
+    normalize_catalog,
+    normalize_models,
 )
-from probe import run_probe
+from config import FRONTEND_DATA_DIR
 
 
-def crawl(dry_run: bool = False):
-    """主流程"""
-    errors = []
-    now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    models_data = []
-    prices_data = []
-    suppliers_data = []
-    stability_data = None
+def _utc_now() -> str:
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    # ── 1. 抓取模型 + 价格（oken.ai API） ──
+
+def _write_json_atomic(path: str, value: Any) -> None:
+    directory = os.path.dirname(path)
+    os.makedirs(directory, exist_ok=True)
+    descriptor, temporary_path = tempfile.mkstemp(
+        dir=directory, prefix=f".{os.path.basename(path)}.", suffix=".tmp"
+    )
     try:
-        raw_models = fetch_models()
-        models_data = normalize_models(raw_models)
-        print(f"  ✓ oken_api: {len(models_data)} models")
-    except Exception as e:
-        errors.append(f"  ✗ oken_api models: {e}")
-        print(f"  ✗ oken_api models: {e}")
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
+            json.dump(value, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+        os.replace(temporary_path, path)
+    except BaseException:
+        try:
+            os.unlink(temporary_path)
+        except FileNotFoundError:
+            pass
+        raise
 
-    # ── 2. 抓取供应商 ──
-    raw_suppliers = []
+
+def crawl(dry_run: bool = False) -> int:
+    """Abort on any required model/route request failure; never publish partial data."""
+    fetched_at = _utc_now()
+    session = create_session()
     try:
-        raw_suppliers = fetch_suppliers()
-        suppliers_data = normalize_suppliers(raw_suppliers)
-        print(f"  ✓ oken_api suppliers: {len(suppliers_data)} suppliers")
-    except Exception as e:
-        errors.append(f"  ✗ oken_api suppliers: {e}")
-        print(f"  ✗ oken_api suppliers: {e}")
+        raw_models = fetch_models(session)
+        if not raw_models:
+            raise RuntimeError("Oken returned no models; refusing an empty snapshot")
+        source_model_count = len(raw_models)
+        raw_models, models, excluded_models = normalize_models(raw_models)
+        if not models:
+            raise RuntimeError("Oken returned no models with verified official prices")
+        print(
+            f"  OK Oken models: {len(models)} publishable / "
+            f"{source_model_count} source rows"
+        )
+        for item in excluded_models:
+            print(
+                f"  WARN Excluded model {item.get('slug') or item.get('id')}: "
+                f"{item['reason']}"
+            )
 
-    # ── 3. 生成价格（官方 + 中转站） ──
-    if models_data:
-        prices_data = normalize_prices(raw_models, raw_suppliers)
-        print(f"  ✓ prices: {len(prices_data)} entries")
+        try:
+            supplier_directory = fetch_supplier_directory(session)
+            print(f"  OK Optional supplier URL directory: {len(supplier_directory)}")
+        except Exception as error:
+            supplier_directory = []
+            print(f"  WARN Optional supplier URL directory unavailable: {error}")
 
-    # ── 4. 校验与补全 ──
-    if not models_data:
-        print("  ⚠ No models from API — output will be empty")
-        return 1
+        rows_by_model_id: dict[int, list[dict[str, Any]]] = {}
+        for index, raw_model in enumerate(raw_models, start=1):
+            rows = fetch_model_suppliers(session, raw_model)
+            rows_by_model_id[int(raw_model["id"])] = rows
+            print(
+                f"  OK Routes {index:>2}/{len(raw_models)} "
+                f"{raw_model.get('sku_name')}: {len(rows)}"
+            )
+    finally:
+        session.close()
 
-    # 从 prices 计算 supplier_count 和 has_online_supplier
-    model_price_counts = Counter(p.get("canonical_id", "") for p in prices_data)
-    for m in models_data:
-        m["supplier_count"] = model_price_counts.get(m.get("canonical_id", ""), 0)
-        m["has_online_supplier"] = m["supplier_count"] > 0
-
-    # 给 suppliers 补上 available_models
-    supplier_model_counts = Counter(p.get("supplier_slug", "") for p in prices_data)
-    for s in suppliers_data:
-        s["available_models"] = supplier_model_counts.get(s.get("slug", ""), 0)
-        s["total_models"] = s["available_models"] or 0
-
-    # ── 5. 稳定性探测（每个中转站） ──
-    try:
-        stability_data = run_probe(suppliers_data, models_data)
-        print(f"  ✓ stability: {len(stability_data.get('stability', []))} records")
-    except Exception as e:
-        errors.append(f"  ✗ stability probe: {e}")
-        print(f"  ✗ stability probe: {e}")
-
-    # ── 6. 输出 JSON ──
-    os.makedirs(FRONTEND_DATA_DIR, exist_ok=True)
-
-    meta = {
-        "version": "1.0.0",
-        "data_updated_at": now,
-        "usd_cny_rate": USD_CNY_RATE,
-        "rate_updated_at": now,
-        "total_models": len(models_data),
-        "total_suppliers": len(suppliers_data),
-    }
+    prices, suppliers, stability = normalize_catalog(
+        raw_models,
+        models,
+        rows_by_model_id,
+        supplier_directory,
+        fetched_at,
+    )
+    if not prices:
+        raise RuntimeError("No verified prices were normalized; refusing to publish")
 
     outputs = {
-        "meta.json": meta,
-        "models.json": {"updated_at": now, "models": models_data},
-        "prices.json": {"updated_at": now, "prices": prices_data},
-        "suppliers.json": {"updated_at": now, "suppliers": suppliers_data},
-        "monitor.json": {"updated_at": now, "records": []},
+        "meta.json": {
+            "version": "3.0.0",
+            "data_updated_at": fetched_at,
+            "source_name": "Oken",
+            "source_url": OKEN_SITE,
+            "total_models": len(models),
+            "total_suppliers": len(suppliers),
+            "source_total_models": source_model_count,
+            "excluded_models": len(excluded_models),
+        },
+        "models.json": {"updated_at": fetched_at, "models": models},
+        "prices.json": {"updated_at": fetched_at, "prices": prices},
+        "suppliers.json": {"updated_at": fetched_at, "suppliers": suppliers},
+        "stability.json": {"updated_at": fetched_at, "stability": stability},
+        # Compatibility file only. Verified monitoring lives in stability.json;
+        # synthetic direct probes are intentionally disabled.
+        "monitor.json": {"updated_at": fetched_at, "records": []},
     }
-    if stability_data:
-        outputs["stability.json"] = stability_data
 
     if dry_run:
-        print("\n  [DRY RUN] Would write:")
-        for name, data in outputs.items():
-            path = os.path.join(FRONTEND_DATA_DIR, name)
-            size = len(json.dumps(data, ensure_ascii=False))
-            print(f"    {path}  ({size:,} bytes)")
+        print("\n  [DRY RUN] Verified snapshot:")
+        for filename, value in outputs.items():
+            size = len(json.dumps(value, ensure_ascii=False).encode("utf-8"))
+            print(f"    {filename:<18} {size:>10,} bytes")
         return 0
 
-    for filename, data in outputs.items():
-        path = os.path.join(FRONTEND_DATA_DIR, filename)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+    for filename, value in outputs.items():
+        _write_json_atomic(os.path.join(FRONTEND_DATA_DIR, filename), value)
 
-    # ── 7. 报告 ──
-    print(f"\n  ✅ Output → {FRONTEND_DATA_DIR}/")
-    print(f"     meta.json        — {len(models_data)} models, {len(suppliers_data)} suppliers")
-    print(f"     models.json      — {len(models_data)} entries")
-    print(f"     prices.json      — {len(prices_data)} entries")
-    print(f"     suppliers.json   — {len(suppliers_data)} entries")
-    if stability_data:
-        print(f"     stability.json   — {len(stability_data['stability'])} entries")
-
-    if errors:
-        print(f"\n  ⚠ Errors ({len(errors)}):")
-        for e in errors:
-            print(e)
-
-    return 0 if not errors else 1
-
-
-if __name__ == "__main__":
-    dry = "--dry-run" in sys.argv
-    sys.exit(crawl(dry_run=dry))
+    print(f"\n  OK Output: {FRONTEND_DATA_DIR}")
+    print(f"     models:    {len(models)}")
+    print(f"     prices:    {len(prices)}")
+    print(f"     suppliers: {len(suppliers)}")
+    print(f"     stability: {len(stability)}")
+    return 0

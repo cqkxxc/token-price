@@ -5,11 +5,19 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "validate:data": "node scripts/validate-data.mjs",
+    "check": "astro check",
+    "build": "npm run validate:data && astro build",
+    "check:dist": "node scripts/check-dist.mjs",
+    "verify": "npm run check && npm run build && npm run check:dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "astro": "^4.16.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
   }
 }

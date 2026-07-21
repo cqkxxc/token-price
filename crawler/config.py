@@ -9,9 +9,6 @@ CRAWLER_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(CRAWLER_DIR)
 FRONTEND_DATA_DIR = os.path.join(PROJECT_DIR, "frontend", "site", "src", "data")
 
-# ── 汇率 ──
-USD_CNY_RATE = 7.25
-
 # ── 公司信息 ──
 COMPANIES = {
     "openai":     {"slug": "openai",     "name": "OpenAI",      "name_zh": "OpenAI",     "logo_color": "#10a37f"},

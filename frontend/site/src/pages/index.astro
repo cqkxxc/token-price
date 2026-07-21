@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import { MODELS, PRICES, SUPPLIERS, MANIFEST, META, pricesOf, clientDataset } from '../lib/data';
-import { rowHTML, modelLogo, vendorIconFor, companyName, composite, num } from '../lib/render';
+import { MODELS, PRICES, SUPPLIERS, MANIFEST, META, pricesOf } from '../lib/data';
+import {
+  rowHTML, modelLogo, vendorIconFor, companyName, composite, activePrices,
+  discountFor, discountPercentText, officialPriceDisplay, quoteTotal, esc,
+} from '../lib/render';
 import { homeJsonLd } from '../lib/seo';
 
 // ── 首屏筛选器数据（构建期计算）────────────────────────
@@ -10,7 +13,49 @@ const capabilities = [...new Set(MODELS.flatMap((m) => m.capabilities || []))];
 
 // 默认排序：综合价降序（与旧版一致）
 const sorted = [...MODELS].sort((a, b) => (composite(b) ?? -Infinity) - (composite(a) ?? -Infinity));
-const initialRows = sorted.map((m) => rowHTML(m, pricesOf(m.canonical_id), MANIFEST)).join('');
+
+const homeRowHTML = (m: (typeof MODELS)[number]) => {
+  const prices = pricesOf(m.canonical_id);
+  let html = rowHTML(m, prices, MANIFEST);
+  if (!activePrices(prices).length) {
+    html = html.replace('>0 家</td>', '><span class="verified-quote-status is-empty">暂无已验证报价</span></td>');
+  }
+  return html;
+};
+
+const mobileCardHTML = (m: (typeof MODELS)[number]) => {
+  const prices = pricesOf(m.canonical_id);
+  const quotes = activePrices(prices);
+  const official = officialPriceDisplay(m);
+  const discount = discountFor(m, prices);
+  const supplierCount = new Set(quotes.map((price) => price.supplier_slug)).size;
+  const caps = (m.capabilities || []).slice(0, 3);
+  const quoteStatus = quotes.length
+    ? `${supplierCount} 家供应商 · ${quotes.length} 条线路`
+    : '暂无已验证报价';
+
+  return '<article class="model-result-card">' +
+    '<div class="model-result-card-head">' + modelLogo(m, MANIFEST, 'model-result-logo') +
+      '<div class="model-result-identity"><h3><a href="/models/' + esc(m.slug) + '/">' + esc(m.display_name) + '</a></h3>' +
+      '<p>' + esc(companyName(m)) + '</p></div>' +
+      '<button type="button" class="btn-compare model-card-compare" data-compare="' + esc(m.slug) +
+        '" aria-label="比较 ' + esc(m.display_name) + ' 的供应商报价">比价 <span aria-hidden="true">→</span></button></div>' +
+    (caps.length ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>' : '') +
+    '<dl class="model-result-prices">' +
+      '<div><dt>' + official.primaryLabel + '</dt><dd>' + official.primaryHtml + '</dd></div>' +
+      '<div><dt>官方输出价</dt><dd>' + official.outputHtml + '</dd></div>' +
+      '<div><dt>官方综合价</dt><dd>' + official.compositeHtml + '</dd></div>' +
+    '</dl>' +
+    '<div class="model-result-card-foot"><span class="verified-quote-status' + (quotes.length ? '' : ' is-empty') + '">' +
+      quoteStatus + '</span>' +
+      (discount > 0 ? '<span class="model-result-discount">最低约省 ' + discountPercentText(discount) + '</span>' : '') +
+    '</div></article>';
+};
+
+const initialRows = sorted.map(homeRowHTML).join('');
+// Keep the first mobile viewport server-rendered; the compact client summary
+// expands the complete card list immediately after hydration.
+const initialCards = sorted.slice(0, 20).map(mobileCardHTML).join('');
 
 // 热门模型走马灯
 const hotScrollModels = [
@@ -23,7 +68,7 @@ const renderHotCards = (isVisualClone = false) => hotScrollModels
     if (!m) return '';
     const content = `${modelLogo(m, MANIFEST, 'hot-model-logo')}<span>${m.display_name}</span>`;
     return isVisualClone
-      ? `<span class="hot-model-card" data-hot-model="${m.slug}">${content}</span>`
+      ? `<span class="hot-model-card">${content}</span>`
       : `<button class="hot-model-card" type="button" data-hot-model="${m.slug}" aria-pressed="false">${content}</button>`;
   })
   .join('');
@@ -32,9 +77,28 @@ const hotCardsClone = renderHotCards(true);
 
 const updatedAt = String(META.data_updated_at || '');
 const updated = updatedAt.slice(0, 10);
-const activeQuoteCount = PRICES.filter((p) => p.is_active === true && p.source_url).length;
-const dataset = JSON.stringify(clientDataset()).replace(/</g, '\\u003c');
-const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), MODELS, updatedAt);
+const verifiedPrices = PRICES.filter((p) => p.is_active === true && p.source_url);
+const activeQuoteCount = verifiedPrices.length;
+
+// 首页只内联筛选和首屏展示所需摘要；完整报价按模型从构建产物加载。
+type CompactQuoteSummary = [number, number, number | null];
+const compactSummaries: CompactQuoteSummary[] = MODELS.map((model) => {
+  const quotes = activePrices(pricesOf(model.canonical_id));
+  return [
+    new Set(quotes.map((price) => price.supplier_slug)).size,
+    quotes.length,
+    quotes.length ? Math.min(...quotes.map((price) => quoteTotal(price, model))) : null,
+  ];
+});
+
+const dataset = JSON.stringify({
+  v: 2,
+  models: MODELS,
+  r: compactSummaries,
+  meta: { data_updated_at: META.data_updated_at, source_name: META.source_name },
+  manifest: MANIFEST,
+}).replace(/</g, '\\u003c');
+const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updatedAt);
 ---
 <Base title="AI 模型价格比价 — 官方价与中转站价格对比" jsonLd={jsonLd}>
   <div id="page-home" class="page active">
@@ -47,9 +111,9 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), MODELS, updat
       <div class="hero-copy">
         <div class="intro-eyebrow">
           <span class="pulse-dot"></span>
-          <span>实时价格指数</span>
+          <span>已验证价格快照</span>
           <span class="intro-eyebrow-separator" aria-hidden="true"></span>
-          <span class="intro-eyebrow-en">LIVE PRICING INDEX</span>
+          <span class="intro-eyebrow-en">VERIFIED PRICING SNAPSHOT</span>
         </div>
         <h1>AI 大模型全网比价</h1>
         <p>覆盖主流官方厂商与中转站。统一人民币口径，一目了然。</p>
@@ -92,6 +156,10 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), MODELS, updat
           <div class="hot-models-group" aria-hidden="true" set:html={hotCardsClone}></div>
         </div>
       </div></div>
+      <button class="hot-models-toggle" id="hotModelsToggle" type="button" aria-pressed="false" aria-controls="hotModelsTrack" aria-label="暂停热门模型滚动">
+        <span class="hot-models-toggle-icon" aria-hidden="true"></span>
+        <span id="hotModelsToggleText">暂停</span>
+      </button>
     </section>
 
     <section class="content-shell" aria-labelledby="filterHeading">
@@ -103,21 +171,21 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), MODELS, updat
           </div>
           <div class="filter-search" id="searchBox">
             <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-            <input type="text" id="globalSearch" placeholder="搜索模型名称、厂商、能力…" autocomplete="off" aria-label="搜索模型">
+            <input type="text" id="globalSearch" placeholder="搜索模型名称、厂商、能力…" autocomplete="off" aria-label="搜索模型" aria-controls="modelResults">
           </div>
-          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · 表内为官方价 · {updated}</span>
+          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · 表内为官方价 · 数据源 {META.source_name} · {updated}</span>
         </div>
         <div class="filter-controls">
-          <div class="filter-row"><span class="filter-label">厂商</span>
-            <div class="filter-group" id="companyChips">
-              <button type="button" class="chip active" data-company="">全部</button>
+          <div class="filter-row"><span class="filter-label" id="companyFilterLabel">厂商</span>
+            <div class="filter-group" id="companyChips" role="group" aria-labelledby="companyFilterLabel">
+              <button type="button" class="chip active" data-company="" aria-pressed="true">全部</button>
               {companies.map((model) => {
                 const company = model.company;
                 const name = companyName(model);
                 const icon = vendorIconFor(company, MANIFEST);
                 const fallback = (Array.from(name.trim())[0] || '?').toUpperCase();
                 return (
-                  <button type="button" class="chip chip-vendor" data-company={company.slug}>
+                  <button type="button" class="chip chip-vendor" data-company={company.slug} aria-pressed="false">
                     <span class:list={['chip-vendor-icon', { 'vendor-icon-fallback': !icon }]} aria-hidden="true">
                       {icon && <img src={icon} alt="" aria-hidden="true" onerror="this.parentElement.classList.add('vendor-icon-fallback');this.remove()" />}
                       <span class="chip-vendor-fallback">{fallback}</span>
@@ -128,35 +196,36 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), MODELS, updat
               })}
             </div>
           </div>
-          <div class="filter-row"><span class="filter-label">能力</span>
-            <div class="filter-group" id="capabilityChips">
-              <button type="button" class="chip active" data-capability="">全部</button>
-              {capabilities.map((c) => <button type="button" class="chip" data-capability={c}>{c}</button>)}
+          <div class="filter-row"><span class="filter-label" id="capabilityFilterLabel">能力</span>
+            <div class="filter-group" id="capabilityChips" role="group" aria-labelledby="capabilityFilterLabel">
+              <button type="button" class="chip active" data-capability="" aria-pressed="true">全部</button>
+              {capabilities.map((c) => <button type="button" class="chip" data-capability={c} aria-pressed="false">{c}</button>)}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="table-wrap"><div class="table-scroll"><table class="model-table"><caption class="sr-only">AI 模型官方价格与供应商报价对比</caption><thead><tr>
+      <div class="table-wrap" id="modelResults"><div class="table-scroll"><table class="model-table"><caption class="sr-only">AI 模型官方价格与供应商报价对比</caption><thead><tr>
         <th class="sortable" data-sort="name" id="th-name" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>模型</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
         <th scope="col">模型厂商</th><th scope="col">能力</th>
-        <th class="sortable" data-sort="input_price" id="th-input" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输入价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
+        <th class="sortable" data-sort="input_price" id="th-input" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输入 / 单位价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
         <th class="sortable" data-sort="output_price" id="th-output" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输出价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
         <th class="sortable active desc" data-sort="composite_price" id="th-composite" scope="col" aria-sort="descending"><button type="button" class="sort-control"><span>官方综合价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
         <th scope="col">折扣</th><th scope="col">渠道</th><th scope="col"><span class="sr-only">操作</span></th>
       </tr></thead><tbody id="tableBody" set:html={initialRows}></tbody></table></div>
+        <div class="model-card-list" id="modelCardList" aria-label="AI 模型价格结果" set:html={initialCards}></div>
         <div class="empty-state" id="emptyState" style="display:none">没有匹配的模型</div>
       </div>
     </section>
   </div>
 
   <!-- 比价抽屉 -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-  <div class="drawer" id="drawer">
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true" hidden></div>
+  <section class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="模型供应商比价" tabindex="-1" hidden>
     <button type="button" class="btn-drawer-close" id="drawerClose" aria-label="关闭比价抽屉">✕</button>
     <div class="drawer-inner" id="drawerContent"></div>
-  </div>
+  </section>
 
-  <script id="__DATA__" type="application/json" set:html={dataset}></script>
+  <script is:inline id="__DATA__" type="application/json" set:html={dataset}></script>
   <script src="../scripts/home.ts"></script>
 </Base>

@@ -1,8 +1,10 @@
 {
-  "version": "1.0.0",
-  "data_updated_at": "2026-07-20T06:20:06Z",
-  "usd_cny_rate": 7.25,
-  "rate_updated_at": "2026-07-20T06:20:06Z",
-  "total_models": 20,
-  "total_suppliers": 96
+  "version": "3.0.0",
+  "data_updated_at": "2026-07-21T08:21:41Z",
+  "source_name": "Oken",
+  "source_url": "https://oken.ai/zh",
+  "total_models": 120,
+  "total_suppliers": 98,
+  "source_total_models": 256,
+  "excluded_models": 136
 }
