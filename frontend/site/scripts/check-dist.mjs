@@ -557,9 +557,7 @@ if (staleDataFiles.length) {
 
 const privateMeta = JSON.parse(await readFile(path.join(siteDirectory, 'src', 'data', 'meta.json'), 'utf8'));
 const privateSourceName = String(privateMeta.source_name || '').trim();
-const privateSourceHost = typeof privateMeta.source_url === 'string'
-  ? new URL(privateMeta.source_url).hostname.toLowerCase()
-  : '';
+const privateSourceHosts = ['oken.ai'];
 const privateSourceNamePattern = privateSourceName
   ? new RegExp('\\b' + escapeRegExp(privateSourceName) + '\\b', 'i')
   : null;
@@ -569,7 +567,7 @@ const exposedSourceEntryFiles = [];
 for (const file of publicTextFiles) {
   const content = await readFile(file, 'utf8');
   if (
-    (privateSourceHost && content.toLowerCase().includes(privateSourceHost))
+    privateSourceHosts.some((host) => content.toLowerCase().includes(host))
     || (privateSourceNamePattern && privateSourceNamePattern.test(content))
   ) {
     exposedSourceFiles.push(path.relative(distDirectory, file).replaceAll('\\', '/'));

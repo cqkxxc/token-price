@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:ai-model-price:data-contract:3",
+  "$id": "urn:ai-model-price:data-contract:4",
   "title": "AI Model Price build data bundle",
   "type": "object",
   "required": [
@@ -154,7 +154,6 @@
         "output_price",
         "cache_read_price",
         "is_active",
-        "source_url",
         "fetched_at"
       ],
       "additionalProperties": false,
@@ -172,10 +171,6 @@
         "output_price": { "$ref": "#/$defs/nonNegativeNumber" },
         "cache_read_price": { "$ref": "#/$defs/nullableNonNegativeNumber" },
         "is_active": { "type": "boolean" },
-        "source_url": {
-          "type": ["string", "null"],
-          "format": "uri"
-        },
         "fetched_at": { "$ref": "#/$defs/nullableDateTime" }
       }
     },
@@ -197,7 +192,6 @@
       "required": [
         "slug",
         "name",
-        "base_url",
         "description",
         "payment_methods",
         "has_invoice",
@@ -212,10 +206,6 @@
       "properties": {
         "slug": { "$ref": "#/$defs/slug" },
         "name": { "$ref": "#/$defs/nonEmptyString" },
-        "base_url": {
-          "type": ["string", "null"],
-          "format": "uri"
-        },
         "description": { "type": "string" },
         "payment_methods": {
           "type": "array",
@@ -271,8 +261,7 @@
         "last_response_time_ms",
         "last_http_status",
         "last_error",
-        "response_text",
-        "source_url"
+        "response_text"
       ],
       "additionalProperties": false,
       "properties": {
@@ -306,10 +295,6 @@
         },
         "response_text": {
           "type": ["string", "null"]
-        },
-        "source_url": {
-          "type": "string",
-          "format": "uri"
         }
       }
     },
@@ -432,22 +417,17 @@
         "version",
         "data_updated_at",
         "source_name",
-        "source_url",
         "total_models",
         "total_suppliers"
       ],
       "additionalProperties": false,
       "properties": {
         "version": {
-          "const": "3.0.0"
+          "const": "4.0.0"
         },
         "data_updated_at": { "$ref": "#/$defs/dateTime" },
         "source_name": {
           "const": "Oken"
-        },
-        "source_url": {
-          "type": "string",
-          "format": "uri"
         },
         "total_models": {
           "type": "integer",

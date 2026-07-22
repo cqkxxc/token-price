@@ -9,7 +9,6 @@ import tempfile
 from typing import Any
 
 from adapters.oken_api import (
-    OKEN_SITE,
     create_session,
     fetch_model_suppliers,
     fetch_models,
@@ -95,10 +94,9 @@ def crawl(dry_run: bool = False) -> int:
 
     outputs = {
         "meta.json": {
-            "version": "3.0.0",
+            "version": "4.0.0",
             "data_updated_at": fetched_at,
             "source_name": "Oken",
-            "source_url": OKEN_SITE,
             "total_models": len(models),
             "total_suppliers": len(suppliers),
             "source_total_models": source_model_count,

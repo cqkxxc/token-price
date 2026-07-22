@@ -1,8 +1,7 @@
 {
-  "version": "3.0.0",
+  "version": "4.0.0",
   "data_updated_at": "2026-07-21T08:21:41Z",
   "source_name": "Oken",
-  "source_url": "https://oken.ai/zh",
   "total_models": 120,
   "total_suppliers": 98,
   "source_total_models": 256,

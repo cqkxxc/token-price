@@ -5,7 +5,6 @@ import { monitorSupplierJsonLd } from '../../lib/seo';
 
 type StabilityRecord = (typeof STABILITY)[number] & {
   response_text?: string | null;
-  source_url?: string | null;
 };
 type MonitorStatus = StabilityRecord['status'];
 
@@ -14,7 +13,6 @@ export function getStaticPaths() {
   for (const record of STABILITY as StabilityRecord[]) {
     if (!(
       record.last_checked_at
-      && record.source_url
       && (
         record.uptime_7d != null
         || record.avg_latency_ms != null

@@ -21,7 +21,6 @@ from urllib3.util.retry import Retry
 from config import COMPANIES, company_key, guess_series
 
 OKEN_API = "https://gateway.oken.ai/v4/services/jiazhi-aipolymerization/api/v1"
-OKEN_SITE = "https://oken.ai/zh"
 PAGE_SIZE = 200
 TIMEOUT_SECONDS = 30
 HEADERS = {
@@ -388,7 +387,6 @@ def normalize_catalog(
         upstream_id = int(raw["id"])
         canonical_id = model["canonical_id"]
         company_slug = model["company"]["slug"]
-        source_url = f"{OKEN_SITE}/model-detail?id={upstream_id}"
         pricing_method, unit = PRICING_METHODS.get(
             raw.get("pricing_method"), ("per_token", "token")
         )
@@ -460,7 +458,6 @@ def normalize_catalog(
                 "output_price": model["official_output_price"],
                 "cache_read_price": None,
                 "is_active": True,
-                "source_url": source_url,
                 "fetched_at": fetched_at,
             }
         )
@@ -476,7 +473,6 @@ def normalize_catalog(
                 model,
                 official_supplier_slug,
                 "官方参考价",
-                source_url,
                 supplier_name=official_source_name,
             )
             if record:
@@ -498,7 +494,6 @@ def normalize_catalog(
                     "output_price": quote["output_price"],
                     "cache_read_price": quote["cache_read_price"],
                     "is_active": True,
-                    "source_url": source_url,
                     "fetched_at": fetched_at,
                 }
             )
@@ -508,7 +503,7 @@ def normalize_catalog(
             supplier["models"].add(canonical_id)
             _merge_supplier_facts(supplier, row, directory_urls)
             record = _stability_record(
-                row, model, supplier_slug, route, source_url
+                row, model, supplier_slug, route
             )
             if record:
                 stability.append(record)
@@ -753,7 +748,6 @@ def _stability_record(
     model: dict[str, Any],
     supplier_slug: str,
     route: str,
-    source_url: str,
     supplier_name: str | None = None,
 ) -> dict[str, Any] | None:
     uptime = _number(row.get("stability"))
@@ -782,7 +776,6 @@ def _stability_record(
         "last_http_status": None,
         "last_error": None,
         "response_text": response_text,
-        "source_url": source_url,
     }
 
 
@@ -826,7 +819,6 @@ def _merge_supplier_facts(
 def _finalize_supplier(slug: str, supplier: dict[str, Any]) -> dict[str, Any]:
     names: Counter = supplier["names"]
     name = sorted(names, key=lambda value: (-names[value], value.casefold()))[0]
-    urls = supplier["urls"]
     records = supplier["stability"]
     uptimes = [record["uptime_7d"] for record in records]
     latencies = [record["avg_latency_ms"] for record in records]
@@ -840,7 +832,6 @@ def _finalize_supplier(slug: str, supplier: dict[str, Any]) -> dict[str, Any]:
     return {
         "slug": slug,
         "name": name,
-        "base_url": next(iter(urls)) if len(urls) == 1 else None,
         "description": "",
         "payment_methods": sorted(supplier["payment_methods"]),
         "has_invoice": has_invoice,

@@ -77,8 +77,8 @@ const hotCardsClone = renderHotCards(true);
 
 const updatedAt = String(META.data_updated_at || '');
 const updated = updatedAt.slice(0, 10);
-const verifiedPrices = PRICES.filter((p) => p.is_active === true && p.source_url);
-const activeQuoteCount = verifiedPrices.length;
+const activePriceRows = PRICES.filter((p) => p.is_active === true);
+const activeQuoteCount = activePriceRows.length;
 
 // 首页只内联筛选和首屏展示所需摘要；完整报价按模型从构建产物加载。
 type CompactQuoteSummary = [number, number, number | null];
