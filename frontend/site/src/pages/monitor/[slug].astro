@@ -68,7 +68,7 @@ const latestCheckedAt = records
   .map((record) => record.last_checked_at)
   .filter((value): value is string => Boolean(value))
   .sort((left, right) => Date.parse(right) - Date.parse(left))[0] ?? null;
-const description = `${supplierName} 模型线路的上游近 7 天稳定率、响应延迟与最近更新时间。指标直接来自带来源链接的上游监控记录，不代表本站主动探测。`;
+const description = `${supplierName} 模型线路近 7 天的稳定率、响应延迟与最近更新时间。指标来自已验证的数据快照，不代表本站主动探测。`;
 const jsonLd = monitorSupplierJsonLd(
   Astro.site || new URL(Astro.url.origin),
   Astro.params.slug || supplierName,
@@ -97,7 +97,7 @@ const jsonLd = monitorSupplierJsonLd(
 
       <div class="monitor-table-wrap">
         <table class="monitor-detail-table">
-          <caption class="sr-only">{supplierName} 上游近 7 天模型线路监控详情</caption>
+          <caption class="sr-only">{supplierName} 近 7 天模型线路监控详情</caption>
           <thead>
             <tr>
               <th scope="col">模型</th>
@@ -106,7 +106,6 @@ const jsonLd = monitorSupplierJsonLd(
               <th scope="col">稳定率</th>
               <th scope="col">响应延迟</th>
               <th scope="col">检查时间</th>
-              <th scope="col">数据来源</th>
             </tr>
           </thead>
           <tbody>
@@ -121,14 +120,13 @@ const jsonLd = monitorSupplierJsonLd(
                   <td class="monitor-metric">{record.uptime_7d != null ? `${record.uptime_7d.toFixed(2)}%` : '—'}</td>
                   <td class="monitor-metric">{latency != null ? `${Math.round(latency)}ms` : '—'}</td>
                   <td><time datetime={record.last_checked_at || undefined}>{formatTime(record.last_checked_at)}</time></td>
-                  <td><a class="source-link" href={record.source_url!} target="_blank" rel="noopener noreferrer">查看上游记录<span class="sr-only">（新窗口打开）</span></a></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      <p class="monitor-data-note">数据来自上游近 7 天监控，并非本站主动探测。“—” 表示上游未提供该项指标，页面不会用估算值补齐。</p>
+      <p class="monitor-data-note">页面展示近 7 天的已验证监控快照，并非本站主动探测。“—” 表示该项指标暂无有效数据，页面不会用估算值补齐。</p>
     </div>
   </div>
 </Base>

@@ -83,7 +83,7 @@ const statusCounts = {
   unknown: suppliers.filter((supplier) => supplier.status === 'unknown').length,
 };
 
-const description = '查看供应商各模型线路的上游近 7 天监控稳定率、响应延迟和最近更新时间；缺少可追溯来源时不会展示推测数据。';
+const description = '查看供应商各模型线路近 7 天的稳定率、响应延迟和最近更新时间；缺少有效监控数据时不会展示推测值。';
 const jsonLd = monitorIndexJsonLd(
   Astro.site || new URL(Astro.url.origin),
   suppliers,
@@ -115,7 +115,7 @@ const jsonLd = monitorIndexJsonLd(
               <a
                 class={`monitor-card ${supplier.status}`}
                 href={`/monitor/${encodeURIComponent(supplier.slug)}/`}
-                aria-label={`查看 ${supplier.name} 的上游近 7 天线路监控详情`}
+                aria-label={`查看 ${supplier.name} 的近 7 天线路监控详情`}
               >
                 <div class="monitor-card-heading">
                   <span class="monitor-card-name">{supplier.name}</span>
@@ -135,7 +135,7 @@ const jsonLd = monitorIndexJsonLd(
       ) : (
         <section class="empty-state monitor-empty" aria-labelledby="monitorEmptyTitle">
           <h2 id="monitorEmptyTitle">暂无已验证监控数据</h2>
-          <p>上游尚未返回带来源链接的近 7 天监控记录，因此这里不展示模拟状态。</p>
+          <p>当前没有有效的近 7 天监控记录，因此这里不展示模拟状态。</p>
         </section>
       )}
     </div>

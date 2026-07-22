@@ -68,7 +68,6 @@ export function modelJsonLd(site: URL, model: Model, prices: Price[], updatedAt?
         name: `${quote.supplier_name} · ${quote.route}`,
         price: priceValue(quote[field]),
         priceCurrency: 'CNY',
-        url: quote.source_url,
         seller: { '@type': 'Organization', name: quote.supplier_name },
         priceSpecification: {
           '@type': 'UnitPriceSpecification',
