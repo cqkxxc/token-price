@@ -141,7 +141,7 @@ export function officialPriceDisplay(m: Model): {
   };
 }
 export function activePrices(prices: Price[]): Price[] {
-  return (prices || []).filter((p) => p.is_active === true && p.source_url);
+  return (prices || []).filter((p) => p.is_active === true);
 }
 export function quoteTotal(p: Price, m: Model): number {
   return isToken(m) ? num(p.input_price) + num(p.output_price) : num(p.input_price) || num(p.output_price);
@@ -194,9 +194,9 @@ function stabilityCellHTML(item?: Stability): string {
   const status = normalizeStatus(item?.status);
   const uptime = uptimeText(item?.uptime_7d);
   const latency = latencyText(item?.avg_latency_ms);
-  const checked = item?.last_checked_at ? ` · 上游更新 ${item.last_checked_at}` : '';
+  const checked = item?.last_checked_at ? ` · 最近更新 ${item.last_checked_at}` : '';
   const title = item
-    ? `上游近 7 天稳定率 ${uptime} · 平均响应延迟 ${latency}${checked}`
+    ? `近 7 天稳定率 ${uptime} · 平均响应延迟 ${latency}${checked}`
     : '暂无已验证稳定性数据';
   return '<td class="dt-stability" title="' + esc(title) + '">' +
     '<div class="dt-stability-main"><span class="status-dot ' + status + '" aria-hidden="true"></span>' +
@@ -243,7 +243,7 @@ export function priceTableHTML(m: Model, prices: Price[], stability: Stability[]
   const stabilityByRoute = new Map(stability.map((item) => [stabilityKey(item), item]));
   return (
     '<table class="drawer-table">' +
-    '<colgroup><col class="dt-col-supplier"><col class="dt-col-type"><col class="dt-col-route"><col class="dt-col-price"><col class="dt-col-price"><col class="dt-col-composite"><col class="dt-col-stability"><col class="dt-col-action"></colgroup>' +
+    '<colgroup><col class="dt-col-supplier"><col class="dt-col-type"><col class="dt-col-route"><col class="dt-col-price"><col class="dt-col-price"><col class="dt-col-composite"><col class="dt-col-stability"></colgroup>' +
     '<thead><tr><th>供应方</th><th>类型</th><th>线路</th>' +
       (tokenPricing
         ? '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="input"><span>输入</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
@@ -251,7 +251,7 @@ export function priceTableHTML(m: Model, prices: Price[], stability: Stability[]
           '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="composite"><span>综合</span><i class="sort-arrow" aria-hidden="true"></i></button></th>'
         : '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="input"><span>单位价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
           '<th class="dt-num">不适用</th><th class="dt-num">不适用</th>') +
-      '<th>稳定性</th><th class="dt-action">操作</th></tr></thead><tbody>' +
+      '<th>稳定性</th></tr></thead><tbody>' +
     sorted.map((p) => {
       const pc = quoteTotal(p, m);
       const inputSortPrice = tokenPricing ? num(p.input_price) : pc;
@@ -267,8 +267,7 @@ export function priceTableHTML(m: Model, prices: Price[], stability: Stability[]
         '<td class="price-cell dt-num ' + (!tokenPricing && pc === min ? 'price-lowest' : '') + '">' + (tokenPricing ? '¥' + priceNumberText(p.input_price) : priceText(pc, m)) + (!tokenPricing && pc === min ? '<span class="lowest-badge">最低</span>' : '') + '</td>' +
         '<td class="price-cell dt-num">' + (tokenPricing ? '¥' + priceNumberText(p.output_price) : '—') + '</td>' +
         '<td class="price-cell dt-num ' + (tokenPricing && pc === min ? 'price-lowest' : '') + '">' + (tokenPricing ? '¥' + priceNumberText(pc) + (pc === min ? '<span class="lowest-badge">最低</span>' : '') : '—') + '</td>' +
-        stabilityCellHTML(stabilityItem) +
-        '<td class="dt-action"><a href="' + esc(p.source_url) + '" target="_blank" rel="noopener noreferrer" class="source-link">查看来源 ↗</a></td></tr>';
+        stabilityCellHTML(stabilityItem) + '</tr>';
     }).join('') +
     '</tbody></table>'
   );

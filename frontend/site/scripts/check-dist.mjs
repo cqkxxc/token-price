@@ -43,6 +43,10 @@ function parseHttpUrl(value, label) {
   }
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function nodesFromStructuredData(parsed) {
   if (Array.isArray(parsed?.['@graph'])) return parsed['@graph'];
   return parsed && typeof parsed === 'object' ? [parsed] : [];
@@ -118,9 +122,6 @@ function validateModelJsonLd(nodes, pagePath, canonicalHref) {
       }
       for (const [childIndex, offer] of children.entries()) {
         const childLabel = label + ', child ' + (childIndex + 1);
-        const source = typeof offer?.url === 'string'
-          ? parseHttpUrl(offer.url, childLabel + ' source')
-          : null;
         const specification = offer?.priceSpecification;
         if (
           offer?.['@type'] !== 'Offer'
@@ -131,9 +132,9 @@ function validateModelJsonLd(nodes, pagePath, canonicalHref) {
           || offer.seller?.['@type'] !== 'Organization'
           || typeof offer.seller?.name !== 'string'
           || !offer.seller.name.trim()
-          || !source
+          || Object.hasOwn(offer, 'url')
         ) {
-          errors.push(childLabel + ' has invalid price, seller, or source');
+          errors.push(childLabel + ' has invalid price, seller, or a public source URL');
         }
         if (
           specification?.['@type'] !== 'UnitPriceSpecification'
@@ -483,7 +484,7 @@ if (payload) {
         continue;
       }
       if (
-        quotePayload.v !== 1
+        quotePayload.v !== 2
         || quotePayload.model_slug !== model.slug
         || !Array.isArray(quotePayload.prices)
         || !Array.isArray(quotePayload.stability)
@@ -501,16 +502,13 @@ if (payload) {
         }
         priceKeys.add(key);
         supplierSlugs.add(price.supplier_slug);
-        const source = typeof price.source_url === 'string'
-          ? parseHttpUrl(price.source_url, 'api/quotes/' + model.slug + '.json source')
-          : null;
         if (
           price.canonical_id !== model.canonical_id
           || price.is_active !== true
           || price.currency !== 'CNY'
           || !finiteNonNegative(price.input_price)
           || !finiteNonNegative(price.output_price)
-          || !source
+          || Object.hasOwn(price, 'source_url')
         ) {
           errors.push('api/quotes/' + model.slug + '.json: invalid quote at ' + priceIndex);
         }
@@ -533,7 +531,14 @@ if (payload) {
       const stabilityKeys = new Set();
       for (const [stabilityIndex, record] of quotePayload.stability.entries()) {
         const key = record.supplier_slug + '::' + record.canonical_id + '::' + (record.route || 'default');
-        if (stabilityKeys.has(key) || !priceKeys.has(key) || record.model_slug !== model.slug) {
+        if (
+          stabilityKeys.has(key)
+          || !priceKeys.has(key)
+          || record.model_slug !== model.slug
+          || Object.hasOwn(record, 'source_url')
+          || Object.hasOwn(record, 'response_text')
+          || Object.hasOwn(record, 'last_error')
+        ) {
           errors.push('api/quotes/' + model.slug + '.json: invalid stability reference at ' + stabilityIndex);
         }
         stabilityKeys.add(key);
@@ -548,6 +553,36 @@ const staleDataFiles = files.filter((file) => {
 });
 if (staleDataFiles.length) {
   errors.push('dist: stale public/data files were published');
+}
+
+const privateMeta = JSON.parse(await readFile(path.join(siteDirectory, 'src', 'data', 'meta.json'), 'utf8'));
+const privateSourceName = String(privateMeta.source_name || '').trim();
+const privateSourceHost = typeof privateMeta.source_url === 'string'
+  ? new URL(privateMeta.source_url).hostname.toLowerCase()
+  : '';
+const privateSourceNamePattern = privateSourceName
+  ? new RegExp('\\b' + escapeRegExp(privateSourceName) + '\\b', 'i')
+  : null;
+const publicTextFiles = files.filter((file) => /\.(?:css|html|js|json|svg|txt|xml)$/i.test(file));
+const exposedSourceFiles = [];
+const exposedSourceEntryFiles = [];
+for (const file of publicTextFiles) {
+  const content = await readFile(file, 'utf8');
+  if (
+    (privateSourceHost && content.toLowerCase().includes(privateSourceHost))
+    || (privateSourceNamePattern && privateSourceNamePattern.test(content))
+  ) {
+    exposedSourceFiles.push(path.relative(distDirectory, file).replaceAll('\\', '/'));
+  }
+  if (/查看来源|查看上游记录/.test(content)) {
+    exposedSourceEntryFiles.push(path.relative(distDirectory, file).replaceAll('\\', '/'));
+  }
+}
+if (exposedSourceFiles.length) {
+  errors.push('dist: private upstream identity is exposed in ' + exposedSourceFiles.slice(0, 8).join(', '));
+}
+if (exposedSourceEntryFiles.length) {
+  errors.push('dist: upstream source entry text is exposed in ' + exposedSourceEntryFiles.slice(0, 8).join(', '));
 }
 
 for (const warning of warnings) console.warn('Static output warning: ' + warning);

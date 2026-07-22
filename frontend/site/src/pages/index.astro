@@ -95,7 +95,7 @@ const dataset = JSON.stringify({
   v: 2,
   models: MODELS,
   r: compactSummaries,
-  meta: { data_updated_at: META.data_updated_at, source_name: META.source_name },
+  meta: { data_updated_at: META.data_updated_at },
   manifest: MANIFEST,
 }).replace(/</g, '\\u003c');
 const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updatedAt);
@@ -173,7 +173,7 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updat
             <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
             <input type="text" id="globalSearch" placeholder="搜索模型名称、厂商、能力…" autocomplete="off" aria-label="搜索模型" aria-controls="modelResults">
           </div>
-          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · 表内为官方价 · 数据源 {META.source_name} · {updated}</span>
+          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · 表内为官方价 · 更新 {updated}</span>
         </div>
         <div class="filter-controls">
           <div class="filter-row"><span class="filter-label" id="companyFilterLabel">厂商</span>

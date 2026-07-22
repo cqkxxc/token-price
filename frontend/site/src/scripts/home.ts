@@ -14,7 +14,7 @@ interface Dataset {
   v?: number;
   models: Model[];
   r?: CompactQuoteSummary[];
-  meta: any;
+  meta: { data_updated_at?: string };
   manifest: Manifest;
 }
 const raw = document.getElementById('__DATA__')?.textContent || '{}';
@@ -133,7 +133,7 @@ function renderTable() {
     tb.innerHTML = list.map(homeRowHTML).join('');
     cards.innerHTML = list.map(mobileCardHTML).join('');
   }
-  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · 表内为官方价 · 数据源 ${String(META.source_name || 'Oken')} · ${String(META.data_updated_at || '').slice(0, 10)}`;
+  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · 表内为官方价 · 更新 ${String(META.data_updated_at || '').slice(0, 10)}`;
 }
 function syncChips() {
   document.querySelectorAll<HTMLButtonElement>('#companyChips .chip').forEach((chip) => {
@@ -218,7 +218,7 @@ function drawerFocusableElements(): HTMLElement[] {
 }
 
 interface QuotePayload {
-  v: 1;
+  v: 2;
   model_slug: string;
   updated_at: string;
   prices: Price[];
@@ -237,7 +237,7 @@ function loadQuotes(model: Model): Promise<QuotePayload> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload = await response.json() as Partial<QuotePayload>;
     if (
-      payload.v !== 1
+      payload.v !== 2
       || payload.model_slug !== model.slug
       || !Array.isArray(payload.prices)
       || !Array.isArray(payload.stability)
@@ -284,7 +284,7 @@ function renderDrawerContent(
     quoteContent = '<div class="drawer-table-scroll">' + priceTableHTML(model, prices, stability) + '</div>';
   } else {
     quoteContent = '<div class="verified-quotes-empty" role="status"><strong>暂无已验证报价</strong>' +
-      '<p>当前数据集中没有带来源链接的有效供应商报价。</p>' +
+      '<p>当前数据集中没有有效的供应商报价。</p>' +
       '<a href="/models/' + esc(model.slug) + '/">查看模型详情</a></div>';
   }
 
