@@ -272,9 +272,6 @@ function validateBusinessRules(data) {
     if (price.unit !== expectedUnit[model.pricing_method]) {
       errors.push(`${location}.unit: expected ${expectedUnit[model.pricing_method]} for ${model.pricing_method}`);
     }
-    if (price.is_active && !/^https?:\/\//i.test(price.source_url)) {
-      errors.push(`${location}.source_url: active quotes require a source URL`);
-    }
     if (price.is_active && !price.fetched_at) {
       errors.push(`${location}.fetched_at: active quotes require a collection timestamp`);
     }

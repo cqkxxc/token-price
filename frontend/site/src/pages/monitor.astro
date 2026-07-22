@@ -5,13 +5,11 @@ import { monitorIndexJsonLd } from '../lib/seo';
 
 type StabilityRecord = (typeof STABILITY)[number] & {
   response_text?: string | null;
-  source_url?: string | null;
 };
 type MonitorStatus = StabilityRecord['status'];
 
 const isVerified = (record: StabilityRecord) => Boolean(
   record.last_checked_at
-  && record.source_url
   && (
     record.uptime_7d != null
     || record.avg_latency_ms != null

@@ -20,10 +20,10 @@ export interface Price {
   supplier_type: 'official' | 'direct' | 'cloud' | 'aggregator' | 'relay' | 'other';
   route: string; unit: PriceUnit; currency: 'CNY';
   input_price: number; output_price: number; cache_read_price: number | null;
-  is_active: boolean; source_url: string | null; fetched_at: string | null;
+  is_active: boolean; fetched_at: string | null;
 }
 export interface Supplier {
-  slug: string; name: string; base_url: string | null; description: string;
+  slug: string; name: string; description: string;
   payment_methods: string[]; has_invoice: boolean | null; status: SupplierStatus;
   uptime_7d: number | null; avg_latency_ms: number | null; last_checked_at: string | null;
   available_models: number; total_models: number;
@@ -33,10 +33,10 @@ export interface Stability {
   route: string; uptime_7d: number | null; avg_latency_ms: number | null;
   samples_7d: number | null; last_checked_at: string; status: SupplierStatus;
   last_response_time_ms: number | null; last_http_status: number | null; last_error: string | null;
-  response_text: string | null; source_url: string;
+  response_text: string | null;
 }
 export interface DataMeta {
-  version: '3.0.0'; data_updated_at: string; source_name: 'Oken'; source_url: string;
+  version: '4.0.0'; data_updated_at: string; source_name: 'Oken';
   total_models: number; total_suppliers: number; source_total_models?: number; excluded_models?: number;
 }
 export interface QuoteSummary {

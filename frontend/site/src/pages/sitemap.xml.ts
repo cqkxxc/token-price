@@ -12,7 +12,6 @@ export const GET: APIRoute = ({ site }) => {
     STABILITY
       .filter((record) => (
         record.last_checked_at
-        && (record as { source_url?: string | null }).source_url
         && (
           record.uptime_7d != null
           || record.avg_latency_ms != null

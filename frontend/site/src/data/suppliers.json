@@ -4,7 +4,6 @@
     {
       "slug": "supplier-127",
       "name": "360 智脑开放平台 / SmartBrain API",
-      "base_url": "https://api.360.cn",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -18,7 +17,6 @@
     {
       "slug": "supplier-147",
       "name": "3AToken",
-      "base_url": "https://aaatoken.cn",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -32,7 +30,6 @@
     {
       "slug": "supplier-29",
       "name": "4SAPI",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -48,7 +45,6 @@
     {
       "slug": "supplier-107",
       "name": "Aiberm",
-      "base_url": "https://aiberm.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -62,7 +58,6 @@
     {
       "slug": "supplier-142",
       "name": "AICodeMirror",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -76,7 +71,6 @@
     {
       "slug": "supplier-121",
       "name": "AIMZ",
-      "base_url": "https://mzlone.top",
       "description": "",
       "payment_methods": [
         "直充"
@@ -92,7 +86,6 @@
     {
       "slug": "supplier-104",
       "name": "Amux API",
-      "base_url": "https://api.amux.ai",
       "description": "",
       "payment_methods": [
         "直充"
@@ -108,7 +101,6 @@
     {
       "slug": "supplier-159",
       "name": "AnPin AI",
-      "base_url": "https://anpin.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -122,7 +114,6 @@
     {
       "slug": "supplier-81",
       "name": "Anthropic",
-      "base_url": "https://api.anthropic.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -136,7 +127,6 @@
     {
       "slug": "supplier-112",
       "name": "API 分发站",
-      "base_url": "https://api.meding.site",
       "description": "",
       "payment_methods": [
         "直充"
@@ -152,7 +142,6 @@
     {
       "slug": "supplier-120",
       "name": "apinebula",
-      "base_url": "https://apinebula.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -168,7 +157,6 @@
     {
       "slug": "supplier-108",
       "name": "ApiPorter",
-      "base_url": "https://www.apiporter.cn",
       "description": "",
       "payment_methods": [
         "直充"
@@ -184,7 +172,6 @@
     {
       "slug": "supplier-118",
       "name": "APIYI",
-      "base_url": "https://api.apiyi.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -198,7 +185,6 @@
     {
       "slug": "supplier-182",
       "name": "BootToken启元枢纽",
-      "base_url": "https://BootToken.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -212,7 +198,6 @@
     {
       "slug": "supplier-185",
       "name": "boxying",
-      "base_url": "https://www.boxying.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -226,7 +211,6 @@
     {
       "slug": "supplier-28",
       "name": "buzzai",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -242,7 +226,6 @@
     {
       "slug": "supplier-77",
       "name": "claudecc",
-      "base_url": "https://claudecc.top",
       "description": "",
       "payment_methods": [
         "直充"
@@ -258,7 +241,6 @@
     {
       "slug": "supplier-180",
       "name": "Code0.ai",
-      "base_url": "https://api.openai.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -272,7 +254,6 @@
     {
       "slug": "supplier-152",
       "name": "CUN.ai",
-      "base_url": "https://www.cun.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -286,7 +267,6 @@
     {
       "slug": "supplier-1",
       "name": "DeepSeek",
-      "base_url": "https://api.deepseek.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -300,7 +280,6 @@
     {
       "slug": "supplier-30",
       "name": "DMXAPI",
-      "base_url": "https://www.dmxapi.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -316,7 +295,6 @@
     {
       "slug": "supplier-124",
       "name": "DMXAPI-聚合",
-      "base_url": "https://www.dmxapi.cn",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -330,7 +308,6 @@
     {
       "slug": "supplier-183",
       "name": "Easy88AI",
-      "base_url": "https://api.easy88ai.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -344,7 +321,6 @@
     {
       "slug": "supplier-163",
       "name": "ephone.ai",
-      "base_url": "https://api.ephone.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -358,7 +334,6 @@
     {
       "slug": "supplier-115",
       "name": "FlyMux",
-      "base_url": "https://api.flymux.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -372,7 +347,6 @@
     {
       "slug": "supplier-173",
       "name": "ggwk1 API",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -386,7 +360,6 @@
     {
       "slug": "supplier-126",
       "name": "Gitee AI / 模力方舟",
-      "base_url": "https://ai.gitee.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -400,7 +373,6 @@
     {
       "slug": "supplier-79",
       "name": "Google",
-      "base_url": "https://aiplatform.googleapis.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -414,7 +386,6 @@
     {
       "slug": "supplier-90",
       "name": "Google cloud",
-      "base_url": "https://aiplatform.googleapis.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -428,7 +399,6 @@
     {
       "slug": "supplier-164",
       "name": "GPTEAM",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -442,7 +412,6 @@
     {
       "slug": "supplier-76",
       "name": "Happy API",
-      "base_url": "https://happyapi.org",
       "description": "",
       "payment_methods": [
         "直充"
@@ -458,7 +427,6 @@
     {
       "slug": "supplier-151",
       "name": "hohoapi",
-      "base_url": "https://www.hohoapi.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -472,7 +440,6 @@
     {
       "slug": "supplier-3",
       "name": "Kimi",
-      "base_url": "https://api.moonshot.cn",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -486,7 +453,6 @@
     {
       "slug": "supplier-111",
       "name": "KKSJ API",
-      "base_url": "https://api.kksj.org",
       "description": "",
       "payment_methods": [
         "直充"
@@ -502,7 +468,6 @@
     {
       "slug": "supplier-19",
       "name": "lingxicode",
-      "base_url": "https://new.050602.xyz",
       "description": "",
       "payment_methods": [
         "直充"
@@ -518,7 +483,6 @@
     {
       "slug": "supplier-16",
       "name": "LinkAPI",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -534,7 +498,6 @@
     {
       "slug": "supplier-106",
       "name": "LinksAPI",
-      "base_url": "https://linksapi.cn",
       "description": "",
       "payment_methods": [
         "直充"
@@ -550,7 +513,6 @@
     {
       "slug": "supplier-56",
       "name": "LLM-ALL API",
-      "base_url": "https://llm-all.pro",
       "description": "",
       "payment_methods": [
         "直充"
@@ -566,7 +528,6 @@
     {
       "slug": "supplier-144",
       "name": "LuminAi",
-      "base_url": "https://ai.luminai.cc",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -580,7 +541,6 @@
     {
       "slug": "supplier-91",
       "name": "Microsoft Foundry",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -594,7 +554,6 @@
     {
       "slug": "supplier-4",
       "name": "MiniMax",
-      "base_url": "https://api.minimaxi.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -608,7 +567,6 @@
     {
       "slug": "supplier-160",
       "name": "ModCon",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -622,7 +580,6 @@
     {
       "slug": "supplier-128",
       "name": "MokaAI",
-      "base_url": "https://api.moka-ai.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -636,7 +593,6 @@
     {
       "slug": "supplier-114",
       "name": "MoreCode联盟",
-      "base_url": "http://www.1314mc.net:3333",
       "description": "",
       "payment_methods": [
         "直充"
@@ -652,7 +608,6 @@
     {
       "slug": "supplier-119",
       "name": "Neko code",
-      "base_url": "https://nekocode.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -666,7 +621,6 @@
     {
       "slug": "supplier-146",
       "name": "nexaxis",
-      "base_url": "https://nexaxis.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -680,7 +634,6 @@
     {
       "slug": "supplier-157",
       "name": "No.1-API",
-      "base_url": "https://api.rcouyi.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -694,7 +647,6 @@
     {
       "slug": "supplier-78",
       "name": "OpenAI",
-      "base_url": "https://api.openai.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -708,7 +660,6 @@
     {
       "slug": "supplier-51",
       "name": "packyapi",
-      "base_url": "https://www.packyapi.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -724,7 +675,6 @@
     {
       "slug": "supplier-113",
       "name": "Poixe AI",
-      "base_url": "https://api.poixe.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -738,7 +688,6 @@
     {
       "slug": "supplier-136",
       "name": "PPIO（派欧云）",
-      "base_url": "https://api.ppio.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -752,7 +701,6 @@
     {
       "slug": "supplier-150",
       "name": "RIVORA",
-      "base_url": "https://ali.hias-sjd.top",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -766,7 +714,6 @@
     {
       "slug": "supplier-161",
       "name": "Run API",
-      "base_url": "https://runapi.co",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -780,7 +727,6 @@
     {
       "slug": "supplier-169",
       "name": "S3AI API",
-      "base_url": "https://ai.furry.vg",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -794,7 +740,6 @@
     {
       "slug": "supplier-102",
       "name": "SillyDream Wish API",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -810,7 +755,6 @@
     {
       "slug": "supplier-139",
       "name": "SophNet",
-      "base_url": "https://www.sophnet.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -824,7 +768,6 @@
     {
       "slug": "supplier-18",
       "name": "spark code",
-      "base_url": "https://sparkcode.top",
       "description": "",
       "payment_methods": [
         "套餐",
@@ -842,7 +785,6 @@
     {
       "slug": "supplier-149",
       "name": "Token Box",
-      "base_url": "https://tokenbox.cloud",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -856,7 +798,6 @@
     {
       "slug": "supplier-110",
       "name": "tokenx",
-      "base_url": "https://api.toknex.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -870,7 +811,6 @@
     {
       "slug": "supplier-129",
       "name": "TopRouter",
-      "base_url": "https://api.toprouter.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -884,7 +824,6 @@
     {
       "slug": "supplier-148",
       "name": "Traxnode",
-      "base_url": "https://www.traxnode.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -898,7 +837,6 @@
     {
       "slug": "supplier-99",
       "name": "V-API",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -912,7 +850,6 @@
     {
       "slug": "supplier-116",
       "name": "WolfAI",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -928,7 +865,6 @@
     {
       "slug": "supplier-80",
       "name": "xAI",
-      "base_url": "https://api.x.ai",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -942,7 +878,6 @@
     {
       "slug": "supplier-53",
       "name": "Xcode",
-      "base_url": "https://api.xcode.best",
       "description": "",
       "payment_methods": [
         "直充"
@@ -958,7 +893,6 @@
     {
       "slug": "supplier-23",
       "name": "Xiavier Ai",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -974,7 +908,6 @@
     {
       "slug": "supplier-117",
       "name": "Your API",
-      "base_url": "https://api.yourapi.cn",
       "description": "",
       "payment_methods": [
         "直充"
@@ -990,7 +923,6 @@
     {
       "slug": "supplier-100",
       "name": "一步API",
-      "base_url": "https://yibuapi.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1006,7 +938,6 @@
     {
       "slug": "supplier-137",
       "name": "七牛云",
-      "base_url": "https://api.qnaigc.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1020,7 +951,6 @@
     {
       "slug": "supplier-184",
       "name": "云影 API",
-      "base_url": "https://www.yyapi.cloud",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1034,7 +964,6 @@
     {
       "slug": "supplier-24",
       "name": "云雾API",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -1050,7 +979,6 @@
     {
       "slug": "supplier-134",
       "name": "京东云",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1064,7 +992,6 @@
     {
       "slug": "supplier-135",
       "name": "优云智算",
-      "base_url": "https://api.modelverse.cn",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1078,7 +1005,6 @@
     {
       "slug": "supplier-109",
       "name": "元衡 API",
-      "base_url": "https://nan.meta-api.vip",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1094,7 +1020,6 @@
     {
       "slug": "supplier-74",
       "name": "刀刀中转API",
-      "base_url": "https://api.chatgptid.net",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1110,7 +1035,6 @@
     {
       "slug": "supplier-130",
       "name": "华为云",
-      "base_url": "https://api.modelarts-maas.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1124,7 +1048,6 @@
     {
       "slug": "supplier-20",
       "name": "即刻 AI",
-      "base_url": "https://magic666.top",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1140,7 +1063,6 @@
     {
       "slug": "supplier-17",
       "name": "大白API",
-      "base_url": "https://ai-api.db-kj.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1156,7 +1078,6 @@
     {
       "slug": "supplier-154",
       "name": "天枢",
-      "base_url": "https://tian-shu.org",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1170,7 +1091,6 @@
     {
       "slug": "supplier-131",
       "name": "天翼云 / CTYUN",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1184,7 +1104,6 @@
     {
       "slug": "supplier-166",
       "name": "小鲸AI开放平台",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1198,7 +1117,6 @@
     {
       "slug": "supplier-138",
       "name": "并行智算云",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1212,7 +1130,6 @@
     {
       "slug": "supplier-155",
       "name": "得令",
-      "base_url": "https://router.gettoken.net",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -1226,7 +1143,6 @@
     {
       "slug": "supplier-168",
       "name": "数智ai",
-      "base_url": "https://xpluse.plus",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1240,7 +1156,6 @@
     {
       "slug": "supplier-156",
       "name": "星算AI",
-      "base_url": "https://api.xsai5.xyz",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1254,7 +1169,6 @@
     {
       "slug": "supplier-105",
       "name": "星辰·AI",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -1270,7 +1184,6 @@
     {
       "slug": "supplier-158",
       "name": "智惠API",
-      "base_url": "https://api.api2cn.com",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -1284,7 +1197,6 @@
     {
       "slug": "supplier-82",
       "name": "智谱AI",
-      "base_url": "https://open.bigmodel.cn",
       "description": "",
       "payment_methods": [],
       "has_invoice": false,
@@ -1298,7 +1210,6 @@
     {
       "slug": "supplier-70",
       "name": "漫剧API",
-      "base_url": "https://manju.chat",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1314,7 +1225,6 @@
     {
       "slug": "supplier-5",
       "name": "火山引擎",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1328,7 +1238,6 @@
     {
       "slug": "supplier-178",
       "name": "猫艾",
-      "base_url": "https://maoapi.org",
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1342,7 +1251,6 @@
     {
       "slug": "supplier-7",
       "name": "百度云",
-      "base_url": "https://qianfan.baidubce.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1358,7 +1266,6 @@
     {
       "slug": "supplier-10",
       "name": "硅基流动",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -1374,7 +1281,6 @@
     {
       "slug": "supplier-132",
       "name": "移动云 / 中国移动云",
-      "base_url": null,
       "description": "",
       "payment_methods": [],
       "has_invoice": true,
@@ -1388,7 +1294,6 @@
     {
       "slug": "supplier-8",
       "name": "腾讯云",
-      "base_url": "https://api.hunyuan.cloud.tencent.com",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1404,7 +1309,6 @@
     {
       "slug": "supplier-50",
       "name": "钱多多API",
-      "base_url": "https://api2.aigcbest.top",
       "description": "",
       "payment_methods": [
         "直充"
@@ -1420,7 +1324,6 @@
     {
       "slug": "supplier-123",
       "name": "镜核 AI",
-      "base_url": null,
       "description": "",
       "payment_methods": [
         "直充"
@@ -1436,7 +1339,6 @@
     {
       "slug": "supplier-6",
       "name": "阿里云",
-      "base_url": "https://dashscope.aliyuncs.com/compatible-mode",
       "description": "",
       "payment_methods": [
         "直充"
