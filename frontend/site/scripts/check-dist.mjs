@@ -569,6 +569,7 @@ if (!clientScripts.some((content) => content.includes('.json?v=${'))) {
 }
 const exposedSourceFiles = [];
 const exposedSourceEntryFiles = [];
+const externalGoogleFontFiles = [];
 for (const file of publicTextFiles) {
   const content = await readFile(file, 'utf8');
   if (
@@ -580,12 +581,18 @@ for (const file of publicTextFiles) {
   if (/查看来源|查看上游记录/.test(content)) {
     exposedSourceEntryFiles.push(path.relative(distDirectory, file).replaceAll('\\', '/'));
   }
+  if (/fonts\.(?:googleapis|gstatic)\.com/i.test(content)) {
+    externalGoogleFontFiles.push(path.relative(distDirectory, file).replaceAll('\\', '/'));
+  }
 }
 if (exposedSourceFiles.length) {
   errors.push('dist: private upstream identity is exposed in ' + exposedSourceFiles.slice(0, 8).join(', '));
 }
 if (exposedSourceEntryFiles.length) {
   errors.push('dist: upstream source entry text is exposed in ' + exposedSourceEntryFiles.slice(0, 8).join(', '));
+}
+if (externalGoogleFontFiles.length) {
+  errors.push('dist: render-blocking Google Fonts references remain in ' + externalGoogleFontFiles.slice(0, 8).join(', '));
 }
 
 for (const warning of warnings) console.warn('Static output warning: ' + warning);
