@@ -416,6 +416,17 @@ if (indexHtml.includes('-100%') || indexHtml.includes('约省 100%')) {
 if (indexHtml.includes('data-capability="—"') || indexHtml.includes('<span class="model-tag">—</span>')) {
   errors.push('/: the missing-value placeholder was rendered as a capability filter or tag');
 }
+const hotModelButtons = [...indexHtml.matchAll(/<button class="hot-model-card"[^>]*data-hot-model="([^"]+)"/g)]
+  .map((match) => match[1]);
+const hotModelClones = [...indexHtml.matchAll(/<span class="hot-model-card hot-model-card-clone"[^>]*data-hot-model="([^"]+)"[^>]*data-hot-model-clone="true"/g)]
+  .map((match) => match[1]);
+if (
+  !hotModelButtons.length
+  || hotModelButtons.length !== hotModelClones.length
+  || hotModelButtons.some((slug) => !hotModelClones.includes(slug))
+) {
+  errors.push('/: marquee clones must preserve the clickable hot-model mapping');
+}
 
 const payloadMatch = indexHtml.match(/<script id="__DATA__" type="application\/json">([\s\S]*?)<\/script>/);
 let payload = null;
@@ -599,6 +610,12 @@ if (
   && !clientScripts.some((content) => content.includes('model-result-capabilities-missing'))
 ) {
   errors.push('/: client-rendered mobile cards lack the missing-capability placeholder');
+}
+if (clientScripts.some((content) => content.includes('user-paused'))) {
+  errors.push('dist: hot-model clicks still include the legacy delayed pause state');
+}
+if (!clientScripts.some((content) => content.includes('is-dragging'))) {
+  errors.push('dist: hot-model drag detection is missing from the client script');
 }
 const exposedSourceFiles = [];
 const exposedSourceEntryFiles = [];
