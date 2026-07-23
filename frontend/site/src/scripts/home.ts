@@ -365,25 +365,55 @@ function trapDrawerFocus(event: KeyboardEvent) {
   }
 }
 
-// ── 热门走马灯：拖动时暂停 ───────────────────────────────
+// ── 热门走马灯：仅真实拖动或手动控制时暂停 ───────────────
 function initMarquee() {
   const track = $('hotModelsTrack');
   const toggle = $<HTMLButtonElement>('hotModelsToggle');
   const toggleText = $('hotModelsToggleText');
   if (!track || !toggle || !toggleText) return;
-  let t: number | undefined;
   let manuallyPaused = false;
-  const pause = () => { clearTimeout(t); track.classList.add('user-paused'); };
-  const resume = () => { clearTimeout(t); t = window.setTimeout(() => track.classList.remove('user-paused'), 1500); };
+  let pointerId: number | null = null;
+  let pointerStartX = 0;
+  let pointerStartY = 0;
+  let dragged = false;
+  let clearDraggedState: number | undefined;
+
+  const finishDrag = (event: PointerEvent) => {
+    if (pointerId !== event.pointerId) return;
+    pointerId = null;
+    track.classList.remove('is-dragging');
+    clearTimeout(clearDraggedState);
+    clearDraggedState = window.setTimeout(() => { dragged = false; }, 0);
+  };
   const syncToggle = () => {
     track.classList.toggle('is-paused', manuallyPaused);
     toggle.setAttribute('aria-pressed', String(manuallyPaused));
     toggle.setAttribute('aria-label', manuallyPaused ? '继续热门模型滚动' : '暂停热门模型滚动');
     toggleText.textContent = manuallyPaused ? '继续' : '暂停';
   };
-  track.addEventListener('pointerdown', pause, { passive: true });
-  window.addEventListener('pointerup', resume, { passive: true });
-  window.addEventListener('pointercancel', resume, { passive: true });
+  track.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary) return;
+    clearTimeout(clearDraggedState);
+    pointerId = event.pointerId;
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+    dragged = false;
+  }, { passive: true });
+  window.addEventListener('pointermove', (event) => {
+    if (pointerId !== event.pointerId || dragged) return;
+    const distanceX = Math.abs(event.clientX - pointerStartX);
+    const distanceY = Math.abs(event.clientY - pointerStartY);
+    if (distanceX < 8 || distanceX <= distanceY) return;
+    dragged = true;
+    track.classList.add('is-dragging');
+  }, { passive: true });
+  window.addEventListener('pointerup', finishDrag, { passive: true });
+  window.addEventListener('pointercancel', finishDrag, { passive: true });
+  track.addEventListener('click', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }, { capture: true });
   toggle.addEventListener('click', () => {
     manuallyPaused = !manuallyPaused;
     syncToggle();

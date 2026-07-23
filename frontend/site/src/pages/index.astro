@@ -71,7 +71,7 @@ const renderHotCards = (isVisualClone = false) => hotScrollModels
     if (!m) return '';
     const content = `${modelLogo(m, MANIFEST, 'hot-model-logo')}<span>${m.display_name}</span>`;
     return isVisualClone
-      ? `<span class="hot-model-card">${content}</span>`
+      ? `<span class="hot-model-card hot-model-card-clone" data-hot-model="${m.slug}" data-hot-model-clone="true">${content}</span>`
       : `<button class="hot-model-card" type="button" data-hot-model="${m.slug}" aria-pressed="false">${content}</button>`;
   })
   .join('');

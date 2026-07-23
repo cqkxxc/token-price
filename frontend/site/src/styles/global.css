@@ -612,10 +612,8 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .hot-models-track::-webkit-scrollbar{display:none}
 .hot-models-marquee{display:flex;width:max-content;animation:hotModelsMarquee 36s linear infinite;will-change:transform}
 .hot-models-group{display:flex;flex-shrink:0;gap:10px;padding-right:10px}
-.hot-models-group[aria-hidden='true'] .hot-model-card{pointer-events:none;cursor:default}
-.hot-models-viewport:hover .hot-models-marquee,
-.hot-models-viewport:focus-within .hot-models-marquee,
-.hot-models-track.user-paused .hot-models-marquee,
+.hot-models-viewport:has(.hot-model-card:focus-visible) .hot-models-marquee,
+.hot-models-track.is-dragging .hot-models-marquee,
 .hot-models-track.is-paused .hot-models-marquee{animation-play-state:paused}
 @keyframes hotModelsMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .hot-model-card{
