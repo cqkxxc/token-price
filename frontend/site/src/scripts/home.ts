@@ -225,19 +225,20 @@ interface QuotePayload {
   stability: Stability[];
 }
 
+const QUOTE_API_VERSION = 2;
 const quoteRequests = new Map<string, Promise<QuotePayload>>();
 let drawerRequestSerial = 0;
 
 function loadQuotes(model: Model): Promise<QuotePayload> {
   const cached = quoteRequests.get(model.slug);
   if (cached) return cached;
-  const request = fetch(`/api/quotes/${encodeURIComponent(model.slug)}.json`, {
+  const request = fetch(`/api/quotes/${encodeURIComponent(model.slug)}.json?v=${QUOTE_API_VERSION}`, {
     headers: { Accept: 'application/json' },
   }).then(async (response) => {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload = await response.json() as Partial<QuotePayload>;
     if (
-      payload.v !== 2
+      payload.v !== QUOTE_API_VERSION
       || payload.model_slug !== model.slug
       || !Array.isArray(payload.prices)
       || !Array.isArray(payload.stability)

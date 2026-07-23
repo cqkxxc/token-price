@@ -562,6 +562,11 @@ const privateSourceNamePattern = privateSourceName
   ? new RegExp('\\b' + escapeRegExp(privateSourceName) + '\\b', 'i')
   : null;
 const publicTextFiles = files.filter((file) => /\.(?:css|html|js|json|svg|txt|xml)$/i.test(file));
+const clientScriptFiles = files.filter((file) => /\.js$/i.test(file));
+const clientScripts = await Promise.all(clientScriptFiles.map((file) => readFile(file, 'utf8')));
+if (!clientScripts.some((content) => content.includes('.json?v=${'))) {
+  errors.push('dist: quote requests are missing the versioned cache-busting query');
+}
 const exposedSourceFiles = [];
 const exposedSourceEntryFiles = [];
 for (const file of publicTextFiles) {
