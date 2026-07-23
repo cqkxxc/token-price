@@ -81,6 +81,59 @@ export const esc = (v: unknown): string =>
   String(v ?? '').replace(/[&<>'"]/g, (ch) => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch] as string));
 export const num = (v: unknown): number => (Number.isFinite(Number(v)) ? Number(v) : 0);
+export const MISSING_VALUE = '—';
+
+export function displayText(value: unknown, fallback = MISSING_VALUE): string {
+  if (value === null || value === undefined) return fallback;
+  const text = String(value).trim();
+  return text || fallback;
+}
+
+export function normalizedTextList(values: readonly unknown[] | null | undefined): string[] {
+  const normalized: string[] = [];
+  const seen = new Set<string>();
+  for (const value of values || []) {
+    if (value === null || value === undefined) continue;
+    const text = String(value).trim();
+    if (!text || seen.has(text)) continue;
+    seen.add(text);
+    normalized.push(text);
+  }
+  return normalized;
+}
+
+export function capabilitiesFor(model: Pick<Model, 'capabilities'>): string[] {
+  return normalizedTextList(model.capabilities);
+}
+
+export function capabilityText(model: Pick<Model, 'capabilities'>): string {
+  return capabilitiesFor(model).join(' · ') || MISSING_VALUE;
+}
+
+export function shortDateText(value: unknown): string {
+  const text = displayText(value, '');
+  return text ? text.slice(0, 10) : MISSING_VALUE;
+}
+
+export function modelMetaSegments(
+  model: Model,
+  supplierCount: number,
+  quoteCount: number,
+  capabilityLimit?: number,
+): string[] {
+  const capabilities = capabilitiesFor(model);
+  const visibleCapabilities = capabilityLimit === undefined
+    ? capabilities
+    : capabilities.slice(0, Math.max(0, capabilityLimit));
+  const contextWindow = displayText(model.context_window, '');
+  return [
+    displayText(companyName(model)),
+    ...(visibleCapabilities.length ? visibleCapabilities : [MISSING_VALUE]),
+    contextWindow || `上下文 ${MISSING_VALUE}`,
+    `${supplierCount} 家已验证供应商`,
+    `${quoteCount} 条报价线路`,
+  ];
+}
 
 const iconPath = (file?: string): string => file ? `/icons/${file}` : '';
 const normalizeIconKey = (value: unknown): string => String(value ?? '').trim().toLowerCase();
@@ -215,15 +268,18 @@ export function rowHTML(
   const ps = activePrices(prices);
   const disc = summary ? discountForBestTotal(m, summary.bestTotal) : discountFor(m, prices);
   const supplierCount = summary?.supplierCount ?? new Set(ps.map((price) => price.supplier_slug)).size;
-  const caps = m.capabilities || [];
+  const caps = capabilitiesFor(m);
+  const capTags = caps.slice(0, 3)
+    .map((capability) => '<span class="model-tag">' + esc(capability) + '</span>')
+    .join('');
   return (
     '<tr>' +
     '<td><div class="model-cell">' + modelLogo(m, manifest) +
       '<div><div class="model-name"><a href="/models/' + esc(m.slug) + '/">' + esc(m.display_name) + '</a></div>' +
-      '<div class="model-tags">' + caps.slice(0, 3).map((c) => '<span class="model-tag">' + esc(c) + '</span>').join('') + '</div></div></div></td>' +
+      (capTags ? '<div class="model-tags">' + capTags + '</div>' : '') + '</div></div></td>' +
     '<td><span class="model-company-name">' + esc(companyName(m)) + '</span>' +
       '<small class="official-price-source">价格源 · ' + esc(m.official_price_source) + '</small></td>' +
-    '<td class="capabilities-cell">' + caps.map(esc).join(' · ') + '</td>' +
+    '<td class="capabilities-cell">' + esc(capabilityText(m)) + '</td>' +
     '<td class="price-cell">' + official.primaryHtml + '</td>' +
     '<td class="price-cell">' + official.outputHtml + '</td>' +
     '<td class="price-cell">' + official.compositeHtml + '</td>' +

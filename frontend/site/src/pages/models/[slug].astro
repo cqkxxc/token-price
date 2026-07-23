@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { MODELS, MANIFEST, META, pricesOf, stabilityOf } from '../../lib/data';
 import {
-  modelLogo, companyName, activePrices, officialPriceDisplay, priceTableHTML, esc,
+  modelLogo, activePrices, officialPriceDisplay, priceTableHTML, modelMetaSegments, esc,
 } from '../../lib/render';
 import { modelJsonLd } from '../../lib/seo';
 
@@ -21,6 +21,7 @@ const header = modelLogo(m, MANIFEST, 'model-avatar-lg');
 const priceTable = ps.length
   ? priceTableHTML(m, pricesOf(m.canonical_id), stabilityOf(m.canonical_id))
   : '';
+const modelMeta = modelMetaSegments(m, supplierCount, ps.length).map(esc).join(' · ');
 const jsonLd = modelJsonLd(
   Astro.site || new URL(Astro.url.origin),
   m,
@@ -33,7 +34,7 @@ const jsonLd = modelJsonLd(
     <div class="page-container" style="padding-top:32px">
       <a class="back-link" href="/">← 返回比价列表</a>
       <div class="detail-card">
-        <div class="drawer-model-header" set:html={header + `<div><h1 class="drawer-model-name">${esc(m.display_name)}</h1><div class="drawer-model-meta">${esc(companyName(m))} · ${(m.capabilities || []).map(esc).join(' · ')} · ${esc(m.context_window || '上下文未提供')} · ${supplierCount} 家供应商 · ${ps.length} 条报价线路</div></div>`}></div>
+        <div class="drawer-model-header" set:html={header + `<div><h1 class="drawer-model-name">${esc(m.display_name)}</h1><div class="drawer-model-meta">${modelMeta}</div></div>`}></div>
         {m.description && <p class="model-description">{m.description}</p>}
         <div class="price-summary" style="margin-top:20px">
           <div><small>{official.primaryLabel}</small><div class="price-cell" set:html={official.primaryHtml}></div></div>
