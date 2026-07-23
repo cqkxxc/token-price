@@ -5,7 +5,8 @@
 import {
   rowHTML, priceTableHTML, modelLogo, companyName, composite, activePrices,
   discountForBestTotal, discountPercentText, officialComparisonPrice,
-  officialPriceDisplay, isToken, num, esc,
+  officialPriceDisplay, capabilitiesFor, modelMetaSegments, shortDateText,
+  isToken, num, esc,
   type Model, type Price, type Manifest, type QuoteSummary, type Stability,
 } from '../lib/render';
 
@@ -55,7 +56,7 @@ function mobileCardHTML(m: Model): string {
   const summary = summaryOf(m);
   const official = officialPriceDisplay(m);
   const discount = discountForBestTotal(m, summary.bestTotal);
-  const caps = (m.capabilities || []).slice(0, 3);
+  const caps = capabilitiesFor(m).slice(0, 3);
   const quoteStatus = summary.quoteCount
     ? `${summary.supplierCount} 家供应商 · ${summary.quoteCount} 条线路`
     : '暂无已验证报价';
@@ -66,7 +67,9 @@ function mobileCardHTML(m: Model): string {
       '<p>' + esc(companyName(m)) + '</p></div>' +
       '<button type="button" class="btn-compare model-card-compare" data-compare="' + esc(m.slug) +
         '" aria-label="比较 ' + esc(m.display_name) + ' 的供应商报价">比价 <span aria-hidden="true">→</span></button></div>' +
-    (caps.length ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>' : '') +
+    (caps.length
+      ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>'
+      : '<p class="model-result-capabilities-missing">能力：—</p>') +
     '<dl class="model-result-prices">' +
       '<div><dt>' + official.primaryLabel + '</dt><dd>' + official.primaryHtml + '</dd></div>' +
       '<div><dt>官方输出价</dt><dd>' + official.outputHtml + '</dd></div>' +
@@ -84,11 +87,11 @@ function filtered(): Model[] {
   if (hotModelKey) f = f.filter((m) => m.slug === hotModelKey);
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
-    f = f.filter((m) => [m.display_name, m.slug, m.series, companyName(m), ...(m.capabilities || [])]
+    f = f.filter((m) => [m.display_name, m.slug, m.series, companyName(m), ...capabilitiesFor(m)]
       .some((v) => String(v).toLowerCase().includes(q)));
   }
   if (activeCompany) f = f.filter((m) => m.company.slug === activeCompany);
-  if (activeCapability) f = f.filter((m) => (m.capabilities || []).includes(activeCapability));
+  if (activeCapability) f = f.filter((m) => capabilitiesFor(m).includes(activeCapability));
   return f;
 }
 function sorted(arr: Model[]): Model[] {
@@ -133,7 +136,7 @@ function renderTable() {
     tb.innerHTML = list.map(homeRowHTML).join('');
     cards.innerHTML = list.map(mobileCardHTML).join('');
   }
-  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · 表内为官方价 · 更新 ${String(META.data_updated_at || '').slice(0, 10)}`;
+  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · 表内为官方价 · 更新 ${shortDateText(META.data_updated_at)}`;
 }
 function syncChips() {
   document.querySelectorAll<HTMLButtonElement>('#companyChips .chip').forEach((chip) => {
@@ -267,11 +270,7 @@ function renderDrawerContent(
     : new Set(quotes.map((price) => price.supplier_slug)).size;
   const quoteCount = prices === null ? summary.quoteCount : quotes.length;
   const official = officialPriceDisplay(model);
-  const caps = (model.capabilities || []).slice(0, 3);
-  const meta = [
-    companyName(model), ...caps, model.context_window || null,
-    `${supplierCount} 家已验证供应商`, `${quoteCount} 条报价线路`,
-  ].filter(Boolean).map(esc).join(' · ');
+  const meta = modelMetaSegments(model, supplierCount, quoteCount, 3).map(esc).join(' · ');
 
   let quoteContent: string;
   if (loadError) {

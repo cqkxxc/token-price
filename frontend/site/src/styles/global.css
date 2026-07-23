@@ -919,6 +919,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .model-card-compare{height:34px;padding-inline:11px;font-size:12px}
 .model-result-tags{display:flex;gap:5px;margin:13px 0 10px;overflow:hidden}
 .model-result-tags span{flex:0 0 auto;padding:2px 7px;border-radius:4px;color:#8494a2;background:rgba(255,255,255,.04);font-size:10px}
+.model-result-capabilities-missing{margin:13px 0 10px;color:#71808e;font-size:10px;line-height:18px}
 .model-result-prices{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));

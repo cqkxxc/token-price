@@ -214,6 +214,12 @@ for (const file of htmlFiles) {
   const h1Count = (html.match(/<h1(?:\s|>)/gi) || []).length;
   if (mainCount !== 1) errors.push(pagePath + ': expected one <main>, found ' + mainCount);
   if (h1Count !== 1) errors.push(pagePath + ': expected one <h1>, found ' + h1Count);
+  if (/<td\b[^>]*class=["'][^"']*\bcapabilities-cell\b[^"']*["'][^>]*>\s*<\/td>/i.test(html)) {
+    errors.push(pagePath + ': an empty capabilities cell was rendered');
+  }
+  if (/ ·\s* · /.test(html)) {
+    errors.push(pagePath + ': consecutive metadata separators were rendered');
+  }
 
   const ids = new Set();
   for (const match of html.matchAll(/\bid\s*=\s*(?:"([^"]+)"|'([^']+)')/gi)) {
@@ -407,9 +413,13 @@ if (indexBytes > 400 * 1024) errors.push('/: index.html exceeds 400 KiB (' + ind
 if (indexHtml.includes('-100%') || indexHtml.includes('约省 100%')) {
   errors.push('/: a positive quote was rounded to a misleading 100% discount');
 }
+if (indexHtml.includes('data-capability="—"') || indexHtml.includes('<span class="model-tag">—</span>')) {
+  errors.push('/: the missing-value placeholder was rendered as a capability filter or tag');
+}
 
 const payloadMatch = indexHtml.match(/<script id="__DATA__" type="application\/json">([\s\S]*?)<\/script>/);
 let payload = null;
+let expectsMissingCapabilityPlaceholder = false;
 if (!payloadMatch) {
   errors.push('/: compact client data payload is missing');
 } else {
@@ -450,6 +460,23 @@ if (payload) {
       }
       if (!pagePaths.has('/models/' + model.slug + '/')) {
         errors.push('/: model payload has no static detail page (' + model.slug + ')');
+      }
+    }
+
+    const modelWithoutCapabilities = payload.models.find((model) => (
+      !Array.isArray(model.capabilities)
+      || !model.capabilities.some((capability) => String(capability ?? '').trim())
+    ));
+    if (modelWithoutCapabilities) {
+      expectsMissingCapabilityPlaceholder = true;
+      if (!/<td\b[^>]*class=["'][^"']*\bcapabilities-cell\b[^"']*["'][^>]*>\s*—\s*<\/td>/i.test(indexHtml)) {
+        errors.push('/: a model without capabilities lacks the table placeholder');
+      }
+      const detailPath = '/models/' + modelWithoutCapabilities.slug + '/';
+      const detailFile = htmlFileByPath.get(detailPath);
+      const detailHtml = detailFile ? await readFile(detailFile, 'utf8') : '';
+      if (!/<div class="drawer-model-meta">[^<]* · — · [^<]*<\/div>/.test(detailHtml)) {
+        errors.push(detailPath + ': model metadata lacks the missing-capability placeholder');
       }
     }
 
@@ -566,6 +593,12 @@ const clientScriptFiles = files.filter((file) => /\.js$/i.test(file));
 const clientScripts = await Promise.all(clientScriptFiles.map((file) => readFile(file, 'utf8')));
 if (!clientScripts.some((content) => content.includes('.json?v=${'))) {
   errors.push('dist: quote requests are missing the versioned cache-busting query');
+}
+if (
+  expectsMissingCapabilityPlaceholder
+  && !clientScripts.some((content) => content.includes('model-result-capabilities-missing'))
+) {
+  errors.push('/: client-rendered mobile cards lack the missing-capability placeholder');
 }
 const exposedSourceFiles = [];
 const exposedSourceEntryFiles = [];

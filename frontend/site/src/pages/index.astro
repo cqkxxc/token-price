@@ -3,13 +3,14 @@ import Base from '../layouts/Base.astro';
 import { MODELS, PRICES, SUPPLIERS, MANIFEST, META, pricesOf } from '../lib/data';
 import {
   rowHTML, modelLogo, vendorIconFor, companyName, composite, activePrices,
-  discountFor, discountPercentText, officialPriceDisplay, quoteTotal, esc,
+  discountFor, discountPercentText, officialPriceDisplay, quoteTotal,
+  capabilitiesFor, shortDateText, esc,
 } from '../lib/render';
 import { homeJsonLd } from '../lib/seo';
 
 // ── 首屏筛选器数据（构建期计算）────────────────────────
 const companies = [...new Map(MODELS.map((m) => [m.company.slug, m])).values()];
-const capabilities = [...new Set(MODELS.flatMap((m) => m.capabilities || []))];
+const capabilities = [...new Set(MODELS.flatMap(capabilitiesFor))];
 
 // 默认排序：综合价降序（与旧版一致）
 const sorted = [...MODELS].sort((a, b) => (composite(b) ?? -Infinity) - (composite(a) ?? -Infinity));
@@ -29,7 +30,7 @@ const mobileCardHTML = (m: (typeof MODELS)[number]) => {
   const official = officialPriceDisplay(m);
   const discount = discountFor(m, prices);
   const supplierCount = new Set(quotes.map((price) => price.supplier_slug)).size;
-  const caps = (m.capabilities || []).slice(0, 3);
+  const caps = capabilitiesFor(m).slice(0, 3);
   const quoteStatus = quotes.length
     ? `${supplierCount} 家供应商 · ${quotes.length} 条线路`
     : '暂无已验证报价';
@@ -40,7 +41,9 @@ const mobileCardHTML = (m: (typeof MODELS)[number]) => {
       '<p>' + esc(companyName(m)) + '</p></div>' +
       '<button type="button" class="btn-compare model-card-compare" data-compare="' + esc(m.slug) +
         '" aria-label="比较 ' + esc(m.display_name) + ' 的供应商报价">比价 <span aria-hidden="true">→</span></button></div>' +
-    (caps.length ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>' : '') +
+    (caps.length
+      ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>'
+      : '<p class="model-result-capabilities-missing">能力：—</p>') +
     '<dl class="model-result-prices">' +
       '<div><dt>' + official.primaryLabel + '</dt><dd>' + official.primaryHtml + '</dd></div>' +
       '<div><dt>官方输出价</dt><dd>' + official.outputHtml + '</dd></div>' +
@@ -75,8 +78,8 @@ const renderHotCards = (isVisualClone = false) => hotScrollModels
 const hotCards = renderHotCards();
 const hotCardsClone = renderHotCards(true);
 
-const updatedAt = String(META.data_updated_at || '');
-const updated = updatedAt.slice(0, 10);
+const updatedAt = String(META.data_updated_at || '').trim();
+const updated = shortDateText(updatedAt);
 const activePriceRows = PRICES.filter((p) => p.is_active === true);
 const activeQuoteCount = activePriceRows.length;
 
@@ -138,7 +141,7 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updat
           </div>
           <div class="hero-metric hero-metric-date">
             <dt>数据更新</dt>
-            <dd><time datetime={updatedAt}>{updated || '—'}</time><small>UPDATED</small></dd>
+            <dd><time datetime={updatedAt || undefined}>{updated}</time><small>UPDATED</small></dd>
           </div>
         </dl>
       </aside>
