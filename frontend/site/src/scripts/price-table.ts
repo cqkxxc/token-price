@@ -34,3 +34,58 @@ document.addEventListener('click', (event) => {
     th.setAttribute('aria-sort', active ? (ascending ? 'ascending' : 'descending') : 'none');
   });
 });
+
+const workloadNumber = (value: string): number => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+};
+
+const workloadPriceText = (value: number): string => {
+  const amount = Number.isFinite(value) ? value : 0;
+  const formatted = amount === 0 || Math.abs(amount) >= 0.01
+    ? amount.toFixed(2)
+    : amount.toFixed(6).replace(/0+$/, '').replace(/\.$/, '');
+  return `¥${formatted}`;
+};
+
+function updateWorkload(comparison: HTMLElement) {
+  const inputControl = comparison.querySelector<HTMLInputElement>('[data-workload-input]');
+  const outputControl = comparison.querySelector<HTMLInputElement>('[data-workload-output]');
+  if (!inputControl || !outputControl) return;
+  const inputVolume = workloadNumber(inputControl.value);
+  const outputVolume = workloadNumber(outputControl.value);
+
+  comparison.querySelectorAll<HTMLElement>('[data-workload-total]').forEach((element) => {
+    const inputPrice = workloadNumber(element.dataset.inputPrice || '0');
+    const outputPrice = workloadNumber(element.dataset.outputPrice || '0');
+    element.textContent = workloadPriceText(inputPrice * inputVolume + outputPrice * outputVolume);
+  });
+
+  const tableRoutes = Array.from(comparison.querySelectorAll<HTMLTableRowElement>(
+    '.drawer-table tbody tr[data-price-route]',
+  ));
+  tableRoutes.forEach((route) => {
+    const inputPrice = workloadNumber(route.dataset.inputPrice || '0');
+    const outputPrice = workloadNumber(route.dataset.outputPrice || '0');
+    route.dataset.compositePrice = String(inputPrice * inputVolume + outputPrice * outputVolume);
+  });
+
+  const minima = {
+    all: tableRoutes,
+    online: tableRoutes.filter((route) => route.dataset.routeOnline === 'true'),
+    stable: tableRoutes.filter((route) => route.dataset.routeStable === 'true'),
+  };
+  (Object.entries(minima) as Array<[keyof typeof minima, HTMLTableRowElement[]]>).forEach(([tier, routes]) => {
+    const target = comparison.querySelector<HTMLElement>(`[data-price-tier="${tier}"]`);
+    if (!target) return;
+    const values = routes.map((route) => Number(route.dataset.compositePrice)).filter(Number.isFinite);
+    target.textContent = values.length ? workloadPriceText(Math.min(...values)) : '—';
+  });
+}
+
+document.addEventListener('input', (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement) || !target.matches('[data-workload-input], [data-workload-output]')) return;
+  const comparison = target.closest<HTMLElement>('[data-price-comparison]');
+  if (comparison) updateWorkload(comparison);
+});

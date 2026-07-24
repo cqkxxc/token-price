@@ -39,9 +39,9 @@ const jsonLd = modelJsonLd(
         <div class="price-summary" style="margin-top:20px">
           <div><small>{official.primaryLabel}</small><div class="price-cell" set:html={official.primaryHtml}></div></div>
           <div><small>官方输出价</small><div class="price-cell" set:html={official.outputHtml}></div></div>
-          <div><small>官方综合价</small><div class="price-cell" set:html={official.compositeHtml}></div></div>
+          <div><small>{official.compositeLabel}</small><div class="price-cell" set:html={official.compositeHtml}></div></div>
         </div>
-        <h2 class="drawer-section-title">供应商比价（{supplierCount} 家 · {ps.length} 条线路）</h2>
+        <h2 class="drawer-section-title">供应商报价（{supplierCount} 家 · {ps.length} 条线路）</h2>
         {ps.length ? (
           <div class="table-wrap" set:html={priceTable}></div>
         ) : (
