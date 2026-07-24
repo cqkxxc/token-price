@@ -4,13 +4,13 @@
 // ═══════════════════════════════════════════════════════
 import {
   rowHTML, priceTableHTML, modelLogo, companyName, composite, activePrices,
-  discountForBestTotal, discountPercentText, officialComparisonPrice,
+  quoteMinimumsHTML, officialComparisonPrice,
   officialPriceDisplay, capabilitiesFor, modelMetaSegments, shortDateText,
   isToken, num, esc,
   type Model, type Price, type Manifest, type QuoteSummary, type Stability,
 } from '../lib/render';
 
-type CompactQuoteSummary = [number, number, number | null];
+type CompactQuoteSummary = [number, number, number | null, number | null, number | null];
 interface Dataset {
   v?: number;
   models: Model[];
@@ -26,13 +26,22 @@ const META = DATA.meta || {};
 const SUMMARIES: QuoteSummary[] = MODELS.map((model, index) => {
   const row = DATA.r?.[index];
   return row
-    ? { supplierCount: row[0], quoteCount: row[1], bestTotal: row[2] }
-    : { supplierCount: model.supplier_count || 0, quoteCount: 0, bestTotal: null };
+    ? {
+        supplierCount: row[0], quoteCount: row[1], bestTotal: row[2],
+        bestOnlineTotal: row[3], bestStableTotal: row[4],
+      }
+    : {
+        supplierCount: model.supplier_count || 0, quoteCount: 0, bestTotal: null,
+        bestOnlineTotal: null, bestStableTotal: null,
+      };
 });
 const modelIndex = new Map(MODELS.map((model, index) => [model.canonical_id, index]));
 const summaryOf = (model: Model): QuoteSummary =>
   SUMMARIES[modelIndex.get(model.canonical_id) ?? -1]
-  ?? { supplierCount: model.supplier_count || 0, quoteCount: 0, bestTotal: null };
+  ?? {
+    supplierCount: model.supplier_count || 0, quoteCount: 0, bestTotal: null,
+    bestOnlineTotal: null, bestStableTotal: null,
+  };
 
 // ── 状态 ────────────────────────────────────────────────
 let activeCompany: string | null = null;
@@ -40,6 +49,9 @@ let activeCapability: string | null = null;
 let searchQuery = '';
 let hotModelKey: string | null = null;
 let sort = { f: 'composite_price', asc: false };
+const PAGE_SIZE = 24;
+let visibleCount = PAGE_SIZE;
+const mobileResults = window.matchMedia('(max-width: 768px)');
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
@@ -55,7 +67,6 @@ function homeRowHTML(m: Model): string {
 function mobileCardHTML(m: Model): string {
   const summary = summaryOf(m);
   const official = officialPriceDisplay(m);
-  const discount = discountForBestTotal(m, summary.bestTotal);
   const caps = capabilitiesFor(m).slice(0, 3);
   const quoteStatus = summary.quoteCount
     ? `${summary.supplierCount} 家供应商 · ${summary.quoteCount} 条线路`
@@ -66,19 +77,18 @@ function mobileCardHTML(m: Model): string {
       '<div class="model-result-identity"><h3><a href="/models/' + esc(m.slug) + '/">' + esc(m.display_name) + '</a></h3>' +
       '<p>' + esc(companyName(m)) + '</p></div>' +
       '<button type="button" class="btn-compare model-card-compare" data-compare="' + esc(m.slug) +
-        '" aria-label="比较 ' + esc(m.display_name) + ' 的供应商报价">比价 <span aria-hidden="true">→</span></button></div>' +
+        '" aria-label="查看 ' + esc(m.display_name) + ' 的供应商报价">查看报价</button></div>' +
     (caps.length
       ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>'
       : '<p class="model-result-capabilities-missing">能力：—</p>') +
     '<dl class="model-result-prices">' +
       '<div><dt>' + official.primaryLabel + '</dt><dd>' + official.primaryHtml + '</dd></div>' +
       '<div><dt>官方输出价</dt><dd>' + official.outputHtml + '</dd></div>' +
-      '<div><dt>官方综合价</dt><dd>' + official.compositeHtml + '</dd></div>' +
+      '<div><dt>' + official.compositeLabel + '</dt><dd>' + official.compositeHtml + '</dd></div>' +
     '</dl>' +
+    quoteMinimumsHTML(summary, 'quote-minimums quote-minimums-mobile') +
     '<div class="model-result-card-foot"><span class="verified-quote-status' + (summary.quoteCount ? '' : ' is-empty') + '">' +
-      quoteStatus + '</span>' +
-      (discount > 0 ? '<span class="model-result-discount">最低约省 ' + discountPercentText(discount) + '</span>' : '') +
-    '</div></article>';
+      quoteStatus + '</span></div></article>';
 }
 
 // ── 筛选 + 排序 ─────────────────────────────────────────
@@ -124,19 +134,24 @@ function sorted(arr: Model[]): Model[] {
 // ── 渲染 ────────────────────────────────────────────────
 function renderTable() {
   const list = sorted(filtered());
+  const visible = list.slice(0, visibleCount);
   const tb = $('tableBody')!;
   const cards = $('modelCardList')!;
   const em = $('emptyState')!;
+  const loadMore = $<HTMLButtonElement>('loadMoreModels');
   if (!list.length) {
     tb.innerHTML = '';
     cards.innerHTML = '';
     em.style.display = 'block';
   } else {
     em.style.display = 'none';
-    tb.innerHTML = list.map(homeRowHTML).join('');
-    cards.innerHTML = list.map(mobileCardHTML).join('');
+    tb.innerHTML = mobileResults.matches ? '' : visible.map(homeRowHTML).join('');
+    cards.innerHTML = mobileResults.matches ? visible.map(mobileCardHTML).join('') : '';
   }
-  $('resultsInfo')!.textContent = `共 ${list.length} 个模型 · 表内为官方价 · 更新 ${shortDateText(META.data_updated_at)}`;
+  if (loadMore) loadMore.hidden = !list.length || visible.length >= list.length;
+  $('resultsInfo')!.textContent = list.length
+    ? `显示 ${visible.length} / ${list.length} 个模型 · 更新 ${shortDateText(META.data_updated_at)}`
+    : `没有匹配模型 · 更新 ${shortDateText(META.data_updated_at)}`;
 }
 function syncChips() {
   document.querySelectorAll<HTMLButtonElement>('#companyChips .chip').forEach((chip) => {
@@ -281,7 +296,7 @@ function renderDrawerContent(
     quoteContent = '<div class="verified-quotes-empty" role="status"><strong>正在加载已验证报价…</strong>' +
       '<p>读取本站构建时生成的模型报价快照。</p></div>';
   } else if (quotes.length) {
-    quoteContent = '<div class="drawer-table-scroll">' + priceTableHTML(model, prices, stability) + '</div>';
+    quoteContent = priceTableHTML(model, prices, stability);
   } else {
     quoteContent = '<div class="verified-quotes-empty" role="status"><strong>暂无已验证报价</strong>' +
       '<p>当前数据集中没有有效的供应商报价。</p>' +
@@ -295,8 +310,8 @@ function renderDrawerContent(
     (model.description ? '<p class="model-description">' + esc(model.description) + '</p>' : '') +
     '<div class="price-summary"><div><small>' + official.primaryLabel + '</small><div class="price-cell">' + official.primaryHtml + '</div></div>' +
       '<div><small>官方输出价</small><div class="price-cell">' + official.outputHtml + '</div></div>' +
-      '<div><small>官方综合价</small><div class="price-cell">' + official.compositeHtml + '</div></div></div>' +
-    '<h3 class="drawer-section-title">供应商比价</h3>' + quoteContent;
+      '<div><small>' + official.compositeLabel + '</small><div class="price-cell">' + official.compositeHtml + '</div></div></div>' +
+    '<h3 class="drawer-section-title">供应商报价</h3>' + quoteContent;
 }
 
 async function openDrawer(slug: string, opener?: HTMLElement) {
@@ -394,12 +409,18 @@ function initMarquee() {
 // ── 事件绑定 ────────────────────────────────────────────
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
+  if (target.closest('#loadMoreModels')) {
+    visibleCount += PAGE_SIZE;
+    renderTable();
+    return;
+  }
   const company = target.closest<HTMLElement>('[data-company]');
   if (company) {
     activeCompany = company.dataset.company || null;
     activeCapability = null;
     hotModelKey = null; searchQuery = '';
-    const search = $('globalSearch') as HTMLInputElement | null; if (search) search.value = '';
+    visibleCount = PAGE_SIZE;
+    document.querySelectorAll<HTMLInputElement>('#globalSearch, #mobileSearch').forEach((search) => { search.value = ''; });
     syncChips(); renderTable(); return;
   }
   const cap = target.closest<HTMLElement>('[data-capability]');
@@ -407,7 +428,8 @@ document.addEventListener('click', (e) => {
     activeCapability = cap.dataset.capability || null;
     activeCompany = null;
     hotModelKey = null; searchQuery = '';
-    const search = $('globalSearch') as HTMLInputElement | null; if (search) search.value = '';
+    visibleCount = PAGE_SIZE;
+    document.querySelectorAll<HTMLInputElement>('#globalSearch, #mobileSearch').forEach((search) => { search.value = ''; });
     syncChips(); renderTable(); return;
   }
   const hot = target.closest<HTMLElement>('[data-hot-model]');
@@ -415,25 +437,33 @@ document.addEventListener('click', (e) => {
     const key = hot.dataset.hotModel!;
     hotModelKey = hotModelKey === key ? null : key;
     activeCompany = null; activeCapability = null; searchQuery = '';
-    const search = $('globalSearch') as HTMLInputElement | null; if (search) search.value = '';
+    visibleCount = PAGE_SIZE;
+    document.querySelectorAll<HTMLInputElement>('#globalSearch, #mobileSearch').forEach((search) => { search.value = ''; });
     syncChips(); renderTable(); return;
   }
   const th = target.closest<HTMLElement>('thead th.sortable');
   if (th) {
     const f = th.dataset.sort!;
     if (sort.f === f) sort.asc = !sort.asc; else { sort.f = f; sort.asc = true; }
+    visibleCount = PAGE_SIZE;
     updateSortHeaders(); renderTable(); return;
   }
   const cmp = target.closest<HTMLElement>('[data-compare]');
   if (cmp) { e.preventDefault(); void openDrawer(cmp.dataset.compare!, cmp); return; }
   if (target.closest('#drawerOverlay') || target.closest('#drawerClose')) closeDrawer();
 });
-$('globalSearch')?.addEventListener('input', (e) => {
-  searchQuery = (e.target as HTMLInputElement).value.trim();
-  if (searchQuery) {
-    hotModelKey = null; activeCompany = null; activeCapability = null;
-  }
-  syncChips(); renderTable();
+document.querySelectorAll<HTMLInputElement>('#globalSearch, #mobileSearch').forEach((search) => {
+  search.addEventListener('input', (event) => {
+    searchQuery = (event.target as HTMLInputElement).value.trim();
+    visibleCount = PAGE_SIZE;
+    document.querySelectorAll<HTMLInputElement>('#globalSearch, #mobileSearch').forEach((peer) => {
+      if (peer !== event.target) peer.value = searchQuery;
+    });
+    if (searchQuery) {
+      hotModelKey = null; activeCompany = null; activeCapability = null;
+    }
+    syncChips(); renderTable();
+  });
 });
 document.addEventListener('keydown', (e) => {
   const drawer = $('drawer');
@@ -448,3 +478,4 @@ document.addEventListener('keydown', (e) => {
 
 renderTable();
 initMarquee();
+mobileResults.addEventListener('change', renderTable);

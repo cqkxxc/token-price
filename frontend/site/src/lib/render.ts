@@ -43,6 +43,8 @@ export interface QuoteSummary {
   supplierCount: number;
   quoteCount: number;
   bestTotal: number | null;
+  bestOnlineTotal: number | null;
+  bestStableTotal: number | null;
 }
 export interface VendorIconEntry {
   vendorId: string;
@@ -68,6 +70,7 @@ const ICON_ALIASES: Record<string, string> = {
 export const PRICING_UNITS: Record<string, string> = {
   per_token: '百万 tokens', per_call: '次', per_image: '张', per_second: '秒',
 };
+export const STABLE_UPTIME_THRESHOLD = 99;
 const SUPPLIER_TYPE_TAGS: Record<Price['supplier_type'], { className: string; label: string }> = {
   official: { className: 'tag-official', label: '官方参考' },
   direct: { className: 'tag-official', label: '模型官网' },
@@ -180,6 +183,7 @@ export function priceText(value: number | null, m: Model): string {
 }
 export function officialPriceDisplay(m: Model): {
   primaryLabel: '官方输入价' | '官方单位价';
+  compositeLabel: '官方预计成本' | '官方单位价';
   primaryHtml: string;
   outputHtml: string;
   compositeHtml: string;
@@ -188,9 +192,10 @@ export function officialPriceDisplay(m: Model): {
   const total = composite(m);
   return {
     primaryLabel: tokenPricing ? '官方输入价' : '官方单位价',
+    compositeLabel: tokenPricing ? '官方预计成本' : '官方单位价',
     primaryHtml: priceText(tokenPricing ? m.official_input_price : officialComparisonPrice(m), m),
     outputHtml: tokenPricing ? priceText(m.official_output_price, m) : '—',
-    compositeHtml: total === null ? '—' : priceText(total, m),
+    compositeHtml: total === null ? '—' : `¥${priceNumberText(total)}`,
   };
 }
 export function activePrices(prices: Price[]): Price[] {
@@ -198,6 +203,43 @@ export function activePrices(prices: Price[]): Price[] {
 }
 export function quoteTotal(p: Price, m: Model): number {
   return isToken(m) ? num(p.input_price) + num(p.output_price) : num(p.input_price) || num(p.output_price);
+}
+const priceStabilityKey = (item: Pick<Stability, 'supplier_slug' | 'canonical_id' | 'route'>): string =>
+  `${item.supplier_slug}::${item.canonical_id}::${item.route || 'default'}`;
+const isOnlineRoute = (item?: Stability): boolean => item?.status === 'online';
+const isStableRoute = (item?: Stability): boolean => (
+  isOnlineRoute(item)
+  && item?.uptime_7d != null
+  && Number(item.uptime_7d) >= STABLE_UPTIME_THRESHOLD
+);
+const minimumTotal = (model: Model, quotes: Price[]): number | null => (
+  quotes.length ? Math.min(...quotes.map((price) => quoteTotal(price, model))) : null
+);
+
+export function quoteSummary(
+  model: Model,
+  prices: Price[],
+  stability: Stability[] = [],
+): QuoteSummary {
+  const quotes = activePrices(prices);
+  const stabilityByRoute = new Map(stability.map((item) => [priceStabilityKey(item), item]));
+  const withStability = quotes.map((price) => ({
+    price,
+    stability: stabilityByRoute.get(priceStabilityKey(price)),
+  }));
+  return {
+    supplierCount: new Set(quotes.map((price) => price.supplier_slug)).size,
+    quoteCount: quotes.length,
+    bestTotal: minimumTotal(model, quotes),
+    bestOnlineTotal: minimumTotal(
+      model,
+      withStability.filter(({ stability: item }) => isOnlineRoute(item)).map(({ price }) => price),
+    ),
+    bestStableTotal: minimumTotal(
+      model,
+      withStability.filter(({ stability: item }) => isStableRoute(item)).map(({ price }) => price),
+    ),
+  };
 }
 export function discountFor(m: Model, prices: Price[]): number {
   const official = officialComparisonPrice(m);
@@ -243,7 +285,7 @@ const uptimeText = (value: number | null | undefined): string =>
 const latencyText = (value: number | null | undefined): string =>
   value === null || value === undefined || !Number.isFinite(Number(value)) ? '—' : `${Math.round(Number(value))}ms`;
 
-function stabilityCellHTML(item?: Stability): string {
+function stabilityCellHTML(item?: Stability, riskHtml = ''): string {
   const status = normalizeStatus(item?.status);
   const uptime = uptimeText(item?.uptime_7d);
   const latency = latencyText(item?.avg_latency_ms);
@@ -254,7 +296,20 @@ function stabilityCellHTML(item?: Stability): string {
   return '<td class="dt-stability" title="' + esc(title) + '">' +
     '<div class="dt-stability-main"><span class="status-dot ' + status + '" aria-hidden="true"></span>' +
       '<span class="status-text ' + status + '">' + STABILITY_LABELS[status] + '</span></div>' +
-    '<div class="dt-stability-detail"><span>' + uptime + '</span><span aria-hidden="true">·</span><span>' + latency + '</span></div></td>';
+    '<div class="dt-stability-detail"><span>' + uptime + '</span><span aria-hidden="true">·</span><span>' + latency + '</span></div>' +
+    riskHtml + '</td>';
+}
+
+const compactPriceText = (value: number | null): string => (
+  value === null ? MISSING_VALUE : `¥${priceNumberText(value)}`
+);
+
+export function quoteMinimumsHTML(summary: QuoteSummary, className: string): string {
+  return '<dl class="' + className + '">' +
+    '<div><dt>全部最低</dt><dd>' + compactPriceText(summary.bestTotal) + '</dd></div>' +
+    '<div><dt>在线最低</dt><dd>' + compactPriceText(summary.bestOnlineTotal) + '</dd></div>' +
+    '<div><dt>稳定最低</dt><dd>' + compactPriceText(summary.bestStableTotal) + '</dd></div>' +
+  '</dl>';
 }
 
 // 首页表格：单行 HTML（prices = 该模型的全部报价）
@@ -266,8 +321,8 @@ export function rowHTML(
 ): string {
   const official = officialPriceDisplay(m);
   const ps = activePrices(prices);
-  const disc = summary ? discountForBestTotal(m, summary.bestTotal) : discountFor(m, prices);
-  const supplierCount = summary?.supplierCount ?? new Set(ps.map((price) => price.supplier_slug)).size;
+  const resolvedSummary = summary ?? quoteSummary(m, prices);
+  const supplierCount = resolvedSummary.supplierCount ?? new Set(ps.map((price) => price.supplier_slug)).size;
   const caps = capabilitiesFor(m);
   const capTags = caps.slice(0, 3)
     .map((capability) => '<span class="model-tag">' + esc(capability) + '</span>')
@@ -283,48 +338,163 @@ export function rowHTML(
     '<td class="price-cell">' + official.primaryHtml + '</td>' +
     '<td class="price-cell">' + official.outputHtml + '</td>' +
     '<td class="price-cell">' + official.compositeHtml + '</td>' +
-    '<td class="price-cell' + (disc > 0 ? ' price-lowest' : '') + '">' + (disc > 0 ? '-' + discountPercentText(disc) : '—') + '</td>' +
+    '<td class="quote-minimums-cell">' + quoteMinimumsHTML(resolvedSummary, 'quote-minimums quote-minimums-table') + '</td>' +
     '<td style="font-family:var(--font-mono);font-size:13px">' + supplierCount + ' 家</td>' +
-    '<td><button type="button" class="btn-compare" data-compare="' + esc(m.slug) + '" aria-label="比较 ' + esc(m.display_name) + ' 的供应商报价">比价 →</button></td>' +
+    '<td><button type="button" class="btn-compare" data-compare="' + esc(m.slug) + '" aria-label="查看 ' + esc(m.display_name) + ' 的供应商报价">查看报价</button></td>' +
     '</tr>'
   );
 }
 
-// 供应商比价表格（详情页 + 抽屉共用）
-export function priceTableHTML(m: Model, prices: Price[], stability: Stability[] = []): string {
-  const ps = activePrices(prices);
-  const sorted = [...ps].sort((a, b) => quoteTotal(a, m) - quoteTotal(b, m));
-  const min = sorted.length ? quoteTotal(sorted[0], m) : null;
-  const tokenPricing = isToken(m);
+interface QuoteRouteRecord {
+  price: Price;
+  stability?: Stability;
+  total: number;
+  online: boolean;
+  stable: boolean;
+}
+
+function routeRiskHTML(model: Model, route: QuoteRouteRecord): string {
+  const badges: Array<{ className: string; label: string }> = [];
+  const status = normalizeStatus(route.stability?.status);
+  if (!route.stability || status === 'unknown') {
+    badges.push({ className: 'unknown', label: '未监控' });
+  } else if (status === 'degraded') {
+    badges.push({ className: 'degraded', label: '存在波动' });
+  } else if (status === 'offline') {
+    badges.push({
+      className: 'offline',
+      label: route.stability.uptime_7d != null && route.stability.uptime_7d <= 50 ? '长期离线' : '离线',
+    });
+  }
+  const official = officialComparisonPrice(model);
+  if (
+    official > 0
+    && route.total < official * 0.1
+    && route.price.supplier_type !== 'official'
+    && route.price.supplier_type !== 'direct'
+  ) {
+    badges.push({ className: 'price-anomaly', label: '异常低价' });
+  }
+  if (!badges.length) return '';
+  return '<span class="route-risk-list">' + badges.map((badge) => (
+    '<span class="route-risk ' + badge.className + '">' + badge.label + '</span>'
+  )).join('') + '</span>';
+}
+
+function routeStabilityHTML(item?: Stability): string {
+  const status = normalizeStatus(item?.status);
+  const label = item ? STABILITY_LABELS[status] : '未监控';
+  return '<span class="mobile-route-stability ' + status + '">' +
+    '<span class="status-dot ' + status + '" aria-hidden="true"></span>' +
+    '<span>' + label + '</span><small>' + uptimeText(item?.uptime_7d) + ' · ' + latencyText(item?.avg_latency_ms) + '</small>' +
+  '</span>';
+}
+
+function quoteOverviewHTML(model: Model, summary: QuoteSummary): string {
+  const value = (tier: 'all' | 'online' | 'stable', amount: number | null) => (
+    '<dd data-price-tier="' + tier + '">' + compactPriceText(amount) + '</dd>'
+  );
+  return '<section class="quote-overview" aria-labelledby="quoteOverviewTitle">' +
+    '<div class="quote-overview-heading"><div><span class="filter-kicker">PRICE BASIS</span>' +
+      '<h3 id="quoteOverviewTitle">最低价口径</h3></div>' +
+      '<p>' + (isToken(model) ? '预计成本默认按输入、输出各 100 万 tokens 计算' : '按模型计价单位比较') + '</p></div>' +
+    '<dl class="quote-overview-values">' +
+      '<div><dt>全部报价最低</dt>' + value('all', summary.bestTotal) + '<small>包含未监控与波动线路</small></div>' +
+      '<div><dt>已验证在线最低</dt>' + value('online', summary.bestOnlineTotal) + '<small>最近监控状态正常</small></div>' +
+      '<div><dt>稳定线路最低</dt>' + value('stable', summary.bestStableTotal) + '<small>近 7 天稳定率 ≥ ' + STABLE_UPTIME_THRESHOLD + '%</small></div>' +
+    '</dl></section>';
+}
+
+function workloadControlsHTML(model: Model): string {
+  if (!isToken(model)) return '';
+  return '<div class="pricing-workload" role="group" aria-label="预计成本工作量">' +
+    '<span class="pricing-workload-label">预计用量</span>' +
+    '<label><span>输入</span><input type="number" min="0" step="0.1" value="1" inputmode="decimal" data-workload-input><small>百万 tokens</small></label>' +
+    '<label><span>输出</span><input type="number" min="0" step="0.1" value="1" inputmode="decimal" data-workload-output><small>百万 tokens</small></label>' +
+  '</div>';
+}
+
+function routeDataAttributes(route: QuoteRouteRecord): string {
+  return ' data-price-route data-input-price="' + num(route.price.input_price) +
+    '" data-output-price="' + num(route.price.output_price) +
+    '" data-composite-price="' + route.total +
+    '" data-route-online="' + String(route.online) +
+    '" data-route-stable="' + String(route.stable) + '"';
+}
+
+function mobileSupplierGroupsHTML(model: Model, routes: QuoteRouteRecord[]): string {
+  const grouped = new Map<string, QuoteRouteRecord[]>();
+  for (const route of routes) {
+    if (!grouped.has(route.price.supplier_slug)) grouped.set(route.price.supplier_slug, []);
+    grouped.get(route.price.supplier_slug)!.push(route);
+  }
+  const preferredRoute = (items: QuoteRouteRecord[]): QuoteRouteRecord => {
+    const online = items.filter((item) => item.online);
+    return [...(online.length ? online : items)].sort((a, b) => a.total - b.total)[0];
+  };
+  const groups = [...grouped.values()].sort((a, b) => preferredRoute(a).total - preferredRoute(b).total);
+  return '<div class="supplier-quote-list" aria-label="按供应商分组的报价">' + groups.map((items) => {
+    const preferred = preferredRoute(items);
+    const supplierTag = SUPPLIER_TYPE_TAGS[preferred.price.supplier_type] || SUPPLIER_TYPE_TAGS.other;
+    return '<details class="supplier-quote-group">' +
+      '<summary><span class="supplier-quote-summary-main"><span class="supplier-quote-name">' + esc(preferred.price.supplier_name) + '</span>' +
+        '<span class="tag ' + supplierTag.className + '">' + supplierTag.label + '</span>' + routeRiskHTML(model, preferred) + '</span>' +
+        '<span class="supplier-quote-summary-price"><small>' + (isToken(model) ? '预计成本' : '单位价') + '</small>' +
+          '<strong data-workload-total data-input-price="' + num(preferred.price.input_price) + '" data-output-price="' + num(preferred.price.output_price) + '">¥' + priceNumberText(preferred.total) + '</strong>' +
+          '<span>' + esc(preferred.price.route) + ' · ' + items.length + ' 条线路</span></span>' +
+        routeStabilityHTML(preferred.stability) + '<span class="supplier-quote-chevron" aria-hidden="true"></span></summary>' +
+      '<div class="supplier-route-list">' + [...items].sort((a, b) => a.total - b.total).map((route) => (
+        '<div class="supplier-route"' + routeDataAttributes(route) + '>' +
+          '<div class="supplier-route-heading"><strong>' + esc(route.price.route) + '</strong>' + routeRiskHTML(model, route) + '</div>' +
+          '<dl><div><dt>输入</dt><dd>' + (isToken(model) ? '¥' + priceNumberText(route.price.input_price) : MISSING_VALUE) + '</dd></div>' +
+            '<div><dt>输出</dt><dd>' + (isToken(model) ? '¥' + priceNumberText(route.price.output_price) : MISSING_VALUE) + '</dd></div>' +
+            '<div><dt>' + (isToken(model) ? '预计成本' : '单位价') + '</dt><dd data-workload-total data-input-price="' + num(route.price.input_price) + '" data-output-price="' + num(route.price.output_price) + '">¥' + priceNumberText(route.total) + '</dd></div>' +
+            '<div><dt>缓存读取</dt><dd>' + (route.price.cache_read_price == null ? MISSING_VALUE : '¥' + priceNumberText(route.price.cache_read_price)) + '</dd></div></dl>' +
+          routeStabilityHTML(route.stability) +
+        '</div>'
+      )).join('') + '</div></details>';
+  }).join('') + '</div>';
+}
+
+// 供应商报价（详情页 + 抽屉共用）：桌面表格与移动端供应商分组共用同一份线路数据。
+export function priceTableHTML(model: Model, prices: Price[], stability: Stability[] = []): string {
+  const tokenPricing = isToken(model);
   const stabilityByRoute = new Map(stability.map((item) => [stabilityKey(item), item]));
-  return (
-    '<table class="drawer-table">' +
+  const routes: QuoteRouteRecord[] = activePrices(prices).map((price) => {
+    const routeStability = stabilityByRoute.get(stabilityKey(price));
+    return {
+      price,
+      stability: routeStability,
+      total: quoteTotal(price, model),
+      online: isOnlineRoute(routeStability),
+      stable: isStableRoute(routeStability),
+    };
+  }).sort((a, b) => a.total - b.total);
+  const summary = quoteSummary(model, prices, stability);
+  const min = summary.bestTotal;
+
+  const table = '<div class="quote-table-scroll"><table class="drawer-table">' +
     '<colgroup><col class="dt-col-supplier"><col class="dt-col-type"><col class="dt-col-route"><col class="dt-col-price"><col class="dt-col-price"><col class="dt-col-composite"><col class="dt-col-stability"></colgroup>' +
     '<thead><tr><th>供应方</th><th>类型</th><th>线路</th>' +
       (tokenPricing
         ? '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="input"><span>输入</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
           '<th class="dt-num dt-sortable" aria-sort="none"><button type="button" class="dt-sort-control" data-price-sort="output"><span>输出</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
-          '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="composite"><span>综合</span><i class="sort-arrow" aria-hidden="true"></i></button></th>'
+          '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="composite"><span>预计成本</span><i class="sort-arrow" aria-hidden="true"></i></button></th>'
         : '<th class="dt-num dt-sortable active asc" aria-sort="ascending"><button type="button" class="dt-sort-control" data-price-sort="input"><span>单位价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>' +
           '<th class="dt-num">不适用</th><th class="dt-num">不适用</th>') +
-      '<th>稳定性</th></tr></thead><tbody>' +
-    sorted.map((p) => {
-      const pc = quoteTotal(p, m);
-      const inputSortPrice = tokenPricing ? num(p.input_price) : pc;
-      const supplierTag = SUPPLIER_TYPE_TAGS[p.supplier_type] || SUPPLIER_TYPE_TAGS.other;
-      const stabilityItem = stabilityByRoute.get(stabilityKey({
-        supplier_slug: p.supplier_slug,
-        canonical_id: p.canonical_id,
-        route: p.route || 'default',
-      }));
-      return '<tr data-input-price="' + inputSortPrice + '" data-output-price="' + num(p.output_price) + '" data-composite-price="' + pc + '" data-supplier="' + esc(p.supplier_name) + '"><td class="dt-supplier">' + esc(p.supplier_name) + '</td>' +
-        '<td><span class="tag ' + supplierTag.className + '">' + supplierTag.label + '</span></td>' +
-        '<td class="dt-route">' + esc(p.route) + '</td>' +
-        '<td class="price-cell dt-num ' + (!tokenPricing && pc === min ? 'price-lowest' : '') + '">' + (tokenPricing ? '¥' + priceNumberText(p.input_price) : priceText(pc, m)) + (!tokenPricing && pc === min ? '<span class="lowest-badge">最低</span>' : '') + '</td>' +
-        '<td class="price-cell dt-num">' + (tokenPricing ? '¥' + priceNumberText(p.output_price) : '—') + '</td>' +
-        '<td class="price-cell dt-num ' + (tokenPricing && pc === min ? 'price-lowest' : '') + '">' + (tokenPricing ? '¥' + priceNumberText(pc) + (pc === min ? '<span class="lowest-badge">最低</span>' : '') : '—') + '</td>' +
-        stabilityCellHTML(stabilityItem) + '</tr>';
-    }).join('') +
-    '</tbody></table>'
-  );
+      '<th>稳定性</th></tr></thead><tbody>' + routes.map((route) => {
+        const price = route.price;
+        const supplierTag = SUPPLIER_TYPE_TAGS[price.supplier_type] || SUPPLIER_TYPE_TAGS.other;
+        return '<tr' + routeDataAttributes(route) + ' data-supplier="' + esc(price.supplier_name) + '"><td class="dt-supplier">' + esc(price.supplier_name) + '</td>' +
+          '<td><span class="tag ' + supplierTag.className + '">' + supplierTag.label + '</span></td>' +
+          '<td class="dt-route">' + esc(price.route) + '</td>' +
+          '<td class="price-cell dt-num ' + (!tokenPricing && route.total === min ? 'price-lowest' : '') + '">' + (tokenPricing ? '¥' + priceNumberText(price.input_price) : priceText(route.total, model)) + (!tokenPricing && route.total === min ? '<span class="lowest-badge">全部最低</span>' : '') + '</td>' +
+          '<td class="price-cell dt-num">' + (tokenPricing ? '¥' + priceNumberText(price.output_price) : MISSING_VALUE) + '</td>' +
+          '<td class="price-cell dt-num ' + (tokenPricing && route.total === min ? 'price-lowest' : '') + '" data-workload-total data-input-price="' + num(price.input_price) + '" data-output-price="' + num(price.output_price) + '">' + (tokenPricing ? '¥' + priceNumberText(route.total) + (route.total === min ? '<span class="lowest-badge">全部最低</span>' : '') : MISSING_VALUE) + '</td>' +
+          stabilityCellHTML(route.stability, routeRiskHTML(model, route)) + '</tr>';
+      }).join('') + '</tbody></table></div>';
+
+  return '<div class="quote-comparison" data-price-comparison data-token-pricing="' + String(tokenPricing) + '">' +
+    quoteOverviewHTML(model, summary) + workloadControlsHTML(model) + table + mobileSupplierGroupsHTML(model, routes) +
+  '</div>';
 }

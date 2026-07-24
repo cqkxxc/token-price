@@ -1,9 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import { MODELS, PRICES, SUPPLIERS, MANIFEST, META, pricesOf } from '../lib/data';
+import { MODELS, PRICES, SUPPLIERS, MANIFEST, META, pricesOf, stabilityOf } from '../lib/data';
 import {
   rowHTML, modelLogo, vendorIconFor, companyName, composite, activePrices,
-  discountFor, discountPercentText, officialPriceDisplay, quoteTotal,
+  officialPriceDisplay, quoteSummary, quoteMinimumsHTML,
   capabilitiesFor, shortDateText, esc,
 } from '../lib/render';
 import { homeJsonLd } from '../lib/seo';
@@ -14,10 +14,12 @@ const capabilities = [...new Set(MODELS.flatMap(capabilitiesFor))];
 
 // 默认排序：综合价降序（与旧版一致）
 const sorted = [...MODELS].sort((a, b) => (composite(b) ?? -Infinity) - (composite(a) ?? -Infinity));
+const PAGE_SIZE = 24;
 
 const homeRowHTML = (m: (typeof MODELS)[number]) => {
   const prices = pricesOf(m.canonical_id);
-  let html = rowHTML(m, prices, MANIFEST);
+  const summary = quoteSummary(m, prices, stabilityOf(m.canonical_id));
+  let html = rowHTML(m, prices, MANIFEST, summary);
   if (!activePrices(prices).length) {
     html = html.replace('>0 家</td>', '><span class="verified-quote-status is-empty">暂无已验证报价</span></td>');
   }
@@ -28,11 +30,10 @@ const mobileCardHTML = (m: (typeof MODELS)[number]) => {
   const prices = pricesOf(m.canonical_id);
   const quotes = activePrices(prices);
   const official = officialPriceDisplay(m);
-  const discount = discountFor(m, prices);
-  const supplierCount = new Set(quotes.map((price) => price.supplier_slug)).size;
+  const summary = quoteSummary(m, prices, stabilityOf(m.canonical_id));
   const caps = capabilitiesFor(m).slice(0, 3);
   const quoteStatus = quotes.length
-    ? `${supplierCount} 家供应商 · ${quotes.length} 条线路`
+    ? `${summary.supplierCount} 家供应商 · ${quotes.length} 条线路`
     : '暂无已验证报价';
 
   return '<article class="model-result-card">' +
@@ -40,25 +41,22 @@ const mobileCardHTML = (m: (typeof MODELS)[number]) => {
       '<div class="model-result-identity"><h3><a href="/models/' + esc(m.slug) + '/">' + esc(m.display_name) + '</a></h3>' +
       '<p>' + esc(companyName(m)) + '</p></div>' +
       '<button type="button" class="btn-compare model-card-compare" data-compare="' + esc(m.slug) +
-        '" aria-label="比较 ' + esc(m.display_name) + ' 的供应商报价">比价 <span aria-hidden="true">→</span></button></div>' +
+        '" aria-label="查看 ' + esc(m.display_name) + ' 的供应商报价">查看报价</button></div>' +
     (caps.length
       ? '<div class="model-result-tags">' + caps.map((cap) => '<span>' + esc(cap) + '</span>').join('') + '</div>'
       : '<p class="model-result-capabilities-missing">能力：—</p>') +
     '<dl class="model-result-prices">' +
       '<div><dt>' + official.primaryLabel + '</dt><dd>' + official.primaryHtml + '</dd></div>' +
       '<div><dt>官方输出价</dt><dd>' + official.outputHtml + '</dd></div>' +
-      '<div><dt>官方综合价</dt><dd>' + official.compositeHtml + '</dd></div>' +
+      '<div><dt>' + official.compositeLabel + '</dt><dd>' + official.compositeHtml + '</dd></div>' +
     '</dl>' +
+    quoteMinimumsHTML(summary, 'quote-minimums quote-minimums-mobile') +
     '<div class="model-result-card-foot"><span class="verified-quote-status' + (quotes.length ? '' : ' is-empty') + '">' +
-      quoteStatus + '</span>' +
-      (discount > 0 ? '<span class="model-result-discount">最低约省 ' + discountPercentText(discount) + '</span>' : '') +
-    '</div></article>';
+      quoteStatus + '</span></div></article>';
 };
 
-const initialRows = sorted.map(homeRowHTML).join('');
-// Keep the first mobile viewport server-rendered; the compact client summary
-// expands the complete card list immediately after hydration.
-const initialCards = sorted.slice(0, 20).map(mobileCardHTML).join('');
+const initialRows = sorted.slice(0, PAGE_SIZE).map(homeRowHTML).join('');
+const initialCards = sorted.slice(0, PAGE_SIZE).map(mobileCardHTML).join('');
 
 // 热门模型走马灯
 const hotScrollModels = [
@@ -84,18 +82,20 @@ const activePriceRows = PRICES.filter((p) => p.is_active === true);
 const activeQuoteCount = activePriceRows.length;
 
 // 首页只内联筛选和首屏展示所需摘要；完整报价按模型从构建产物加载。
-type CompactQuoteSummary = [number, number, number | null];
+type CompactQuoteSummary = [number, number, number | null, number | null, number | null];
 const compactSummaries: CompactQuoteSummary[] = MODELS.map((model) => {
-  const quotes = activePrices(pricesOf(model.canonical_id));
+  const summary = quoteSummary(model, pricesOf(model.canonical_id), stabilityOf(model.canonical_id));
   return [
-    new Set(quotes.map((price) => price.supplier_slug)).size,
-    quotes.length,
-    quotes.length ? Math.min(...quotes.map((price) => quoteTotal(price, model))) : null,
+    summary.supplierCount,
+    summary.quoteCount,
+    summary.bestTotal,
+    summary.bestOnlineTotal,
+    summary.bestStableTotal,
   ];
 });
 
 const dataset = JSON.stringify({
-  v: 2,
+  v: 3,
   models: MODELS,
   r: compactSummaries,
   meta: { data_updated_at: META.data_updated_at },
@@ -105,6 +105,12 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updat
 ---
 <Base title="AI 模型价格比价 — 官方价与中转站价格对比" jsonLd={jsonLd}>
   <div id="page-home" class="page active">
+    <div class="mobile-search-dock">
+      <div class="filter-search">
+        <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input type="search" id="mobileSearch" placeholder="搜索模型、厂商或能力" autocomplete="off" aria-label="搜索模型" aria-controls="modelResults">
+      </div>
+    </div>
     <header class="page-intro">
       <div class="hero-effects" aria-hidden="true">
         <span class="hero-orb hero-orb-primary"></span>
@@ -176,7 +182,7 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updat
             <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
             <input type="text" id="globalSearch" placeholder="搜索模型名称、厂商、能力…" autocomplete="off" aria-label="搜索模型" aria-controls="modelResults">
           </div>
-          <span id="resultsInfo" aria-live="polite">共 {MODELS.length} 个模型 · 表内为官方价 · 更新 {updated}</span>
+          <span id="resultsInfo" aria-live="polite">显示 {Math.min(PAGE_SIZE, MODELS.length)} / {MODELS.length} 个模型 · 更新 {updated}</span>
         </div>
         <div class="filter-controls">
           <div class="filter-row"><span class="filter-label" id="companyFilterLabel">厂商</span>
@@ -213,11 +219,12 @@ const jsonLd = homeJsonLd(Astro.site || new URL(Astro.url.origin), sorted, updat
         <th scope="col">模型厂商</th><th scope="col">能力</th>
         <th class="sortable" data-sort="input_price" id="th-input" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输入 / 单位价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
         <th class="sortable" data-sort="output_price" id="th-output" scope="col" aria-sort="none"><button type="button" class="sort-control"><span>官方输出价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
-        <th class="sortable active desc" data-sort="composite_price" id="th-composite" scope="col" aria-sort="descending"><button type="button" class="sort-control"><span>官方综合价</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
-        <th scope="col">折扣</th><th scope="col">渠道</th><th scope="col"><span class="sr-only">操作</span></th>
+        <th class="sortable active desc" data-sort="composite_price" id="th-composite" scope="col" aria-sort="descending"><button type="button" class="sort-control"><span>官方预计成本</span><i class="sort-arrow" aria-hidden="true"></i></button></th>
+        <th scope="col">报价最低价</th><th scope="col">渠道</th><th scope="col"><span class="sr-only">操作</span></th>
       </tr></thead><tbody id="tableBody" set:html={initialRows}></tbody></table></div>
         <div class="model-card-list" id="modelCardList" aria-label="AI 模型价格结果" set:html={initialCards}></div>
         <div class="empty-state" id="emptyState" style="display:none">没有匹配的模型</div>
+        <div class="results-pagination"><button class="btn-load-more" id="loadMoreModels" type="button">加载更多</button></div>
       </div>
     </section>
   </div>

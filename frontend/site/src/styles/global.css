@@ -301,6 +301,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .page{display:none}
 .page.active{display:block}
 #page-home{position:relative;min-height:calc(100vh - 64px);overflow:clip;padding-bottom:1px}
+.mobile-search-dock{display:none}
 .page-container{
   position:relative;
   z-index:2;
@@ -888,6 +889,22 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 
 /* Mobile result cards are a compact counterpart to the desktop data table. */
 .model-card-list{display:none}
+.quote-minimums{margin:0;padding:0;display:grid;font-variant-numeric:tabular-nums}
+.quote-minimums>div{min-width:0}
+.quote-minimums dt{color:#708392;font-size:10px;font-weight:500}
+.quote-minimums dd{margin-top:4px;color:#dcecf7;font:600 12px var(--font-mono);white-space:nowrap}
+.quote-minimums-table{grid-template-columns:1fr;gap:5px;min-width:104px}
+.quote-minimums-table dt,.quote-minimums-table dd{display:inline;margin:0}
+.quote-minimums-table dd{margin-left:6px;font-size:11px}
+.quote-minimums-mobile{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:10px;overflow:hidden;border:1px solid rgba(137,188,230,.09);border-radius:9px;background:rgba(0,0,0,.14)}
+.quote-minimums-mobile>div{padding:9px 8px}
+.quote-minimums-mobile>div+div{border-left:1px solid rgba(137,188,230,.08)}
+.quote-minimums-mobile dt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px}
+.quote-minimums-mobile dd{overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.results-pagination{display:flex;justify-content:center;padding:18px 14px 22px;background:#060a0f}
+.results-pagination:has(.btn-load-more[hidden]){display:none}
+.btn-load-more{min-width:132px;height:40px;border:1px solid rgba(78,168,255,.28);border-radius:8px;color:#9cd8ff;background:rgba(78,168,255,.075);font-size:13px;font-weight:600;cursor:pointer;transition:color .16s ease,background .16s ease,border-color .16s ease}
+.btn-load-more:hover{color:#e5f7ff;border-color:rgba(34,211,238,.54);background:rgba(34,211,238,.10)}
 .model-result-card{
   position:relative;
   overflow:hidden;
@@ -997,6 +1014,33 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .price-summary .price-cell{font-size:16px}
 .model-description{margin:18px 0;color:var(--text2);font-size:14px;line-height:1.78;white-space:pre-line}
 .detail-card{padding:32px;border:1px solid var(--border);border-radius:15px;background:linear-gradient(145deg,rgba(12,18,25,.90),rgba(6,10,15,.92));box-shadow:var(--shadow-card)}
+.quote-comparison{min-width:0}
+.quote-overview{margin-bottom:16px;padding:18px 0;border-top:1px solid rgba(141,194,238,.13);border-bottom:1px solid rgba(141,194,238,.13)}
+.quote-overview-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:15px}
+.quote-overview-heading .filter-kicker{display:block;margin-bottom:5px}
+.quote-overview-heading h3{color:var(--text);font-size:15px;font-weight:600}
+.quote-overview-heading p{max-width:360px;color:var(--text3);font-size:11px;line-height:1.55;text-align:right}
+.quote-overview-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+.quote-overview-values>div{min-width:0;padding:0 18px}
+.quote-overview-values>div:first-child{padding-left:0}
+.quote-overview-values>div+div{border-left:1px solid rgba(141,194,238,.12)}
+.quote-overview-values dt{color:#8293a1;font-size:12px}
+.quote-overview-values dd{margin-top:7px;color:#e2f4ff;font:600 19px var(--font-mono);font-variant-numeric:tabular-nums}
+.quote-overview-values small{display:block;margin-top:6px;color:#617687;font-size:10px;line-height:1.35}
+.pricing-workload{display:flex;align-items:flex-end;gap:12px;margin:0 0 18px;padding:13px 15px;border:1px solid rgba(114,190,244,.14);border-radius:9px;background:rgba(78,168,255,.045)}
+.pricing-workload-label{padding-bottom:10px;color:#9ecdeb;font-size:12px;font-weight:600;white-space:nowrap}
+.pricing-workload label{display:grid;grid-template-columns:auto 78px auto;align-items:center;gap:7px;min-width:0;color:#7d91a1;font-size:11px}
+.pricing-workload input{width:78px;height:32px;padding:0 8px;border:1px solid rgba(136,196,241,.18);border-radius:6px;outline:0;color:#e9f8ff;background:rgba(0,0,0,.22);font:500 12px var(--font-mono);font-variant-numeric:tabular-nums}
+.pricing-workload input:focus{border-color:rgba(34,211,238,.55);box-shadow:0 0 0 3px rgba(34,211,238,.08)}
+.pricing-workload small{color:#647989;font-size:10px;white-space:nowrap}
+.quote-table-scroll{width:100%;overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.supplier-quote-list{display:none}
+.route-risk-list{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:5px}
+.route-risk{display:inline-flex;align-items:center;min-height:18px;padding:0 5px;border:1px solid transparent;border-radius:4px;font-size:9px;font-weight:600;white-space:nowrap}
+.route-risk.unknown{color:#9baab6;border-color:rgba(151,163,175,.16);background:rgba(148,163,184,.08)}
+.route-risk.degraded{color:#f7c658;border-color:rgba(251,191,36,.18);background:rgba(251,191,36,.08)}
+.route-risk.offline{color:#ff9098;border-color:rgba(248,113,113,.18);background:rgba(248,113,113,.08)}
+.route-risk.price-anomaly{color:#c5a6ff;border-color:rgba(167,139,250,.22);background:rgba(139,92,246,.09)}
 
 /* ── Tags and actions ─────────────────────────────────── */
 .tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:500}
@@ -1085,7 +1129,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .drawer-table-scroll{width:100%;overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:6px;-webkit-overflow-scrolling:touch}
 .drawer .drawer-table{min-width:760px}
 .drawer-table{width:100%;min-width:760px;table-layout:fixed;border-collapse:collapse}
-.detail-card .table-wrap{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.detail-card .table-wrap{overflow:visible}
 .drawer-table colgroup .dt-col-supplier{width:18%}
 .drawer-table colgroup .dt-col-type{width:9%}
 .drawer-table colgroup .dt-col-route{width:11%}
@@ -1129,6 +1173,35 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
 .drawer-table td.dt-num .lowest-badge{margin-left:6px}
 .drawer-table tbody tr:hover{background:rgba(78,168,255,.04)}
 .drawer-table tbody tr:last-child td{border-bottom:none}
+.supplier-quote-list{overflow:hidden;border:1px solid rgba(139,196,246,.14);border-radius:10px;background:rgba(3,7,11,.34)}
+.supplier-quote-group+ .supplier-quote-group{border-top:1px solid rgba(139,196,246,.11)}
+.supplier-quote-group summary{position:relative;min-height:96px;padding:15px 42px 15px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 14px;align-items:center;list-style:none;cursor:pointer}
+.supplier-quote-group summary::-webkit-details-marker{display:none}
+.supplier-quote-group[open] summary{background:rgba(78,168,255,.035)}
+.supplier-quote-summary-main{min-width:0;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.supplier-quote-name{max-width:100%;overflow:hidden;color:#edf6fb;font-size:14px;font-weight:650;text-overflow:ellipsis;white-space:nowrap}
+.supplier-quote-summary-price{display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right}
+.supplier-quote-summary-price small{color:#6f8393;font-size:9px}
+.supplier-quote-summary-price strong{color:#c8f8df;font:600 16px var(--font-mono);font-variant-numeric:tabular-nums}
+.supplier-quote-summary-price>span{max-width:150px;overflow:hidden;color:#718493;font:10px var(--font-mono);text-overflow:ellipsis;white-space:nowrap}
+.mobile-route-stability{display:flex;align-items:center;gap:5px;color:#91a2af;font-size:11px}
+.mobile-route-stability .status-dot{margin:0}
+.mobile-route-stability small{color:#657786;font:9px var(--font-mono)}
+.mobile-route-stability.online{color:var(--green)}
+.mobile-route-stability.degraded{color:var(--amber)}
+.mobile-route-stability.offline{color:var(--red)}
+.supplier-quote-chevron{position:absolute;right:15px;top:50%;width:8px;height:8px;border-right:1.5px solid #6d8292;border-bottom:1.5px solid #6d8292;transform:translateY(-70%) rotate(45deg);transition:transform .16s ease}
+.supplier-quote-group[open] .supplier-quote-chevron{transform:translateY(-25%) rotate(225deg)}
+.supplier-route-list{padding:0 12px 12px;background:rgba(0,0,0,.15)}
+.supplier-route{padding:14px 2px;border-top:1px solid rgba(139,196,246,.10)}
+.supplier-route-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:11px}
+.supplier-route-heading>strong{min-width:0;overflow:hidden;color:#cbd9e2;font:600 11px var(--font-mono);text-overflow:ellipsis;white-space:nowrap}
+.supplier-route-heading .route-risk-list{margin-top:0;justify-content:flex-end}
+.supplier-route dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:11px}
+.supplier-route dl>div{min-width:0}
+.supplier-route dl>div+div{padding-left:8px;border-left:1px solid rgba(139,196,246,.09)}
+.supplier-route dt{color:#697d8d;font-size:9px}
+.supplier-route dd{margin-top:5px;overflow:hidden;color:#d7e7f1;font:600 11px var(--font-mono);font-variant-numeric:tabular-nums;text-overflow:ellipsis;white-space:nowrap}
 .btn-drawer-close{
   position:sticky;
   top:18px;
@@ -1276,42 +1349,63 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   .topnav-brand-dot{width:28px;height:28px}
   #page-home{min-height:calc(100vh - 56px)}
 
+  .mobile-search-dock{
+    position:sticky;
+    z-index:20;
+    top:56px;
+    width:min(calc(100% - (2 * var(--page-gutter))),var(--layout-max));
+    margin:12px auto 0;
+    padding:7px;
+    display:block;
+    border:1px solid rgba(126,193,244,.18);
+    border-radius:11px;
+    background:rgba(6,11,16,.92);
+    box-shadow:0 10px 30px rgba(0,0,0,.32);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+  .mobile-search-dock .filter-search{display:block;max-width:none}
+  .mobile-search-dock .filter-search input{height:42px;background:rgba(255,255,255,.035)}
+
   .page-intro{
-    margin-top:24px;
-    padding:30px 22px 28px;
-    gap:30px;
+    margin-top:12px;
+    padding:22px 20px 20px;
+    gap:18px;
     border-radius:15px;
   }
   .page-intro::after{inset:10px;background-size:64px 1px,1px 48px,64px 1px,1px 48px}
-  .intro-eyebrow{gap:8px;margin-bottom:21px;font-size:9px;letter-spacing:.13em}
+  .intro-eyebrow{gap:8px;margin-bottom:14px;font-size:9px;letter-spacing:.13em}
   .intro-eyebrow-separator{width:24px}
-  .page-intro h1{font-size:clamp(36px,10.8vw,44px);line-height:1.12}
-  .page-intro p{margin-top:18px;font-size:14px;line-height:1.72}
-  .hero-snapshot{padding:14px}
-  .hero-snapshot-heading{margin-bottom:10px}
+  .page-intro h1{font-size:30px;line-height:1.14}
+  .page-intro p{margin-top:11px;font-size:13px;line-height:1.6}
+  .hero-snapshot{padding:11px}
+  .hero-snapshot-heading{margin-bottom:8px}
   .hero-snapshot-code{display:none}
-  .hero-metrics{gap:8px}
-  .hero-metric{min-height:88px;padding:13px}
-  .hero-metric dd{margin-top:10px}
-  .hero-metric dd strong{font-size:25px}
+  .hero-metrics{gap:6px}
+  .hero-metric{min-height:66px;padding:10px}
+  .hero-metric dd{margin-top:7px}
+  .hero-metric dd strong{font-size:21px}
   .hero-metric-date time{font-size:12px}
 
-  .hot-models{min-height:72px;padding:9px 11px 9px 15px;grid-template-columns:auto auto minmax(0,1fr) auto;gap:12px;border-radius:13px}
+  .hot-models{min-height:64px;padding:8px 11px 8px 15px;grid-template-columns:auto auto minmax(0,1fr);gap:10px;border-radius:13px}
   .hot-models-label{min-width:92px;gap:9px}
   .hot-models-label small{display:none}
   .hot-models-signal{width:9px;height:9px}
   .hot-models-divider{height:34px}
-  .hot-models-track{padding-inline:20px}
+  .hot-models-viewport::before,.hot-models-viewport::after{width:16px}
+  .hot-models-track{padding:4px 10px}
+  .hot-models-marquee{animation:none;will-change:auto}
+  .hot-models-group[aria-hidden='true']{display:none}
   .hot-model-card{height:42px;padding-right:13px;font-size:12px}
+  .hot-models-toggle{display:none}
 
   .content-shell{margin-bottom:64px}
   .filter-panel{padding:24px 18px 25px}
   .filter-heading{flex-wrap:wrap;align-items:center;row-gap:14px;margin-bottom:22px;padding-bottom:19px}
   .filter-heading-title{flex:1 1 auto}
-  .filter-search{order:3;flex:1 1 100%;max-width:none}
-  .filter-search input{height:44px}
+  .filter-heading>.filter-search{display:none}
   .filter-heading h2{font-size:17px}
-  #resultsInfo{font-size:10px}
+  #resultsInfo{font-size:11px}
   .filter-controls{gap:17px}
   .filter-row{grid-template-columns:48px minmax(0,1fr);gap:12px}
   .filter-label{font-size:12px}
@@ -1329,6 +1423,23 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
   #page-home .table-wrap{overflow-x:visible}
   #page-home .table-scroll{display:none}
   .model-card-list{display:grid;gap:10px;padding:12px;background:#060a0f}
+  .results-pagination{padding-top:12px}
+
+  .quote-overview{margin-bottom:13px;padding:14px 0}
+  .quote-overview-heading{display:block;margin-bottom:13px}
+  .quote-overview-heading p{margin-top:6px;max-width:none;font-size:10px;text-align:left}
+  .quote-overview-values>div{padding:0 9px}
+  .quote-overview-values>div:first-child{padding-left:0}
+  .quote-overview-values dt{font-size:10px;line-height:1.35}
+  .quote-overview-values dd{font-size:15px}
+  .quote-overview-values small{font-size:9px}
+  .pricing-workload{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px;display:grid}
+  .pricing-workload-label{display:none}
+  .pricing-workload label{grid-template-columns:1fr 68px;gap:6px}
+  .pricing-workload label small{grid-column:1/-1}
+  .pricing-workload input{width:68px}
+  .quote-table-scroll{display:none}
+  .supplier-quote-list{display:block}
 
   .drawer{
     top:auto;
@@ -1341,7 +1452,7 @@ html{scrollbar-color:rgba(133,166,198,.32) transparent;scrollbar-width:thin}
     border-left:none;
     border-radius:18px 18px 0 0;
   }
-  .drawer-inner{min-width:0;padding:64px 22px 30px}
+  .drawer-inner{min-width:0;padding:64px 18px 30px}
   .btn-drawer-close{top:15px;margin:15px 15px -51px auto}
   .rail-left{left:8px}
   .rail-right{right:8px}

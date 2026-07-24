@@ -431,7 +431,7 @@ if (!payloadMatch) {
 }
 
 if (payload) {
-  if (payload.v !== 2 || !Array.isArray(payload.models) || !Array.isArray(payload.r)) {
+  if (payload.v !== 3 || !Array.isArray(payload.models) || !Array.isArray(payload.r)) {
     errors.push('/: compact client data payload has an unsupported shape');
   } else if (payload.models.length !== payload.r.length) {
     errors.push('/: quote summary count does not match model count');
@@ -447,7 +447,7 @@ if (payload) {
       slugs.add(model.slug);
       if (
         !Array.isArray(summary)
-        || summary.length !== 3
+        || summary.length !== 5
         || !Number.isInteger(summary[0])
         || !Number.isInteger(summary[1])
         || summary[0] < 0
@@ -455,6 +455,8 @@ if (payload) {
         || (summary[2] !== null && !finiteNonNegative(summary[2]))
         || (summary[1] === 0 && summary[2] !== null)
         || (summary[1] > 0 && summary[2] === null)
+        || (summary[3] !== null && !finiteNonNegative(summary[3]))
+        || (summary[4] !== null && !finiteNonNegative(summary[4]))
       ) {
         errors.push('/: invalid quote summary for model ' + model.slug);
       }
@@ -556,6 +558,8 @@ if (payload) {
         errors.push('api/quotes/' + model.slug + '.json: summary does not match snapshot');
       }
       const stabilityKeys = new Set();
+      const onlinePriceKeys = new Set();
+      const stablePriceKeys = new Set();
       for (const [stabilityIndex, record] of quotePayload.stability.entries()) {
         const key = record.supplier_slug + '::' + record.canonical_id + '::' + (record.route || 'default');
         if (
@@ -569,6 +573,27 @@ if (payload) {
           errors.push('api/quotes/' + model.slug + '.json: invalid stability reference at ' + stabilityIndex);
         }
         stabilityKeys.add(key);
+        if (record.status === 'online') onlinePriceKeys.add(key);
+        if (record.status === 'online' && Number(record.uptime_7d) >= 99) stablePriceKeys.add(key);
+      }
+      const quoteTotalByKey = new Map(quotePayload.prices.map((price) => {
+        const key = price.supplier_slug + '::' + price.canonical_id + '::' + (price.route || 'default');
+        const total = model.pricing_method === 'per_token'
+          ? price.input_price + price.output_price
+          : (price.input_price || price.output_price);
+        return [key, total];
+      }));
+      const minimumForKeys = (keys) => {
+        const values = [...keys].map((key) => quoteTotalByKey.get(key)).filter(Number.isFinite);
+        return values.length ? Math.min(...values) : null;
+      };
+      const expectedOnlineBest = minimumForKeys(onlinePriceKeys);
+      const expectedStableBest = minimumForKeys(stablePriceKeys);
+      if (
+        (expectedOnlineBest === null ? summary[3] !== null : Math.abs(expectedOnlineBest - summary[3]) > 1e-9)
+        || (expectedStableBest === null ? summary[4] !== null : Math.abs(expectedStableBest - summary[4]) > 1e-9)
+      ) {
+        errors.push('api/quotes/' + model.slug + '.json: availability summary does not match snapshot');
       }
     }
   }
